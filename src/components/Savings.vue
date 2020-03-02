@@ -25,7 +25,7 @@
                 <p class='span-details'>Cilj: {{singleSaving.sav_amount}} RSD</p>
                 <p class='span-details'>Do sad uplaceno: {{singleSaving.sav_amount - singleSaving.leftover_amount}} RSD</p>
                 <p class='span-details'>Preostala kolicina novca za uplatu: {{singleSaving.leftover_amount}} RSD</p>
-                <p class='span-details'>Mesecna rata za preostali period: {{calculateRate(singleSaving.leftover_amount, singleSaving.sav_start, singleSaving.sav_period)}} RSD</p>
+                <p class='span-details'>Mesecni doprinos: {{calculateRate(singleSaving.leftover_amount, singleSaving.sav_start, singleSaving.sav_period)}} RSD</p>
                 
                 <div class="accounts">
                     <div class="each-account" 
@@ -165,7 +165,7 @@ export default {
         }
     },
     mounted(){
-        localStorage.setItem('sid', 'lufmNpbMyokzwz3mYRz42WstD0Xcwv0l');
+        localStorage.setItem('sid', 'lufZ9LABCUVzGQzw0xU3xC0UjfZOZKgQ');
         this.getSavings();
     }
 }

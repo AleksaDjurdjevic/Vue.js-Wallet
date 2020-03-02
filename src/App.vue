@@ -5,7 +5,10 @@
       <router-link to="/">Transakcije</router-link> |
       <router-link to="/savings">Štednja</router-link> |
       <router-link to="/">Statistika</router-link> |
-      <router-link to="/login">UlogujSe</router-link> |
+      <router-link to="/login" v-if="!$store.state.isLoggedIn">UlogujSe</router-link> 
+      <span v-if="!$store.state.isLoggedIn"> | </span>
+      <router-link to="/login" v-if="$store.state.isLoggedIn">Uros Dimitrijevc</router-link> 
+      <span v-if="$store.state.isLoggedIn"> | </span>
       <router-link to="/registration">Registracija</router-link> 
     </div>
     <router-view/>

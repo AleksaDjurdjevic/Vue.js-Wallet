@@ -2,9 +2,9 @@
   <div class="bla">
       <div v-if="!$store.state.isLoggedIn">
         <h1>Login</h1>
-        <label for="emial">Insert email</label>
+        <label for="emial">Unesite email</label>
         <input type="email" placeholder="Insert email.." v-model="email">
-        <label for="password">Insert password</label>
+        <label for="password">IUnesite password</label>
         <input type="password" placeholder="Insert password.." v-model="password">
         <button @click="login()">LogIn</button>
       </div>
@@ -13,10 +13,6 @@
         <button @click="logout()">LogOut</button>
       </div>
 
-      <div v-if="$store.state.isAdmin">
-        cao admine    
-      </div>
-      
   </div>
 </template>
 
@@ -61,7 +57,7 @@ export default {
         //mars sam zna sta da uradi kad mu posaljemo sid, treba samo da ga posaljemo
         logout(){
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/logout', {         
-                sid: sessionStorage.getItem('sid')
+                sid: localStorage.getItem('sid')
             })
             .then(res => {
                 console.log(res.data)

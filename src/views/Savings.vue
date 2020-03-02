@@ -6,12 +6,12 @@
             <div class="each-savings" v-for = "saving in savings" :key = 'saving.sav_id'>
                 <h2>{{saving.sav_description}}</h2>
                 <span class='span-details'>Cilj: {{saving.sav_amount}} RSD</span>
-                <span class='span-details'>Do sad uplaceno: {{saving.sav_amount - saving.leftover_amount}} RSD</span>
+                <span class='span-details'>Do sad uplaceno: {{saving.sav_amount_accumulated = saving.sav_amount - saving.leftover_amount}} RSD</span>
                 <span class='span-details'>Period stednje: {{saving.sav_period}} meseci/meseca</span>
                 <span class='span-details'>Preostala kolicina novca za uplatu: {{saving.leftover_amount}} RSD</span>
                 <span class='span-details'>Ukupan broj uplata: {{saving.number_of_payments}}</span>
-                <span class='span-details'>Mesecni doprinos: {{calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}} RSD</span> <br>
-
+                <span class='span-details'>Mesecni doprinos: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}} RSD</span> <br>
+                
                 <button @click = "preparePayment(saving.sav_id)">Uplati na stednju</button>
             </div>
         </div>
@@ -25,8 +25,8 @@
                 <p class='span-details'>Cilj: {{singleSaving.sav_amount}} RSD</p>
                 <p class='span-details'>Do sad uplaceno: {{singleSaving.sav_amount - singleSaving.leftover_amount}} RSD</p>
                 <p class='span-details'>Preostala kolicina novca za uplatu: {{singleSaving.leftover_amount}} RSD</p>
-                <p class='span-details'>Mesecni doprinos: {{calculateRate(singleSaving.leftover_amount, singleSaving.sav_start, singleSaving.sav_period)}} RSD</p>
-                
+                <p class='span-details'>Mesecna rata za preostali period: {{calculateRate(singleSaving.leftover_amount, singleSaving.sav_start, singleSaving.sav_period)}} RSD</p>
+               
                 <div class="accounts">
                     <div class="each-account" 
                         v-for = "account in accounts" 
@@ -57,6 +57,24 @@
 
             <p>{{error}}</p>
         </div>
+
+        <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort('desc')">
+        <label for="sort1">Po cilju</label>
+        <br>
+        <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort('desc')">
+        <label for="sort2">Po uplacenom iznosu</label>
+        <br>
+        <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort('desc')">
+        <label for="sort3">Po periodu</label>
+        <br>
+        <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort('desc')">
+        <label for="sort4">Po preostalom iznosu</label>
+        <br>
+        <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort('desc')">
+        <label for="sort5">Po uplatama</label>
+        <br>
+        <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort('desc')">
+        <label for="sort6">Po mesecnoj rati</label>
     </div>
 </template>
 
@@ -77,10 +95,20 @@ export default {
             addingSaving: false,
             newSavDesc: '',
             newSavAmount: '',
-            newSavPeriod: ''
+            newSavPeriod: '',
+            property: null
         }
     },
     methods: {
+        savingSort(a){
+            if (this.savings !== []) {
+                if(a == 'asc'){
+                    this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? 1 : -1);
+                }else if(a == 'desc'){
+                    this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? -1 : 1);
+                }
+            } 
+        },
         getSavings(){
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{
@@ -138,11 +166,15 @@ export default {
                     this.getSavings();
                     this.getSingleSaving();
                     this.paymentValue = '';
+                    this.error = '';
                     this.makingPayment = false;
+                    console.log('sta');
+                    
                 })
             } 
         },
         addSaving(){
+            this.error = "";
             if(this.newSavDesc == ""){
                 this.error = "Izaberite naziv/opis stednje.";
             }else if(this.newSavPeriod == ""){
@@ -157,15 +189,17 @@ export default {
                     savAmount: this.newSavAmount,
                     savDescription: this.newSavDesc,
                     savPeriod: this.newSavPeriod
-                }).then(r=>{
-                    this.error = r.data.msg;
+                }).then(()=>{
                     this.getSavings();
+                    this.newSavAmount = "";
+                    this.newSavDesc = "";
+                    this.newSavPeriod = "";
+                    this.addingSaving = false;
                 })
             } 
         }
     },
     mounted(){
-        localStorage.setItem('sid', 'lufZ9LABCUVzGQzw0xU3xC0UjfZOZKgQ');
         this.getSavings();
     }
 }

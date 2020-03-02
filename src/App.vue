@@ -1,6 +1,17 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <div id="nav">
+      <router-link to="/">Početna</router-link> |
+      <router-link to="/">Transakcije</router-link> |
+      <router-link to="/savings">Štednja</router-link> |
+      <router-link to="/">Statistika</router-link> |
+      <router-link to="/login" v-if="!$store.state.isLoggedIn">UlogujSe</router-link> 
+      <span v-if="!$store.state.isLoggedIn"> | </span>
+      <router-link to="/login" v-if="$store.state.isLoggedIn">Uros Dimitrijevc</router-link> 
+      <span v-if="$store.state.isLoggedIn"> | </span>
+      <router-link to="/registration">Registracija</router-link> 
+    </div>
+    <router-view/>
   </div>
 </template>
 
@@ -9,9 +20,24 @@ export default {
   
 }
 </script>
+<style scoped>
 
-<style>
-body{
-  margin: 0;
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+::-moz-selection { /* Code for Firefox */
+    color: rgba(238, 238, 238, 0.966);
+    background: rgba(119, 118, 117, 0.6);
+}
+
+::selection {
+    color: rgba(238, 238, 238, 0.966);
+    background: rgba(119, 118, 117, 0.6);
 }
 </style>

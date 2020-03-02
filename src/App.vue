@@ -1,6 +1,7 @@
 <template>
   <div id="app">
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div id="nav">
       <router-link to="/">Transaction</router-link> |
       <router-link to="/about">About</router-link>
@@ -9,6 +10,20 @@
 =======
     <router-view></router-view>
 >>>>>>> c65c5537ce42a0e0d096e5936cc768e4090ccddc
+=======
+    <router-view></router-view>
+=======
+    <div id="nav">
+      <router-link to="/">Početna</router-link> |
+      <router-link to="/">Transakcije</router-link> |
+      <router-link to="/">Štednja</router-link> |
+      <router-link to="/">Statistika</router-link> |
+      <router-link to="/login">Login</router-link> |
+      <router-link to="/registration">Registration</router-link> | 
+    </div>
+    <router-view/>
+>>>>>>> 92daf2297d1584e61baa2865a75519840386b096
+>>>>>>> b93f0a37d9082e13192985657775e54376b7e2cf
   </div>
 </template>
 

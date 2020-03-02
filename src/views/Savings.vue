@@ -57,6 +57,7 @@
 
             <p>{{error}}</p>
         </div>
+        <button @click = "savingSortAmount">asdasd</button>
     </div>
 </template>
 
@@ -82,8 +83,7 @@ export default {
     },
     methods: {
         savingSortAmount(){
-            console.log(this.savings);
-            
+            this.savings.sort((a, b) => (a.sav_amount > b.sav_amount) ? -1 : 1);
         },
         getSavings(){
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/getSavings', {sid: localStorage.getItem('sid')})
@@ -169,7 +169,7 @@ export default {
         }
     },
     mounted(){
-        localStorage.setItem('sid', 'lufoSsH5rmKlIV6VWAyZ9AWkegUK2l9V');
+        localStorage.setItem('sid', 'lufHZBnH3zIl17uiXlOfcIp7MOhrNZ0k');
         this.getSavings();
     }
 }

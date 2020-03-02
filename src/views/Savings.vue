@@ -81,6 +81,10 @@ export default {
         }
     },
     methods: {
+        savingSortAmount(){
+            console.log(this.savings);
+            
+        },
         getSavings(){
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{

@@ -57,7 +57,11 @@
 
             <p>{{error}}</p>
         </div>
-        <button @click = "savingSortAmount">asdasd</button>
+        <button @click = "savingSort('sav_amount', 'desc')">Po cilju</button>
+        <button @click = "savingSort('sav_amount', 'desc')">Po uplacenom iznosu</button>
+        <button @click = "savingSort('sav_amount', 'desc')">Po periodu</button>
+        <button @click = "savingSort('sav_amount', 'desc')">Po preostalom iznosu</button>
+        <button @click = "savingSort('sav_amount', 'desc')">Po uplatama</button>
     </div>
 </template>
 
@@ -82,8 +86,14 @@ export default {
         }
     },
     methods: {
-        savingSortAmount(){
-            this.savings.sort((a, b) => (a.sav_amount > b.sav_amount) ? -1 : 1);
+        savingSort(property, a){
+            if (this.savings !== []) {
+                if(a == 'asc'){
+                    this.savings.sort((a, b) => (a[property] > b[property]) ? 1 : -1);
+                }else if(a == 'desc'){
+                    this.savings.sort((a, b) => (a[property] > b[property]) ? -1 : 1);
+                }
+            }
         },
         getSavings(){
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/getSavings', {sid: localStorage.getItem('sid')})

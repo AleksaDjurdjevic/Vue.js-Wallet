@@ -1,26 +1,24 @@
 <template>
   <div id="app">
+<<<<<<< HEAD
     <div id="nav">
       <router-link to="/">Transaction</router-link> |
       <router-link to="/about">About</router-link>
     </div>
     <router-view/>
+=======
+    <router-view></router-view>
+>>>>>>> c65c5537ce42a0e0d096e5936cc768e4090ccddc
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+  
 }
+</script>
 
-#nav {
-  padding: 30px;
-}
-
+<<<<<<< HEAD
 #nav a {
   font-weight: bold;
   color: #2c3e50;
@@ -39,4 +37,7 @@
     color: rgba(238, 238, 238, 0.966);
     background: rgba(119, 118, 117, 0.6);
 }
+=======
+<style>
+>>>>>>> c65c5537ce42a0e0d096e5936cc768e4090ccddc
 </style>

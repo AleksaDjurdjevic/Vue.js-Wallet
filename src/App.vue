@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
+      <router-link to="/">Transaction</router-link> |
       <router-link to="/about">About</router-link>
     </div>
     <router-view/>
@@ -28,5 +28,15 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+::-moz-selection { /* Code for Firefox */
+    color: rgba(238, 238, 238, 0.966);
+    background: rgba(119, 118, 117, 0.6);
+}
+
+::selection {
+    color: rgba(238, 238, 238, 0.966);
+    background: rgba(119, 118, 117, 0.6);
 }
 </style>

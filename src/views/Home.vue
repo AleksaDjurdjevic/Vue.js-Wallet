@@ -24,10 +24,10 @@
     <!-- show all bils -->
     <div class="bills">
      
-      <div class="bill" v-for="acc in accounts" :key="acc.id" @click="setBill(acc)">{{acc.acc_name}}</div> 
+      <div class="bill" v-for="acc in accounts" :key="acc.id" @click="setBill(acc)"><p>{{acc.acc_name}}</p></div> 
       <div class="bill create" @click="showCreateAccDiv(true)"> + </div>
     </div><!-- end bills-->
-  <h1 v-if="isLoggedIn"> Naziv računa:<span class="orange">{{defAcc.acc_name}} </span>  Stanje: <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}}</span> </h1><br>
+  <h1 v-if="$store.state.isLoggedIn"> Naziv računa:<span class="orange">{{defAcc.acc_name}} </span>  Stanje: <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}}</span> </h1><br>
       <p v-if="message">{{message}}</p><p v-if="err" class="err">{{err}}</p>
     <div class="main">
        <div class="transaction">
@@ -93,7 +93,7 @@ import axios from 'axios'
 import {mapState} from 'vuex'
 
 export default {
-  name: 'Transaction',
+  name: 'Home',
   components: {
     'callendar':Callendar
   },
@@ -197,7 +197,7 @@ export default {
     },
     checkFormCreateAcc () {
       this.createErrors = [];
-      console.log(!isNaN(this.createSum) && this.createSum!==null)
+      console.log(!isNaN(this.createSum) && this.createSum!==null+ " checkFormCreateAcc")
       if (this.createName && this.createSum ) {
          if(!isNaN(this.createSum) && this.createSum!==null){
           this.createNewAccount()
@@ -331,18 +331,21 @@ export default {
   
 }
 </script>
-<style scoped>
+<style scoped >
 .dashboard{
+  text-align: center;
   position:relative;
   width: 100%;
 }
 .bills{
+  padding:6px 0;
   width:100%;
   display: flex;
   flex-wrap:wrap;
   color:floralwhite;
 }
 .bill{
+
   cursor:pointer;
   font-size:1.2em;
   line-height:2.8;
@@ -352,6 +355,11 @@ export default {
   height:60px;
   background-color: rgb(0, 0, 0);
 
+}
+.bill p{
+  line-height:2.8;
+  font-weight: 500;
+  
 }
 .create{
   cursor:pointer;
@@ -453,9 +461,7 @@ select.inputWrite{
  cursor: pointer;
 }
 
-.bills{
-  padding:6px 0;
-}
+
 input:focus{
   border-color: transparent;
   }

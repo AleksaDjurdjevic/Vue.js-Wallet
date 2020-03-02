@@ -68,6 +68,7 @@
     <div class="main2">
       <div  class="transaction2">
         <callendar v-if="showCallendar" class="callendar" v-on:showCallEmit="showCallendarMet($event)" v-on:selectDate="showTransactionByDate($event)" ></callendar>
+       <div class="pickOut3" @click="getTransactions(defAcc.acc_name);"> Transakcije računa </div>
         <div  @click="showCallendar=!showCallendar" class="pickOut3">Prikaz po datumu </div>
       </div> <!-- end transaction2 --> 
     <div class="reverse" >
@@ -185,13 +186,15 @@ export default {
      }
     },
     showTransactionByDate(date){
-      console.localStorage(date)
+      console.log(date)
       let sid=localStorage.getItem('sid')
       if(sid){
       axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/transactionViewsAccountByDate',
       {sid:sid, account:this.defAcc.acc_name, date:date})
       .then((response)=>{
         this.allTransaction = response.data.transaction;
+        this.message=response.data.message;
+        this.err=response.data.err;
       });
       }
     },
@@ -348,7 +351,7 @@ export default {
 
   cursor:pointer;
   font-size:1.2em;
-  line-height:2.8;
+  
   font-weight: 500;
   margin:0.6%;
   width:18%;
@@ -357,6 +360,8 @@ export default {
 
 }
 .bill p{
+  margin:0 auto;
+  box-sizing: border-box;
   line-height:2.8;
   font-weight: 500;
   
@@ -518,7 +523,7 @@ input[type="button"]:active{
     display:flex;
     flex-wrap: wrap;
   
-    flex-direction: column-reverse;
+     flex-direction: column-reverse; 
 
 }
 h1:nth-of-type(2){
@@ -562,12 +567,13 @@ h1 .orange{
 }
 .err{
   color:rgba(255, 0, 0, 0.733);
+  text-shadow: 1.5px 1.5px 1.5px #000000;
 }
 .callendar{
   background:#FFF;
   position :absolute;
   top:70%;
-  left:4%;
+  left:55%;
   z-index: 10;
 }
 </style>

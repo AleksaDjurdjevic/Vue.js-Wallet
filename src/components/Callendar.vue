@@ -8,11 +8,11 @@
         </div>
         
         <ul class="dates" >
-            <li class="days" v-for="day in days" :key="day.index" @click="selectDate(day)">{{day}}</li>
+            <li class="days" v-for="day in days" :key="day.index" >{{day}}</li>
         </ul>
         <ul class="dates">
             <li class="days emptyD" v-for="blank in firstDayOfMonth" :key="blank.index">&nbsp;</li>
-            <li class="days" v-for="date in daysInMonth" :key="date.index" :class="{'current-day': date == initialDate &amp;&amp; month == initialMonth && year == initialYear}">
+            <li class="days" @click="selectDate(date)"  v-for="date in daysInMonth" :key="date.index" :class="{'current-day': date == initialDate &amp;&amp; month == initialMonth && year == initialYear}">
                 <span>{{date}}</span>
            </li>
         </ul>
@@ -38,8 +38,11 @@ export default {
  
   methods:{
       selectDate(day){
-      let date=this.year+'-'+this.month.dateContext.format('MM')+'-'+day
-      this.$emit('selectDate',date)
+        
+          let date=this.year+'-'+ moment().month(this.month).format('MM')+'-'+day
+          console.log(date)
+          this.showCallendarMet()
+          this.$emit('selectDate',date)
 
 
       },
@@ -52,7 +55,7 @@ export default {
         this.daysNum.push(i);
       }
     },
-    addMonth:function(){
+    addMonth(){
       let t=this
       t.dateContext= moment(t.dateContext).add(1, 'month')
      },
@@ -66,7 +69,7 @@ export default {
       let t=this;
       return t.dateContext.format('Y');
     },
-    month: function(){
+    month(){
       let t=this;
       return t.dateContext.format('MMMM')
     },
@@ -118,6 +121,7 @@ export default {
   background: #fff;
   width:200px;
   line-height: 20px;
+   transition:3s ;
 }
 
 h3 {
@@ -177,6 +181,7 @@ i{
   width:100%;
 
 }
+
 .days:nth-of-type(7n+1) {
   color: #ff0000;
    text-shadow: 10px 4px 10px #070707(211, 148, 31); 
@@ -192,7 +197,14 @@ i{
   height:20px;
 }
 .days:hover{
+  cursor: pointer;
   background:rgba(45, 48, 47, 0.089);
+}
+.dates:first-of-type .days{
+  cursor: default;
+}
+.dates:first-of-type .days:hover{
+  background: #fff;
 }
 .emptyD{
   border-color:transparent !important;

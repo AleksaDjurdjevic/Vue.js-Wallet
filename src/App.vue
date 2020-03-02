@@ -5,8 +5,8 @@
       <router-link to="/">Transakcije</router-link> |
       <router-link to="/">Štednja</router-link> |
       <router-link to="/">Statistika</router-link> |
-      <router-link to="/login">Login</router-link> |
-      <router-link to="/registration">Registration</router-link> | 
+      <router-link to="/login">UlogujSe</router-link> |
+      <router-link to="/registration">Registracija</router-link> 
     </div>
     <router-view/>
   </div>

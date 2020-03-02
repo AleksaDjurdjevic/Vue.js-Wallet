@@ -9,7 +9,7 @@
         <button @click="login()">LogIn</button>
       </div>
       <div v-if="$store.state.isLoggedIn">
-        <h1>Hello, {{name}}{{surname}}</h1>   
+        <h1>Hello, {{name}} {{surname}}</h1>   
         <button @click="logout()">LogOut</button>
       </div>
 
@@ -42,8 +42,8 @@ export default {
                 console.log(res.data)
                 console.log('usepsno logovanje')
 
-                sessionStorage.setItem('sid', res.data.sid);
-                sessionStorage.setItem('user', res.data.user); 
+                localStorage.setItem('sid', res.data.sid);
+                localStorage.setItem('user', res.data.user); 
                     
                 this.$store.state.isLoggedIn = true;
 
@@ -60,14 +60,14 @@ export default {
         },
         //mars sam zna sta da uradi kad mu posaljemo sid, treba samo da ga posaljemo
         logout(){
-            axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/login', {         
+            axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/logout', {         
                 sid: sessionStorage.getItem('sid')
             })
             .then(res => {
                 console.log(res.data)
                 this.$store.state.isLoggedIn = false;
-                sessionStorage.removeItem('sid');
-                sessionStorage.removeItem('user');
+                localStorage.removeItem('sid');
+                localStorage.removeItem('user');
                 console.log('usepsno logout')
                 console.log('ovo je iz vuexa isLogedIn ', this.$store.state.isLoggedIn)
             }).catch(err => {

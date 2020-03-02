@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/">Početna</router-link> |
       <router-link to="/">Transakcije</router-link> |
-      <router-link to="/">Štednja</router-link> |
+      <router-link to="/savings">Štednja</router-link> |
       <router-link to="/">Statistika</router-link> |
       <router-link to="/login">UlogujSe</router-link> |
       <router-link to="/registration">Registracija</router-link> 
@@ -12,18 +12,12 @@
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+  
 }
-
-#nav {
-  padding: 30px;
-}
+</script>
+<style scoped>
 
 #nav a {
   font-weight: bold;
@@ -32,5 +26,15 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+::-moz-selection { /* Code for Firefox */
+    color: rgba(238, 238, 238, 0.966);
+    background: rgba(119, 118, 117, 0.6);
+}
+
+::selection {
+    color: rgba(238, 238, 238, 0.966);
+    background: rgba(119, 118, 117, 0.6);
 }
 </style>

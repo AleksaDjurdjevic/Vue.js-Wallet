@@ -24,10 +24,10 @@
     <!-- show all bils -->
     <div class="bills">
      
-      <div class="bill" v-for="acc in accounts" :key="acc.id" @click="setBill(acc)">{{acc.acc_name}}</div> 
+      <div class="bill" v-for="acc in accounts" :key="acc.id" @click="setBill(acc)"><p>{{acc.acc_name}}</p></div> 
       <div class="bill create" @click="showCreateAccDiv(true)"> + </div>
     </div><!-- end bills-->
-  <h1 v-if="isLoggedIn"> Naziv računa:<span class="orange">{{defAcc.acc_name}} </span>  Stanje: <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}}</span> </h1><br>
+  <h1 v-if="$store.state.isLoggedIn"> Naziv računa:<span class="orange">{{defAcc.acc_name}} </span>  Stanje: <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}}</span> </h1><br>
       <p v-if="message">{{message}}</p><p v-if="err" class="err">{{err}}</p>
     <div class="main">
        <div class="transaction">
@@ -68,6 +68,7 @@
     <div class="main2">
       <div  class="transaction2">
         <callendar v-if="showCallendar" class="callendar" v-on:showCallEmit="showCallendarMet($event)" v-on:selectDate="showTransactionByDate($event)" ></callendar>
+       <div class="pickOut3" @click="getTransactions(defAcc.acc_name);"> Transakcije računa </div>
         <div  @click="showCallendar=!showCallendar" class="pickOut3">Prikaz po datumu </div>
       </div> <!-- end transaction2 --> 
     <div class="reverse" >
@@ -93,7 +94,7 @@ import axios from 'axios'
 import {mapState} from 'vuex'
 
 export default {
-  name: 'Transaction',
+  name: 'Home',
   components: {
     'callendar':Callendar
   },
@@ -185,19 +186,21 @@ export default {
      }
     },
     showTransactionByDate(date){
-      console.localStorage(date)
+      console.log(date)
       let sid=localStorage.getItem('sid')
       if(sid){
       axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/transactionViewsAccountByDate',
       {sid:sid, account:this.defAcc.acc_name, date:date})
       .then((response)=>{
         this.allTransaction = response.data.transaction;
+        this.message=response.data.message;
+        this.err=response.data.err;
       });
       }
     },
     checkFormCreateAcc () {
       this.createErrors = [];
-      console.log(!isNaN(this.createSum) && this.createSum!==null)
+      console.log(!isNaN(this.createSum) && this.createSum!==null+ " checkFormCreateAcc")
       if (this.createName && this.createSum ) {
          if(!isNaN(this.createSum) && this.createSum!==null){
           this.createNewAccount()
@@ -331,27 +334,37 @@ export default {
   
 }
 </script>
-<style scoped>
+<style scoped >
 .dashboard{
+  text-align: center;
   position:relative;
   width: 100%;
 }
 .bills{
+  padding:6px 0;
   width:100%;
   display: flex;
   flex-wrap:wrap;
   color:floralwhite;
 }
 .bill{
+
   cursor:pointer;
   font-size:1.2em;
-  line-height:2.8;
+  
   font-weight: 500;
   margin:0.6%;
   width:18%;
   height:60px;
   background-color: rgb(0, 0, 0);
 
+}
+.bill p{
+  margin:0 auto;
+  box-sizing: border-box;
+  line-height:2.8;
+  font-weight: 500;
+  
 }
 .create{
   cursor:pointer;
@@ -450,9 +463,7 @@ select.inputWrite{
  cursor: pointer;
 }
 
-.bills{
-  padding:6px 0;
-}
+
 input:focus{
   border-color: transparent;
   }
@@ -509,7 +520,7 @@ input[type="button"]:active{
     display:flex;
     flex-wrap: wrap;
   
-    flex-direction: column-reverse;
+     flex-direction: column-reverse; 
 
 }
 h1:nth-of-type(2){
@@ -553,12 +564,13 @@ h1 .orange{
 }
 .err{
   color:rgba(255, 0, 0, 0.733);
+  text-shadow: 1.5px 1.5px 1.5px #000000;
 }
 .callendar{
   background:#FFF;
   position :absolute;
   top:70%;
-  left:4%;
+  left:55%;
   z-index: 10;
 }
 </style>

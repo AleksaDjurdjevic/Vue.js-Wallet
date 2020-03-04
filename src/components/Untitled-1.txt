@@ -1,0 +1,20 @@
+,createBuy(){
+      let sid=localStorage.getItem('sid')
+      if(sid){
+        axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/transactionBuy',
+        {sid:sid, acc_id: this.defAcc.acc_id, category: this.categorySelected,tra_amount: this.buySum, tra_description:this.buyDesc  })
+        .then((response)=>{
+              this.getTransactions(this.defAcc.acc_name)
+       
+              this.message= response.data.message
+              this.err=response.data.err
+            if(this.message){
+                  this.defAcc.acc_amount=response.data.amount
+                  this.buyDesc=null
+                  this.buySum=null
+            }
+       });
+
+
+      }
+   },

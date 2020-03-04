@@ -1,10 +1,7 @@
 <template>
   <div class="dashboard" @click="resetMessage">
     <div v-if="createAccDiv" class="createAccDiv" >
-    <!--      let acc_type= param('acc_type','');
-          let acc_amounth=param('acc_amounth:this.createSum','');
-          let acc_name=param('acc_name : this.createName','');     -->
-          <form class="createAccDivChaild">
+       <form class="createAccDivChaild">
            
             <h2>Kreiraj novi račun <span class="exit" @click="showCreateAccDiv(false)"> x </span> </h2>
                 <label>Izaberi tip računa</label><br>
@@ -19,6 +16,7 @@
           <p v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
         </form><!-- end form createAccDivChaild --> 
     </div><!-- end createAccDiv -->
+    
 
     <h1>where the money goes??? </h1>
     <!-- show all bils -->
@@ -79,6 +77,7 @@
         <div>Iznos:<span class="orange"> {{acc.tra_amount}}</span> </div>
         <div>Opis:<span class="orange"> {{acc.tra_description}}</span> </div>
         <div>Datum:<span class="orange"> {{formateDate(acc.tra_date)}}</span></div>
+        <div class="cancelTransaction" @click="cancelTransaction(acc.tra_id)">Opozovi</div>
       </div>
     </div>
     </div> <!-- end main2 -->
@@ -160,7 +159,7 @@ export default {
     },
     getAccounts(){
       if(localStorage.getItem('sid')){
-        axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/getAccounts',{sid:localStorage.getItem('sid')})
+        axios.post('http://053n122.mars-e1.mars-hosting.com/api/get/getAccounts/all',{sid:localStorage.getItem('sid')})
         .then((response)=>{
           this.accounts=response.data.data;
           console.log(this.accounts);
@@ -311,6 +310,24 @@ export default {
      }
 
 
+   },
+   cancelTransaction(tra_id){
+      let sid=localStorage.getItem('sid');
+      
+     if(sid){
+       axios.post('http://053n122.mars-e1.mars-hosting.com/api/delete/cancelTransactionn',
+       {sid:sid, acc_id:this.defAcc.acc_id, tra_id:tra_id})
+       .then((response)=>{
+         this.message=response.data.message;
+         this.err=response.data.err;
+         
+         if(this.message!='' ){
+           this.getTransactions(this.defAcc.acc_name)
+          this.defAcc.acc_amount=response.data.acc_amount
+         
+         }
+       });
+     }
    },
       setBill(bill){
         this.defAcc=bill
@@ -575,5 +592,8 @@ h1 .orange{
   top:70%;
   left:55%;
   z-index: 10;
+}
+.cancelTransaction:hover{
+  cursor: pointer;
 }
 </style>

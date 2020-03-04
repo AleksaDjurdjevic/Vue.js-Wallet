@@ -1,8 +1,12 @@
 <template>
   <div class="userProfile">
     <div class="profile-img">
-        <img v-bind:src="imgUrl" alt="profilePicture">
-    </div>  
+      <img :src="readPic()" alt="profilePicture" />
+    </div>
+    <div class="picEdit">
+      <label for="myfile">Select a new profile photo:</label>
+      <input type="file" @change="photoData($event)" />
+    </div>
     <div>
       Ime:
       <input type="text" v-model="computedName" v-bind:placeholder="name" />
@@ -20,7 +24,7 @@
       <input type="password" v-model="computedPassword" v-bind:placeholder="password" />
     </div>
     <div>
-        <button type="submit" @click="update()">Potvrdi</button>
+      <button type="submit" @click="update()">Potvrdi</button>
     </div>
   </div>
 </template>
@@ -34,13 +38,15 @@ export default {
       surname: null,
       email: null,
       password: null,
-      imgUrl: null,
+      id: localStorage.getItem("user"),
+      img: null,
 
       nameChanged: false,
       surnameChanged: false,
       emailChanged: false,
-      passwordChanged: false,  
-    }
+      passwordChanged: false,
+      imgChanged: false
+    };
   },
   computed: {
     computedName: {
@@ -80,54 +86,80 @@ export default {
         this.passwordChanged = true;
         this.password = newVal;
       }
-    }
+    },
+    
+  },
+  mounted() {
+    this.readPic();
   },
   methods: {
+    photoData(e) {
+      this.img = e.target.files[0];
+      console.log('kad se klikne na dugmeeeee',this.img = e.target.files[0]);
+      
+      console.log("slika", this.img);
+    },
+    
     update() {
+      let formData = new FormData();
+
       let updateParams = {
         sid: localStorage.getItem("sid")
       };
 
+      formData.append("sid", updateParams.sid);
+
       if (this.nameChanged) {
         updateParams.usr_name = this.name;
+        formData.append("usr_name", updateParams.usr_name);
       }
       if (this.surnameChanged) {
         updateParams.usr_surname = this.surname;
+        formData.append("usr_surname", updateParams.usr_surname);
       }
       if (this.emailChanged) {
         updateParams.usr_email = this.email;
+        formData.append("usr_email", updateParams.usr_email);
       }
       if (this.passwordChanged) {
         updateParams.usr_password = this.password;
+        formData.append("usr_password", updateParams.usr_password);
+      }
+      if (this.img != null) {
+        console.log('registrovana promena slike');
+        
+        updateParams.usr_img = this.img;
+        formData.append("usr_img", updateParams.usr_img);
       }
       console.log("Update params", updateParams);
 
-      //komunikacija sa api-jem
       axios
-        .patch("http://053n122.mars-e1.mars-hosting.com/api/wallet/updateUser", {
-          sid: updateParams.sid,
-          usr_username: updateParams.usr_name,
-          usr_surname: updateParams.usr_surname,
-          usr_email: updateParams.usr_email,          
-          usr_password: updateParams.usr_password,
-        })
+        .patch(
+          "http://053n122.mars-e1.mars-hosting.com/api/wallet/updateUser",
+          formData, {headers : {'Content-Type': 'multipart/formdata'}}
+        )
         .then(res => {
-          console.log("korisnik je upisan u bazu", res);
-          this.name = res.data.info[0].usr_name;
-          this.imgUrl = res.data.info[0].usr_img;  
+          console.log(`korisnik je upisan u bazu, status: ${res.data.message}`);
         })
         .catch(err => {
-          console.log(err, "greska pri abdejtovanju podataka");
+          console.log(`greska pri abdejtovanju podataka ${err.message}`);
         });
 
-        //reset params
+      //reset params
         (this.name = ""),
         (this.surname = ""),
         (this.email = ""),
-        (this.password = "")
+        (this.password = "");
+    },
+    readPic() {
+      let url = "";
+      url =
+        "http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic/" +
+        this.id +
+        "/avatar";
+      return url;
     }
-  },
-
+  }
 };
 </script>
 
@@ -144,8 +176,9 @@ export default {
   width: 30%;
   margin: 5px;
 }
-.profile-img{
-    height: 100px;
-    width: 100px;
+.profile-img img {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
 }
 </style>

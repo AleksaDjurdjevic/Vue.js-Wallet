@@ -169,7 +169,6 @@ export default {
         }
     },
     mounted(){
-        localStorage.setItem('sid', 'lufHZBnH3zIl17uiXlOfcIp7MOhrNZ0k');
         this.getSavings();
     }
 }

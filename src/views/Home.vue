@@ -438,11 +438,8 @@ export default {
 .orange{
   color:rgb(250, 174, 33) !important;
   text-shadow: 1.5px 1.5px 1.5px #000000; 
-
-
 }
 
-  
 
 .black{
   background:rgb(234, 236, 236);

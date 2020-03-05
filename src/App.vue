@@ -5,11 +5,12 @@
       <router-link to="/transaction">Transakcije</router-link> |
       <router-link to="/savings">Štednja</router-link> |
       <router-link to="/statistics">Statistika</router-link> |
-      <router-link to="/login" v-if="!$store.state.isLoggedIn">UlogujSe</router-link>
-        <span v-if="!$store.state.isLoggedIn"> | </span>
+
+      <router-link to="/login" v-if='!checkSid()'>UlogujSe</router-link>
+        <span v-if="!checkSid()"> | </span>
 
       <!--Ovo se prikazuje kad je user ulogovan -->
-      <div class="dropdown" v-if="$store.state.isLoggedIn">
+      <div class="dropdown" v-if="checkSid()">
         <button class="dropbtn">Uros Dimitrijevic</button>
         <div class="dropdown-content">
           <router-link to="/profile">Profil</router-link>
@@ -25,7 +26,26 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data(){
+    return{
+    }
+  },
+  beforeUpdate(){
+    this.checkSid()
+  },
+  methods: {
+    checkSid(){
+      let sid = localStorage.getItem('sid');
+      if(sid === null || sid === undefined){
+        this.$store.state.isLoggedIn = false;
+        return false; //ako nema sid
+      }
+      this.$store.state.isLoggedIn = true;
+      return true; //ako ima sid
+    }
+  } 
+};
 </script>
 <style scoped>
 .nav {

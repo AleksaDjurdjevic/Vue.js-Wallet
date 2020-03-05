@@ -33,10 +33,12 @@ export default {
         .then(res => {
           console.log(res.data);
           console.log("usepsno logovanje");
-
+          
           localStorage.setItem("sid", res.data.sid);
           localStorage.setItem("user", res.data.user);
-
+          
+          console.log("Ovo je local storage",localStorage.getItem('sid'));
+          
           this.$store.state.isLoggedIn = true;
 
           this.name = res.data.name;

@@ -6,6 +6,9 @@ import Login from '@/views/Login.vue'
 import Registration from '@/views/Registration.vue'
 import Profile from '@/views/Profile.vue'
 import LogOut from '@/views/LogOut.vue'
+import Transaction from '@/views/Transaction.vue'
+import Statistics from '@/views/Statistics.vue'
+
 
 Vue.use(VueRouter)
 
@@ -38,7 +41,19 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/transaction',
+    name: 'Transaction',
+    component: Transaction
   }
+  ,
+  {
+    path: '/statistics',
+    name: 'Statistics',
+    component: Statistics
+  }
+  
 ]
 
 const router = new VueRouter({

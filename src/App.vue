@@ -2,9 +2,9 @@
   <div class="app">
     <div class="nav">
       <router-link to="/">Početna</router-link> |
-      <router-link to="/">Transakcije</router-link> |
+      <router-link to="/transaction">Transakcije</router-link> |
       <router-link to="/savings">Štednja</router-link> |
-      <router-link to="/">Statistika</router-link> |
+      <router-link to="/statistics">Statistika</router-link> |
       <router-link to="/login" v-if="!$store.state.isLoggedIn">UlogujSe</router-link>
         <span v-if="!$store.state.isLoggedIn"> | </span>
 

@@ -41,7 +41,7 @@
       <div class="bill create" @click="showCreateAccDiv(true)">+</div>
     </div>
     <!-- end bills-->
-    <h1 v-if="$store.state.isLoggedIn">
+    <h1 v-if="this.isLoggedIn">
       Naziv računa:
       <span class="orange">{{defAcc.acc_name}}</span> Stanje:
       <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}}</span>
@@ -205,7 +205,7 @@ export default {
   },
   methods: {
      getParamsForChart(acc_name) {
-     
+       console.log('------------------------------'+ acc_name);
      
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/wallet/statistics", {
           sid: localStorage.getItem("sid"),
@@ -220,7 +220,8 @@ export default {
     setDefAcc(acc) {
       this.$store.dispatch("changeDefAcc", acc);
     },
-    setParamsForChart(params){
+    setParamsForChart(params){ 
+    
       this.$store.dispatch('paramsForChartAct',params);
     },
     formateDate(date) {
@@ -262,8 +263,8 @@ export default {
           )
           .then(response => {
             this.accounts = response.data.data;
-            console.log(this.accounts);
-            if (this.accounts !== undefined) {
+            this.message =response.data.message
+          if (this.accounts !== undefined) {
               this.defAcc = this.accounts[0];
               this.setDefAcc(this.accounts[0]);
               this.getTransactions(this.defAcc.acc_name);
@@ -271,6 +272,7 @@ export default {
             }
           });
       }
+      // hendlujemo ako nema sid 
     },
     getTransactions(acc_name) {
       if (acc_name !== "" && localStorage.getItem("sid")) {
@@ -331,7 +333,7 @@ export default {
           .post(
             "http://053n122.mars-e1.mars-hosting.com/api/wallet/createAccount",
             {
-              sid: sid,
+              sid: localStorage.getItem("sid"),
               acc_type: this.createSelected,
               acc_amounth: this.createSum,
               acc_name: this.createName
@@ -387,6 +389,7 @@ export default {
             this.err = response.data.err;
             if (this.message) {
               this.defAcc.acc_amount = response.data.amount;
+               this.refreshChart(this.defAcc.acc_name);
               this.buyDesc = null;
               this.buySum = null;
             }
@@ -427,6 +430,7 @@ export default {
             this.err = response.data.err;
             if (this.message) {
               this.defAcc.acc_amount = response.data.amount;
+              this.refreshChart(this.defAcc.acc_name);
               this.addDesc = null;
               this.addSum = null;
             }
@@ -449,15 +453,18 @@ export default {
             if (this.message != "") {
               this.getTransactions(this.defAcc.acc_name);
               this.defAcc.acc_amount = response.data.acc_amount;
+              this.refreshChart(this.defAcc.acc_name);
             }
           });
       }
     },
     setBill(bill) {
+      //this.setParamsForChartTrue=false
       this.defAcc = bill;
       this.setDefAcc(bill);
       this.getTransactions(this.defAcc.acc_name);
       this.setParamsForChart(this.defAcc.acc_name);
+
     },
     showCreateAccDiv(x) {
       this.createAccDiv = x;
@@ -468,7 +475,20 @@ export default {
     resetMessage() {
       this.message = null;
       this.err = null;
+    },
+    refreshChart(newValue){
+      this.setParamsForChartTrue=false
+        this.getParamsForChart(newValue);
+        this.setParamsForChartTrue=true
     }
+  },
+  watch:{
+      defAcc(newValue, oldValue){
+          console.log(`old value- ${oldValue.acc_name}  newValue- ${newValue.acc_name}`);
+       if(oldValue.acc_name !== undefined){
+         this.refreshChart(newValue.acc_name);
+       } 
+      }
   },
   computed: {
     ...mapState(["isLoggedIn"]),

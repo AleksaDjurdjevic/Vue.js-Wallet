@@ -5,15 +5,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-<<<<<<< HEAD
     isLoggedIn:false,
     isRegistrated: false,
     defAccV:null,
     paramsForChart:[]
-=======
-    isLoggedIn:  false,
-    isRegistrated: false
->>>>>>> 284976aae2a33289a0f606970e59174b99ac6d17
     },
   mutations: {
     CHANGE_IS_LOGGED_IN(state,payload){

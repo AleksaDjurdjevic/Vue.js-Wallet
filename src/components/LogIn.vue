@@ -54,13 +54,9 @@ export default {
           console.log("pogresno uneti email ili pass");
         });
 
-<<<<<<< HEAD
-        
-=======
         // this.$router.push({
         //   name: 'Home'
         // })
->>>>>>> 284976aae2a33289a0f606970e59174b99ac6d17
     },
     
     

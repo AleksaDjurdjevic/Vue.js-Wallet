@@ -4,7 +4,7 @@
             <p class='span-details'>Cilj: {{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</p>
             <p class='span-details'>Do sad uplaceno: {{singleSaving.sav_amount_accumulated}}{{" " + singleSaving.acc_type_name}}</p>
             <p class='span-details'>Preostala kolicina novca za uplatu: {{singleSaving.leftover_amount}}{{" " + singleSaving.acc_type_name}}</p>
-            <p class='span-details'>Mesecna rata za preostali period: {{singleSaving.sav_month_rate}}</p>
+            <p class='span-details'>Mesecna rata za preostali period: {{singleSaving.sav_month_rate}}{{" " + singleSaving.acc_type_name}}</p>
             
             <div class="accounts" v-if = "accounts.length>1">
                 <div class="each-account" 

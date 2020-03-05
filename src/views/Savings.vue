@@ -51,7 +51,6 @@
         <!-- Div pri pregledu uplata -->
         <savings-view-payments v-if ="viewingPayments"
             :sav_id = "sav_id"
-            :savings = "savings"
             @get-savings = "getSavings"
             @viewing-payments = "viewingPayments = false"
         />

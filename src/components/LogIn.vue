@@ -45,15 +45,16 @@ export default {
             "ovo je iz vuexa isLogedIn ",
             this.$store.state.isLoggedIn
           );
+          this.$router.push({
+            name: 'Home'
+          })
         })
         .catch(err => {
           console.log(err);
           console.log("pogresno uneti email ili pass");
         });
 
-        this.$router.push({
-          name: 'Home'
-        })
+        
     },
     
     

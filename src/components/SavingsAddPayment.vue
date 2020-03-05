@@ -16,7 +16,7 @@
                     <p>{{account.acc_amount + " " + account.acc_type_name}}</p>
                 </div>
             </div>
-            <div class="accounts" v-else>
+            <div class="accounts" v-if = "accounts.length==1">
                 <p>{{accounts[0].acc_name}}</p>
                 <p>{{accounts[0].acc_amount + " " + accounts[0].acc_type_name}}</p>
             </div>
@@ -61,11 +61,13 @@ export default {
                 if (this.accounts.length == 1){
                     this.acc_id = this.accounts[0].acc_id;
                     this.acc_name = this.accounts[0].acc_name;
-                    console.log(this.accounts);
                 }
-            })
-            
-            
+            }) 
+        },
+        setAcc(account){
+            this.acc_id = account.acc_id;
+            this.acc_name = account.acc_name;
+            this.error = '';
         },
         makePayment(){
             if(this.acc_id == ""){
@@ -92,7 +94,6 @@ export default {
     created(){
         this.getSingleSaving();
         this.getAccounts();
-        console.log(this.singleSaving, this.accounts);
     },
 }
 </script>

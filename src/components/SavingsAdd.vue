@@ -59,11 +59,11 @@ export default {
                     savPeriod: this.newSavPeriod,
                     accTypeId: this.type
                 }).then(()=>{
-                    this.$emit('get-savings');
                     this.newSavAmount = "";
                     this.newSavDesc = "";
                     this.newSavPeriod = "";
                     this.$emit('adding-saving');
+                    this.$emit('get-savings');
                 })
             } 
         }

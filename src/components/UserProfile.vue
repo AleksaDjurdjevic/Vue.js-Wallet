@@ -157,6 +157,7 @@ export default {
         "http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic/" +
         this.id +
         "/avatar";
+      console.log('ovo je slikaaaaa ', url)  
       return url;
     }
   }

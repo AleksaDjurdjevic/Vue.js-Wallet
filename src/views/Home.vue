@@ -166,6 +166,7 @@ export default {
     callendar: Callendar,
     ChartCircle: ChartCircle
   },
+  
   data() {
     return {
       selectTransaction: true,
@@ -205,7 +206,6 @@ export default {
   },
   methods: {
      getParamsForChart(acc_name) {
-     
      
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/wallet/statistics", {
           sid: localStorage.getItem("sid"),

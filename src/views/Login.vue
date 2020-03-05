@@ -1,6 +1,7 @@
 <template>
   <div class="login">
-    <LogIn />  
+    <LogIn /> 
+ 
   </div>  
 </template>
 
@@ -9,7 +10,7 @@ import LogIn from '@/components/LogIn';
 export default {
   components: {
     LogIn
-  }
+  }, 
 }
 </script>
 

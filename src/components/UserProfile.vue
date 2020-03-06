@@ -1,7 +1,8 @@
 <template>
   <div class="userProfile">
     <div class="profile-img">
-      <img :src="readPic()" alt="profilePicture" />
+      <img v-if="url === null" src="../assets/placeholder-img.jpg" alt="">
+      <img v-else :src="readPic()" alt="profilePicture" />
     </div>
     <div class="picEdit">
       <label for="myfile">Select a new profile photo:</label>
@@ -40,12 +41,14 @@ export default {
       password: null,
       id: localStorage.getItem("user"),
       img: null,
+      url: "",
 
       nameChanged: false,
       surnameChanged: false,
       emailChanged: false,
       passwordChanged: false,
-      imgChanged: false
+      imgChanged: false,
+
     };
   },
   computed: {
@@ -140,25 +143,41 @@ export default {
         )
         .then(res => {
           console.log(`korisnik je upisan u bazu, status: ${res.data.message}`);
+          console.log('res data',res.data.img_value[0].usr_img); //vraca null ako nema slike
+          
         })
         .catch(err => {
           console.log(`greska pri abdejtovanju podataka ${err.message}`);
         });
-
+        
       //reset params
         (this.name = ""),
         (this.surname = ""),
         (this.email = ""),
         (this.password = "");
     },
+    
     readPic() {
-      let url = "";
-      url =
-        "http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic/" +
-        this.id +
-        "/avatar";
-      console.log('ovo je slikaaaaa ', url)  
-      return url;
+
+      axios
+        .post(
+          "http://053n122.mars-e1.mars-hosting.com/api/wallet/checkPic",{
+            sid: localStorage.getItem("sid")
+          }
+        )
+        .then(res => {
+          if(res.data.img_value[0].usr_img === null){
+            this.url = null; 
+            return this.url;
+          } 
+        })
+        .catch(err => {
+          console.log(`greskaaaaaaaaaaa ${err.message}`);
+          
+        });
+      //ako ima slika
+      this.url ="http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic/" + this.id + "/avatar";
+      return this.url;
     }
   }
 };

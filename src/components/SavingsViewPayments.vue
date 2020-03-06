@@ -56,7 +56,8 @@ export default {
             for (let i = 0; i<this.payments.length; i++){
                 if (this.payments[i].sav_pay_date !== date){
                     this.payments.splice(i, 1);
-                    i = i - 1;                }
+                    i = i - 1;                
+                }
             }
         }
     },

@@ -17,6 +17,7 @@
         <span @click = "resetPayments">Nazad</span>
         <calendar
             @selectDate = 'getPaymentsByDate'
+            @showCallEmit = "showingCalendar = false"
         />
       </div>
       

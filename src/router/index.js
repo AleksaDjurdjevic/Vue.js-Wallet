@@ -6,7 +6,7 @@ import Login from '@/views/Login.vue'
 import Registration from '@/views/Registration.vue'
 import Profile from '@/views/Profile.vue'
 import LogOut from '@/views/LogOut.vue'
-import Transaction from '@/views/Transaction.vue'
+import Transactions from '@/views/Transactions.vue'
 import Statistics from '@/views/Statistics.vue'
 
 
@@ -43,9 +43,9 @@ const routes = [
     component: Profile
   },
   {
-    path: '/transaction',
-    name: 'Transaction',
-    component: Transaction
+    path: '/transactions',
+    name: 'Transactions',
+    component: Transactions
   }
   ,
   {

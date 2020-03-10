@@ -2,7 +2,7 @@
   <div class="app">
     <div class="nav">
       <router-link to="/">Početna</router-link> |
-      <router-link to="/transaction">Transakcije</router-link> |
+      <router-link to="/transactions">Transakcije</router-link> |
       <router-link to="/savings">Štednja</router-link> |
       <router-link to="/statistics">Statistika</router-link> |
 

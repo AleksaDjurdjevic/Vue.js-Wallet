@@ -56,10 +56,6 @@ export default {
       series.hiddenState.properties.endAngle = 90;
 
       this.chart.legend = new am4charts.Legend();
-    },
-    setNewValue(){
-
-
     }
   },
   mounted() {

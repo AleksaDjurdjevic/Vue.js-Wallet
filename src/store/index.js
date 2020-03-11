@@ -8,7 +8,8 @@ export default new Vuex.Store({
     isLoggedIn: false,
     isRegistrated: false,
     defAccV: null,
-    paramsForChart: []
+    paramsForChart: [],
+    allTransactionVuex:[]
   },
   mutations: {
     CHANGE_IS_LOGGED_IN(state, payload) {
@@ -19,6 +20,10 @@ export default new Vuex.Store({
     },
     PARAMS_FOR_CHART_MUT(state, payload) {
       state.paramsForChart = payload
+    },
+    
+    ALL_TRANSACTION_VUEX(state, payload){
+      state.allTransactionVuex=payload
     }
   },
   actions: {
@@ -30,6 +35,10 @@ export default new Vuex.Store({
     },
     paramsForChartAct(store, payload) {
       store.commit('PARAMS_FOR_CHART_MUT', payload)
+    },
+   
+    allTransactionVuexAct(store, payload){
+      store.commit('ALL_TRANSACTION_VUEX', payload)
     }
   },
   modules: {

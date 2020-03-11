@@ -35,7 +35,7 @@
     <h1>where the money goes???</h1>
     <!-- show all bils -->
     <div class="bills">
-      <div class="bill" v-for="acc in accounts" :key="acc.id" @click="setBill(acc)">
+      <div class="bill" v-for="acc in accounts" :key="acc.acc_id" @click="setBill(acc)">
         <p>{{acc.acc_name}}</p>
       </div>
       <div class="bill create" @click="showCreateAccDiv(true)">+</div>
@@ -114,6 +114,7 @@
           class="callendar"
           v-on:showCallEmit="showCallendarMet($event)"
           v-on:selectDate="showTransactionByDate($event)"
+          v-on:selectMonthYear="showTransactionByDate($emit)"
         ></callendar>
         <div class="pickOut3" @click="getTransactions(defAcc.acc_name);">Transakcije računa</div>
         <div @click="showCallendar=!showCallendar" class="pickOut3">Prikaz po datumu</div>
@@ -205,6 +206,7 @@ export default {
     await this.getCategory();
   },
   methods: {
+    //call in  get accounts and setBill - set value for chart- for default bill 
      getParamsForChart(acc_name) {
      
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/wallet/statistics", {
@@ -217,6 +219,7 @@ export default {
           
         });
     },
+    // set Default bill in vuex
     setDefAcc(acc) {
       this.$store.dispatch("changeDefAcc", acc);
     },
@@ -266,7 +269,8 @@ export default {
             this.message =response.data.message
           if (this.accounts !== undefined) {
               this.defAcc = this.accounts[0];
-              this.setDefAcc(this.accounts[0]);
+              this.setDefAcc(this.accounts[0]); // set default bill in vuex
+              localStorage.setItem('setDefAcc',this.defAcc.acc_name)
               this.getTransactions(this.defAcc.acc_name);
               this.getParamsForChart(this.defAcc.acc_name)
             }
@@ -283,7 +287,7 @@ export default {
           )
           .then(response => {
             this.allTransaction = response.data.transaction;
-
+            this.$store.dispatch('allTransactionVuexAct',response.data.transaction);
             console.log(response.data.transaction);
           });
       }
@@ -458,10 +462,11 @@ export default {
           });
       }
     },
+    // set default bill on click and all value for that bill
     setBill(bill) {
-      //this.setParamsForChartTrue=false
+      
       this.defAcc = bill;
-      this.setDefAcc(bill);
+      this.setDefAcc(bill); // set new account as default in vuex
       this.getTransactions(this.defAcc.acc_name);
       this.setParamsForChart(this.defAcc.acc_name);
 
@@ -518,6 +523,7 @@ export default {
   width: 18%;
   height: 60px;
   background-color: rgb(0, 0, 0);
+  
 }
 .bill p {
   margin: 0 auto;
@@ -603,7 +609,7 @@ export default {
   text-shadow: 1.5px 1.5px 1.5px #000000;
 }
 .orange {
-  color: rgb(250, 174, 33) !important;
+  color: #17a2b8 !important;
   text-shadow: 1.5px 1.5px 1.5px #000000;
 }
 
@@ -616,10 +622,11 @@ export default {
   padding: 1%;
   margin-bottom: 2%;
   width: 40%;
-  background-color: rgb(231, 226, 219);
+  background-color: rgb(255, 255, 255);
   border-color: rgb(196, 188, 188);
 }
 select.inputWrite {
+  
   width: 42.5%;
   border: inset 2px rgb(196, 188, 188);
 }
@@ -628,6 +635,7 @@ select.inputWrite {
 }
 
 input:focus {
+   background-color: rgb(234, 236, 236);
   border-color: transparent;
 }
 
@@ -700,11 +708,12 @@ h1 .orange {
   width: 100%;
   height: 100%;
   background: #000000;
+ 
   opacity: 0.7;
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 100;
+  z-index: 100; 
 }
 .createAccDivChaild {
   position: relative;

@@ -15,8 +15,5 @@ export default {
 </script>
 
 <style>
-  .login{
-    margin-top: 50px;
-    background-color:azure; 
-  }
+
 </style>

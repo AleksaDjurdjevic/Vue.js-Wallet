@@ -29,15 +29,15 @@ export default {
         .catch(err => {
           console.log("nesto ne valja", err);
         });
-      (this.email = null),
-        (this.password = null),
-        (this.name = null),
-        (this.$store.state.isLoggedIn = false);
-      this.$store.state.isRegistrated = false;
+        this.email = null,
+        this.password = null,
+        this.name = null,
+        this.$store.state.isLoggedIn = false;
+        this.$store.state.isRegistrated = false;
 
-    //   this.$router.push({
-    //       name: 'Home'
-    //   })
+        this.$router.push({
+            name: 'Login'
+        })
     }
   }
 };

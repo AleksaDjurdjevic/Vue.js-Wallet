@@ -36,7 +36,7 @@
       <!-- Tabela -->
       <table class="main-table" v-if = "transactions.length>0">
         <tr>
-          <input type="checkbox">
+          <input type="checkbox" :value = "transactions">
           <th @click = "transactionSortBy('tra_date')">Datum <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
           <th @click = "transactionSortBy('acc_name')">Naziv Racuna <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
           <th @click = "transactionSortBy('tra_type_name')">Tip transakcije <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
@@ -45,7 +45,7 @@
           <th @click = "transactionSortBy('tra_description')">Opis <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
         </tr>
         <tr class="" v-for = "tr in transactions" :key = "tr.tra_id">
-          <input type="checkbox">
+          <input type="checkbox" :value = "tr.tra_id" v-model="selected">
           <td>{{tr.tra_date}}</td>
           <td>{{tr.acc_name}}</td>
           <td>{{tr.tra_type_name}}</td>
@@ -71,6 +71,7 @@ export default {
       accounts: [],
       allTransactions: [],
       transactions: [],
+      selected: '',
       fromDate: '',
       toDate: '',
       targetInput: null,
@@ -177,6 +178,13 @@ export default {
       }
     }
   },
+  // computed: {
+  //   selectAll: {
+  //     get: {
+
+  //     }
+  //   }
+  // },
   mounted(){
     this.getAccounts();
     this.getTransactions();
@@ -188,7 +196,6 @@ export default {
 .transactions{
   display:flex;
   margin: 50px auto;
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
 }
 .aside{

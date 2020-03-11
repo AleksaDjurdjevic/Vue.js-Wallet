@@ -56,23 +56,31 @@
         />
 
         <!-- Sort -->
-        <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort">
         <label for="sort1">Po cilju</label>
         <br>
-        <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort">
         <label for="sort2">Po uplacenom iznosu</label>
         <br>
-        <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort">
         <label for="sort3">Po periodu</label>
         <br>
-        <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort">
         <label for="sort4">Po preostalom iznosu</label>
         <br>
-        <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort">
         <label for="sort5">Po uplatama</label>
         <br>
-        <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort">
         <label for="sort6">Po mesecnoj rati</label>
+
+        <div class="sort-order">
+            <input type="radio" id="asc" value = "asc" v-model="sortOrder" @change = "sortOrder = 'asc'">
+            <label for="asc">Od najnizeg ka najvecem</label>
+            <br>
+            <input type="radio" id="desc" value = "desc" v-model="sortOrder" @change = "sortOrder = 'desc'">
+            <label for="desc">Od najveceg ka najnizem</label>
+        </div>
     </div>
 </template>
 
@@ -92,7 +100,8 @@ export default {
             viewingPayments: false,
             sav_id: '',
             error: '',
-            property: null
+            property: null,
+            sortOrder: null
         }
     },
     components: {
@@ -102,11 +111,11 @@ export default {
         "savings-view-payments": SavingsViewPayments
     },
     methods: {
-        savingSort(a){
+        savingSort(){
             if (this.savings !== []) {
-                if(a == 'asc'){
+                if(this.sortOrder == 'asc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? 1 : -1);
-                }else if(a == 'desc'){
+                }else if(this.sortOrder == 'desc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? -1 : 1);
                 }
             } 
@@ -205,6 +214,9 @@ export default {
 }
 .each-account{
     margin: 10px;
+}
+.sort-order{
+    margin-top: 30px;
 }
 
 </style>

@@ -9,7 +9,6 @@ import LogOut from '@/views/LogOut.vue'
 import Transaction from '@/views/Transaction.vue'
 import Statistics from '@/views/Statistics.vue'
 
-
 Vue.use(VueRouter)
 
 const routes = [

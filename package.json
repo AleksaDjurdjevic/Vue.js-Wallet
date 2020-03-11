@@ -10,6 +10,8 @@
   "dependencies": {
     "@amcharts/amcharts4": "^4.9.5",
     "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.6.1",
     "core-js": "^3.6.4",
     "moment": "^2.24.0",
     "vue": "^2.6.11",

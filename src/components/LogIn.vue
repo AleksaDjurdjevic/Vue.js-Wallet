@@ -1,13 +1,20 @@
 <template>
-  <div class="bla">
-    <div v-if="!$store.state.isLoggedIn">
-      <h1>Login</h1>
-      <label for="emial">Unesite email</label>
-      <input type="email" placeholder="Insert email.." v-model="email" />
-      <label for="password">IUnesite password</label>
-      <input type="password" placeholder="Insert password.." v-model="password" />
-      <button @click="login()">LogIn</button>
+<div class="wrapper" >
+  <div class="login" >
+    <div class="bla">
+      <div v-if="!$store.state.isLoggedIn">
+        <h1>Login</h1>
+        <input type="email" placeholder="Unesite email.." v-model="email" />
+        <input type="password" placeholder="Unesite sifru.." v-model="password" />
+        <button @click="login()">LogIn</button>
+        <p>Niste se registrovali? <router-link to="/registartion">Registruj se.</router-link></p>
+      </div>
     </div>
+  </div>
+  
+
+ 
+
   </div>
 </template>
 
@@ -18,9 +25,7 @@ export default {
     return {
       email: null,
       password: null,
-      rolName: "",
       name: null,
-      surname: null
     };
   },
   methods: {
@@ -31,22 +36,15 @@ export default {
           password: this.password
         })
         .then(res => {
-          console.log(res.data);
           console.log("usepsno logovanje");
           
           localStorage.setItem("sid", res.data.sid);
           localStorage.setItem("user", res.data.user);
           
-          console.log("Ovo je local storage",localStorage.getItem('sid'));
-          
           this.$store.state.isLoggedIn = true;
-
           this.name = res.data.name;
           this.surname = res.data.surname;
-          console.log(
-            "ovo je iz vuexa isLogedIn ",
-            this.$store.state.isLoggedIn
-          );
+
           this.$router.push({
             name: 'Home'
           })
@@ -57,7 +55,7 @@ export default {
         });
 
         // this.$router.push({
-        //   name: 'Home'
+        //   name: '/login'
         // })
     },
     
@@ -66,8 +64,8 @@ export default {
 };
 </script>
 
-<style scoped>
-h1 {
+<style scoped >
+ h1 {
   margin-bottom: 35px;
 }
 
@@ -83,9 +81,6 @@ input[type="password"] {
   margin-bottom: 15px;
 }
 
-label {
-  font-weight: bold;
-}
 
 button {
   width: 40%;
@@ -97,17 +92,39 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  margin-top: 20px;
 }
 
 button:hover {
   background-color: #9999ff;
 }
+.wrapper{
+  
+  display: flex;
+  justify-content: center;
+  background-color: #f5faff;
+  height: 100vh;
+}
 
+.login{
+  display: flex;
+  border: 1px solid black;
+  width: 25%;
+  margin-top: auto;
+  margin-bottom: auto;
+  background-color: white;
+}
 .bla {
   border-radius: 5px;
   padding: 20px;
-  width: 20%;
-  margin-left: 40%;
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 0;
 }
+.bla p{
+  margin-top: 30px;
+} 
+
+
 </style>
 

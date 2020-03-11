@@ -158,14 +158,12 @@ export default {
     },
     
     readPic() {
-
-      axios
-        .post(
-          "http://053n122.mars-e1.mars-hosting.com/api/wallet/checkPic",{
+      //ako nema slika
+      axios.post("http://053n122.mars-e1.mars-hosting.com/api/wallet/checkPic",
+          {
             sid: localStorage.getItem("sid")
-          }
-        )
-        .then(res => {
+          })
+          .then(res => {
           if(res.data.img_value[0].usr_img === null){
             this.url = null; 
             return this.url;

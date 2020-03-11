@@ -23,6 +23,7 @@
 
 <script>
 import moment from  'moment'
+
 export default {
   name: 'Callendar',
   data(){
@@ -40,9 +41,8 @@ export default {
       selectDate(day){
         
           let date=this.year+'-'+ moment().month(this.month).format('MM')+'-'+day
-          console.log(date)
           this.showCallendarMet()
-          this.$emit('selectDate',date)
+          this.$emit('selectDate', date)
 
 
       },

@@ -3,6 +3,11 @@ import VueRouter from 'vue-router'
 import Savings from '../views/Savings.vue'
 import Home from '../views/Home.vue'
 import Login from '@/views/Login.vue'
+import Registration from '@/views/Registration.vue'
+import Profile from '@/views/Profile.vue'
+import LogOut from '@/views/LogOut.vue'
+import Transactions from '@/views/Transactions.vue'
+import Statistics from '@/views/Statistics.vue'
 
 
 Vue.use(VueRouter)
@@ -21,7 +26,34 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/registartion',
+    name: 'Registration',
+    component: Registration
+  },
+  {
+    path: '/logOut',
+    name: 'LogOut',
+    component: LogOut,
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile
+  },
+  {
+    path: '/transactions',
+    name: 'Transactions',
+    component: Transactions
   }
+  ,
+  {
+    path: '/statistics',
+    name: 'Statistics',
+    component: Statistics
+  }
+  
 ]
 
 const router = new VueRouter({
@@ -29,5 +61,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+
 
 export default router

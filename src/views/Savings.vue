@@ -5,112 +5,123 @@
             <button @click = "addingSaving = true">Dodaj Stednju</button>
             <div class="each-savings" v-for = "saving in savings" :key = 'saving.sav_id'>
                 <h2>{{saving.sav_description}}</h2>
-                <span class='span-details'>Cilj: {{saving.sav_amount}} RSD</span>
-                <span class='span-details'>Do sad uplaceno: {{saving.sav_amount_accumulated = saving.sav_amount - saving.leftover_amount}} RSD</span>
+                <span class='span-details'>Cilj: {{saving.sav_amount + " " + saving.acc_type_name}}</span>
+                <span class='span-details'>Do sad uplaceno: {{saving.sav_amount_accumulated}}{{" " + saving.acc_type_name}}</span>
                 <span class='span-details'>Period stednje: {{saving.sav_period}} meseci/meseca</span>
-                <span class='span-details'>Preostala kolicina novca za uplatu: {{saving.leftover_amount}} RSD</span>
+                <span class='span-details'>Preostala kolicina novca za uplatu: {{saving.leftover_amount + " " + saving.acc_type_name}}</span>
                 <span class='span-details'>Ukupan broj uplata: {{saving.number_of_payments}}</span>
-                <span class='span-details'>Mesecni doprinos: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}} RSD</span> <br>
+                <span class='span-details'>Mesecni doprinos: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}}{{" " + saving.acc_type_name}}</span> <br>
                 
                 <button @click = "preparePayment(saving.sav_id)">Uplati na stednju</button>
+                <button @click = "deleteSavings(saving.sav_id)">Obrisi Stednju</button>
+                <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
             </div>
         </div>
         
         <!-- Shade div -->
-        <div class="payment-processing" v-if ="makingPayment || addingSaving" @click = "makingPayment = false; addingSaving = false; error = '';">
+        <div class="payment-processing" v-if ="makingPayment || addingSaving || deletingSaving || viewingPayments" 
+            @click =    "makingPayment = false; 
+                        addingSaving = false; 
+                        deletingSaving = false;
+                        viewingPayments = false;
+                        error = '';">
         </div>
         <!-- Div pri uplati na stednju -->
-        <div class="paymentForm" v-if ="makingPayment">
-            <h2>{{singleSaving.sav_description}}</h2>
-                <p class='span-details'>Cilj: {{singleSaving.sav_amount}} RSD</p>
-                <p class='span-details'>Do sad uplaceno: {{singleSaving.sav_amount - singleSaving.leftover_amount}} RSD</p>
-                <p class='span-details'>Preostala kolicina novca za uplatu: {{singleSaving.leftover_amount}} RSD</p>
-                <p class='span-details'>Mesecna rata za preostali period: {{calculateRate(singleSaving.leftover_amount, singleSaving.sav_start, singleSaving.sav_period)}} RSD</p>
-               
-                <div class="accounts">
-                    <div class="each-account" 
-                        v-for = "account in accounts" 
-                        :key="account.acc_id"
-                        @click = "setAcc(account)"
-                    >
-                        <p>{{account.acc_name}}</p>
-                        <p>{{account.acc_amount}}</p>
-                    </div>
-                </div>
-                <p>Make a payment using <strong>{{acc_name}}</strong></p>
-                
-            <input type="text" v-model = "paymentValue">
-            <button @click = "makePayment">Uplati</button>
+        <savings-add-payment v-if ="makingPayment"
+            :savings = "savings"
+            :sav_id = "sav_id"
+            @get-savings = "getSavings"
+            @making-payment = "makingPayment = false"
+        />
 
-            <p>{{error}}</p>
-        </div>
         <!-- Div pri kreiranju stednje -->
-        <div class="addSavingsForm" v-if ="addingSaving">
-            <h2>Dodaj novu stednju</h2>
-            <label for="newSavDesc">Dodaj naziv/opis stednje</label>
-                <input id = "newSavDesc" type="text" v-model = "newSavDesc">
-            <label for="newSavAmount">Zeljena kolicina novca</label>
-                <input id = "newSavAmount" type="number" v-model = "newSavAmount">
-            <label for="newSavPeriod">Period za koji zelite da ustedite</label>
-                <input id = "newSavPeriod" type="number" v-model = "newSavPeriod">
-            <button @click = "addSaving">Kreiraj</button>
+        <savings-add  v-if ="addingSaving"
+            @get-savings = "getSavings"
+            @adding-saving = "addingSaving = false"
+        />
 
-            <p>{{error}}</p>
-        </div>
+        <!-- Div pri brisanju stednje -->
+        <savings-delete v-if ="deletingSaving"
+            :sav_id = "sav_id"
+            :savings = "savings"
+            @get-savings = "getSavings"
+            @deleting-saving = "deletingSaving = false"
+        />
 
-        <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort('desc')">
+        <!-- Div pri pregledu uplata -->
+        <savings-view-payments v-if ="viewingPayments"
+            :sav_id = "sav_id"
+            @get-savings = "getSavings"
+            @viewing-payments = "viewingPayments = false"
+        />
+
+        <!-- Sort -->
+        <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort">
         <label for="sort1">Po cilju</label>
         <br>
-        <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort">
         <label for="sort2">Po uplacenom iznosu</label>
         <br>
-        <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort">
         <label for="sort3">Po periodu</label>
         <br>
-        <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort">
         <label for="sort4">Po preostalom iznosu</label>
         <br>
-        <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort">
         <label for="sort5">Po uplatama</label>
         <br>
-        <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort('desc')">
+        <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort">
         <label for="sort6">Po mesecnoj rati</label>
+
+        <div class="sort-order">
+            <input type="radio" id="asc" value = "asc" v-model="sortOrder" @change = "sortOrder = 'asc'">
+            <label for="asc">Od najnizeg ka najvecem</label>
+            <br>
+            <input type="radio" id="desc" value = "desc" v-model="sortOrder" @change = "sortOrder = 'desc'">
+            <label for="desc">Od najveceg ka najnizem</label>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import SavingsAdd from '../components/SavingsAdd.vue';
+import SavingsAddPayment from '../components/SavingsAddPayment.vue';
+import SavingsDelete from '../components/SavingsDelete.vue';
+import SavingsViewPayments from '../components/SavingsViewPayments.vue';
 export default {
     data () {
         return {
             savings: [],
             makingPayment: false,
-            paymentValue: '',
-            sav_id: '',
-            singleSaving: [],
-            accounts: [],
-            acc_id: '',
-            acc_name: '',
-            error: '',
+            deletingSaving: false,
             addingSaving: false,
-            newSavDesc: '',
-            newSavAmount: '',
-            newSavPeriod: '',
-            property: null
+            viewingPayments: false,
+            sav_id: '',
+            error: '',
+            property: null,
+            sortOrder: null
         }
     },
+    components: {
+        "savings-add": SavingsAdd,
+        "savings-add-payment": SavingsAddPayment,
+        "savings-delete": SavingsDelete,
+        "savings-view-payments": SavingsViewPayments
+    },
     methods: {
-        savingSort(a){
+        savingSort(){
             if (this.savings !== []) {
-                if(a == 'asc'){
+                if(this.sortOrder == 'asc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? 1 : -1);
-                }else if(a == 'desc'){
+                }else if(this.sortOrder == 'desc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? -1 : 1);
                 }
             } 
         },
         getSavings(){
-            axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/getSavings', {sid: localStorage.getItem('sid')})
+            axios.post('http://053n122.mars-e1.mars-hosting.com/api/get/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{
                 this.savings = r.data.all_savings;
             })
@@ -130,73 +141,15 @@ export default {
         },
         preparePayment(sav_id){
             this.sav_id = sav_id;
-            this.makingPayment = !this.makingPayment;
-            this.getSingleSaving();
-            axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/getAccounts', {sid: localStorage.getItem('sid')})
-            .then(r=>{
-                this.accounts = r.data.data;
-            })
+            this.makingPayment = true;
         },
-        getSingleSaving(){
-            for (let i in this.savings){
-                if(this.savings[i].sav_id == this.sav_id){
-                    this.singleSaving = this.savings[i];
-                }
-            }
+        deleteSavings(sav_id){
+            this.sav_id = sav_id;
+            this.deletingSaving = true; 
         },
-        setAcc(account){
-            this.acc_id = account.acc_id;
-            this.acc_name = account.acc_name;
-            this.error = '';
-        },
-        makePayment(){
-            if(this.acc_id == ""){
-                this.error = "Izaberi racun s kojeg ces da uplatis na stednju"
-            }else if(isNaN(Number(this.paymentValue))){
-                this.error = ""
-                this.error = "Kolicina uplate mora biti broj"
-            }else{
-                axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/paymentSavings', {
-                    sid: localStorage.getItem('sid'),
-                    accId: this.acc_id,
-                    savId: this.sav_id,
-                    savPayAmount: this.paymentValue
-                }).then(r=>{
-                    this.error = r.data.msg;
-                    this.getSavings();
-                    this.getSingleSaving();
-                    this.paymentValue = '';
-                    this.error = '';
-                    this.makingPayment = false;
-                    console.log('sta');
-                    
-                })
-            } 
-        },
-        addSaving(){
-            this.error = "";
-            if(this.newSavDesc == ""){
-                this.error = "Izaberite naziv/opis stednje.";
-            }else if(this.newSavPeriod == ""){
-                this.error = "Unesite period stednje.";
-            }else if(isNaN(Number(this.newSavPeriod))){
-                this.error = "Period mora biti broj.";
-            }else if(this.newSavAmount == ""){
-                this.error = "Unesite zeljenu kolicinu.";
-            }else{
-                axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/addSavings', {
-                    sid: localStorage.getItem('sid'),
-                    savAmount: this.newSavAmount,
-                    savDescription: this.newSavDesc,
-                    savPeriod: this.newSavPeriod
-                }).then(()=>{
-                    this.getSavings();
-                    this.newSavAmount = "";
-                    this.newSavDesc = "";
-                    this.newSavPeriod = "";
-                    this.addingSaving = false;
-                })
-            } 
+        viewPayments(sav_id){
+            this.sav_id = sav_id;
+            this.viewingPayments = true;
         }
     },
     mounted(){
@@ -245,7 +198,7 @@ export default {
     justify-content: center;
     align-content: center;
 }
-.paymentForm, .addSavingsForm {
+.paymentForm, .addSavingsForm, .delete-saving, .view-payments {
     display:flex;
     background-color: #FAFBFC;
     margin: 100px auto;
@@ -261,6 +214,9 @@ export default {
 }
 .each-account{
     margin: 10px;
+}
+.sort-order{
+    margin-top: 30px;
 }
 
 </style>

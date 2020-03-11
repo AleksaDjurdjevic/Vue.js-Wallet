@@ -10,7 +10,7 @@
                   <div class='nav'>
                       <ul>
                         <li><router-link to="/">Početna</router-link></li> 
-                        <li><router-link to="/transaction">Transakcije</router-link></li>
+                        <li><router-link to="/transactions">Transakcije</router-link></li>
                         <li><router-link to="/savings">Štednja</router-link></li> 
                         <li><router-link to="/statistics">Statistika</router-link></li>
                       </ul>

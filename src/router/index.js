@@ -42,8 +42,8 @@ const routes = [
     component: Profile
   },
   {
-    path: '/transaction',
-    name: 'Transaction',
+    path: '/transactions',
+    name: 'Transactions',
     component: Transaction
   }
   ,

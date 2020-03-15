@@ -160,7 +160,6 @@ export default {
 
 <style scoped>
 .savings-wrapper{
-    position: relative;
     min-width: 100vh;
     min-height: 100vh;
 }
@@ -183,7 +182,7 @@ export default {
     100% {opacity: 0.6;}
 }
 .payment-processing{
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     width: 100%;
@@ -191,7 +190,7 @@ export default {
     margin: 0 auto;
     background-color: black;
     opacity: 0.6;
-    z-index: 1;
+    z-index: 10000;
     animation-name: opacity;
     animation-duration: 0.6s;
     display: flex;
@@ -203,7 +202,7 @@ export default {
     background-color: #FAFBFC;
     margin: 100px auto;
     position: absolute;
-    z-index: 2;
+    z-index: 10001;
     top: 100px;
     left: 600px;
     flex-direction: column;

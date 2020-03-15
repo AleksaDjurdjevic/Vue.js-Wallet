@@ -2,7 +2,7 @@
      <div class="callendar">
         <div class="calendar-header">
            <div class="divI"> <i class="fa fa-fw fa-chevron-left" @click="subtractMonth"></i></div>
-            <div class="divM"><h6>{{month + ' - ' + year}}</h6></div>
+            <div class="divM"><h6 @click="selectMonthYear">{{month + ' - ' + year}}</h6></div>
             <div class="divI" ><i class="fa fa-fw fa-chevron-right" @click="addMonth"></i> </div>
            <div class="divI" @click="showCallendarMet"> <span class="exit"> x</span></div>
         </div>
@@ -44,6 +44,12 @@ export default {
           this.showCallendarMet()
           this.$emit('selectDate', date)
 
+
+      },
+      selectMonthYear(){
+        let monthYear=this.year+'-'+ moment().month(this.month).format('MM')
+          this.showCallendarMet()
+          this.$emit('selectMonthYear', monthYear)
 
       },
       showCallendarMet(){
@@ -117,9 +123,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .callendar{
-  box-shadow: 3px 4px 4px 5px #88888896;
+  box-shadow: 3px 4px 4px 5px #8888884f;
   background: #fff;
-  width:200px;
+  max-width:200px;
+  min-width: 200px;
   line-height: 20px;
    transition:3s ;
 }
@@ -196,6 +203,7 @@ i{
   width:12.07%;    /*   14.28 */
   height:20px;
 }
+  h6:hover,
 .days:hover{
   cursor: pointer;
   background:rgba(45, 48, 47, 0.089);

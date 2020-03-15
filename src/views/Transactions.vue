@@ -1,17 +1,17 @@
 <template>
   <div class="transactions">
-    <!-- Leva strana -->
+    <!-- Left side -->
     <div class="aside">
       <p>Pretraga</p>
       <span>Od datuma</span>
-      <input type="text" readonly v-model = "fromDate"> 
+      <input type="text" readonly v-model = "fromDate">
         <i class="far fa-calendar-alt" @click = "showCalendarFunc('from')"></i>
         <br>
       <span>Do datuma</span>
       <input type="text" readonly v-model = "toDate">
         <i class="far fa-calendar-alt" @click = "showCalendarFunc('to')"></i>
         <br>
-      <!-- Kalendar -->
+      <!-- Calendar -->
       <div class="calendar-wrapper" v-if="showingCalendar">
         <calendar
           @selectDate = 'setDate'
@@ -20,9 +20,9 @@
       </div>
     </div>
 
-    <!-- Desna strana -->
+    <!-- Right side -->
     <div class="main">
-      <!-- Racuni -->
+      <!-- Accounts -->
       <div :class="{accounts}">
         <div class = "each-account-placeholder" :class = "{selected: showingAccPlaceholder}" @click = "accountPlaceholder"><p>Pregled sa svih racuna</p></div>
         <div v-for="account in accounts" class = "each-account"
@@ -30,30 +30,37 @@
           :key = "account.acc_id"
           @click = "getTransactionsByAccount(account.acc_name)"
         >
-            <p>{{account.acc_name}}</p>
+          <p>{{account.acc_name}}</p>
         </div>
       </div>
-      <!-- Tabela -->
-      <table class="main-table" v-if = "transactions.length>0">
-        <tr>
-          <input type="checkbox">
-          <th @click = "transactionSortBy('tra_date')">Datum <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
-          <th @click = "transactionSortBy('acc_name')">Naziv Racuna <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
-          <th @click = "transactionSortBy('tra_type_name')">Tip transakcije <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
-          <th @click = "transactionSortBy('tra_amount')">Iznos <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
-          <th @click = "transactionSortBy('cat_name')">Kategorija <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
-          <th @click = "transactionSortBy('tra_description')">Opis <div :class = "sortOrder ? 'arrow-down': 'arrow-up'"></div></th>
-        </tr>
-        <tr class="" v-for = "tr in transactions" :key = "tr.tra_id">
-          <input type="checkbox">
-          <td>{{tr.tra_date}}</td>
-          <td>{{tr.acc_name}}</td>
-          <td>{{tr.tra_type_name}}</td>
-          <td>{{tr.tra_amount + " " + tr.acc_type_name}}</td>
-          <td>{{tr.cat_name}}</td>
-          <td>{{tr.tra_description}}</td>
-        </tr>
-      </table>
+      <!-- Table -->
+      <div class="main-table" v-if = "transactions.length>0">
+        <!-- First row -->
+        <div class="row-first">
+          <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('acc_name')"><div>Naziv Racuna</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('tra_type_name')"><div>Tip transakcije</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('tra_amount')"><div>Iznos</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('cat_name')"><div>Kategorija</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('tra_description')"><div>Opis</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
+        </div>
+        <!-- Data -->
+        <div class="table-data">
+          <div class="row-other" v-for = "tr in transactions" :key = "tr.tra_id">
+            <div class= "cell">{{tr.tra_date}}</div>
+            <div class= "cell">{{tr.acc_name}}</div>
+            <div class= "cell">{{tr.tra_type_name}}</div>
+            <div class= "cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
+            <div class= "cell">{{tr.cat_name}}</div>
+            <div class= "cell">{{tr.tra_description}}</div>
+          </div>
+        </div>
+        <!-- Pagination -->
+        <div class="pagination-wrap">
+          <div class="first-page-btn"></div>
+          <div class="previous-page-btn"></div>
+        </div>
+      </div>
       <p v-else>Nema transakcija za prikaz</p>
     </div>
   </div>
@@ -71,6 +78,8 @@ export default {
       accounts: [],
       allTransactions: [],
       transactions: [],
+      currentPage: 1,
+      numOfPages: 1,
       fromDate: '',
       toDate: '',
       targetInput: null,
@@ -82,17 +91,20 @@ export default {
   },
   methods: {
     getTransactions(){
-      axios.post("http://053n122.mars-e1.mars-hosting.com/api/wallet/transactionViewsAll", {sid: localStorage.getItem('sid')})
+      axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
+        sid: localStorage.getItem('sid'),
+        page: this.currentPage
+      })
       .then(r=>{
         this.transactions = r.data.transaction;
-        
+        this.allTransactions = r.data.transaction;
+        this.numOfPages = Math.ceil(r.data.pages / 5);
+
         for(let i = 0; i<this.transactions.length; i++){
           if (this.transactions[i].cat_name === null){
             this.transactions[i].cat_name = '/';
           }
         }
-
-        this.allTransactions =  this.transactions;
       })
     },
     getTransactionsByAccount(acc_name){
@@ -138,16 +150,9 @@ export default {
         this.transactions = filteredTransactions;
       }
     },
-    transactionSortBy(property){
-      if (this.transactions !== []) {
-          if(this.sortOrder){
-              this.transactions.sort((a, b) => (a[property] > b[property]) ? 1 : -1);
-          }else if(!this.sortOrder){
-              this.transactions.sort((a, b) => (a[property] > b[property]) ? -1 : 1);
-          }
-      }
-      this.sortOrder = !this.sortOrder; 
-    },
+    // transactionSortBy(property){
+      
+    // },
     showCalendarFunc(x){
       this.showingCalendar = true;
       this.targetInput = x;
@@ -185,17 +190,31 @@ export default {
 </script>
 
 <style scoped>
+@keyframes color-change-blue-shade {
+  0% {background-color: #17A8B9;}
+  100% {background-color: rgb(148, 222, 233);}
+}
+@keyframes color-change-white-gray {
+  0% {background-color: white;}
+  100% {background-color: rgb(196, 188, 188);}
+}
+@keyframes color-change-row {
+  0% {background-color: rgb(234, 236, 236);}
+  100% {background-color: rgb(196, 188, 188);}
+}
+
 .transactions{
   display:flex;
   margin: 50px auto;
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
 }
 .aside{
-  width:17%;
+  width:14%;
+  margin-left: 3%;
 }
 .main{
-  width:83%;
+  width:80%;
+  margin-right: 3%;
   display:flex;
   flex-direction: column;
 }
@@ -213,43 +232,63 @@ export default {
   border-right: 5px solid transparent;
   border-bottom: 5px solid white;
 }
-.main-table th{
+.main-table {
+  overflow: hidden;
+  border-radius: 25px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 130px;
-  background-color: #17A2B8;
-  color: white;
-  border: 1px solid gray;
-  padding: 3px;
+  flex-direction: column;
+  width: 100%;
+  height: 700px;
+  background-color: rgb(234, 236, 236);
 }
-.main-table td{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 130px;
-  color: #17A2B8;
-  border: 1px solid gray;
-  padding: 3px;
-}
-.main-table th:hover{
-  cursor: pointer;
-}
-.main-table tr{
+.row-other{
   display: flex;
   flex-direction: row;
+  width: 100%;
+  background-color: rgb(234, 236, 236);
 }
-/* .main-table {
-  border-collapse: collapse;
-} */
+.row-first{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: #17A2B8 !important;
+  height: 8%;
+}
+.pagination-wrap{
+  width: 100%;
+  height: 8%;
+  background-color: black;
+}
+.table-data{
+  height: 84%;
+}
+.row-other:hover{
+  animation-name: color-change-row;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
+}
+.cell, .cell-first{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  border-bottom:1px solid gray;
+}
+.cell-first:hover{
+  cursor: pointer;
+  animation-name: color-change-blue-shade;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
+}
+.row-first .cell:hover{
+  cursor: pointer;
+}
 .calendar-wrapper{
   position: absolute;
   top: 140px;
   left: 270px;
   z-index:1;
-  background-color: aqua;
 }
 .accounts{
   display:flex;
@@ -263,8 +302,12 @@ export default {
   width: 8%;
   margin: 5px;
 }
+.each-account.selected:hover{
+  animation-name: color-change-blue-shade;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
+}
 .each-account{
-  color: #17A2B8;
   border: 1px solid gray;
   width: 8%;
   margin: 5px;
@@ -272,22 +315,35 @@ export default {
 }
 .each-account:hover{
   cursor: pointer;
+  animation-name: color-change-white-gray;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
 }
 .each-account-placeholder{
-  color: #17A2B8;
   border: 1px solid gray;
   margin: 5px;
   margin-right: 30px;
   text-align: center;
 }
 .each-account-placeholder.selected{
-  background-color: #17A2B8;;
+  background-color: #17A2B8;
   color: white;
   border: 1px solid gray;
   margin: 5px;
   margin-right: 30px;
 }
-.each-account-placeholder{
+.each-account-placeholder:hover{
+  cursor: pointer;
+  animation-name: color-change-white-gray;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
+}
+.each-account-placeholder.selected:hover{
+  animation-name: color-change-blue-shade;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
+}
+.far.fa-calendar-alt{
   cursor: pointer;
 }
 </style>

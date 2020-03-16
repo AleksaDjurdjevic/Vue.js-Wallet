@@ -34,15 +34,15 @@
         </div>
       </div>
       <!-- Table -->
-      <div class="main-table" v-if = "transactions.length>0">
+      <div class="main-table">
         <!-- First row -->
         <div class="row-first">
-          <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('acc_name')"><div>Naziv Racuna</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_type_name')"><div>Tip transakcije</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_amount')"><div>Iznos</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('cat_name')"><div>Kategorija</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_description')"><div>Opis</div> <div :class = "sortOrder ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('ac.acc_name')"><div>Naziv Racuna</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('tra_type_name')"><div>Tip transakcije</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('tra_amount')"><div>Iznos</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('cat_name')"><div>Kategorija</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('tra_description')"><div>Opis</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
         </div>
         <!-- Data -->
         <div class="table-data">
@@ -56,12 +56,20 @@
           </div>
         </div>
         <!-- Pagination -->
-        <div class="pagination-wrap">
-          <div class="first-page-btn"></div>
-          <div class="previous-page-btn"></div>
+        <div class="pagination-wrap" v-if = "allPagesArray.length > 1">
+          <div class="pages">
+            <button class="page-btn" @click= "setPage(1)">Prva strana</button>
+            <button class="page-btn" @click= "setPage(currentPage-1)">Prethodna strana</button>
+
+            <button class="page-array" v-for = "page in displayingPages" :key="page" @click= "setPage(page)">
+              {{page}}
+            </button>
+            
+            <button class="page-btn" @click= "setPage(currentPage+1)">Sledeca strana</button>
+            <button class="page-btn" @click= "setPage(allPagesArray.length)">Poslednja strana</button>
+          </div>
         </div>
       </div>
-      <p v-else>Nema transakcija za prikaz</p>
     </div>
   </div>
 </template>
@@ -80,10 +88,14 @@ export default {
       transactions: [],
       currentPage: 1,
       numOfPages: 1,
+      allPagesArray: [],
+      displayingPages: [],
       fromDate: '',
       toDate: '',
       targetInput: null,
-      sortOrder: false
+      sortBy: 'tra_date',
+      orderBy: 'ASC',
+      acc_name: null
     }
   },
   components : {
@@ -97,34 +109,68 @@ export default {
       })
       .then(r=>{
         this.transactions = r.data.transaction;
-        this.allTransactions = r.data.transaction;
-        this.numOfPages = Math.ceil(r.data.pages / 5);
-
-        for(let i = 0; i<this.transactions.length; i++){
-          if (this.transactions[i].cat_name === null){
-            this.transactions[i].cat_name = '/';
+        this.numOfPages = Math.ceil(r.data.pages / 20);
+        this.allPagesArray = [];
+        this.displayingPages = [];
+        //Get all pages
+        for(let i = 1; i<=this.numOfPages; i++){
+          this.allPagesArray.push(i);
+        }
+        
+        //Set pages to display
+        if (this.numOfPages > 5){
+          for(let i = 1; i<=5; i++){
+            this.displayingPages.push(i);
+          }
+        }else{
+          for(let i = 1; i<=this.numOfPages; i++){
+            this.displayingPages.push(i);
           }
         }
       })
     },
     getTransactionsByAccount(acc_name){
-      this.transactions = this.allTransactions;
+      if(this.acc_name !== acc_name){
+        this.acc_name = acc_name;
+        axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
+            sid: localStorage.getItem('sid'),
+            page: this.currentPage,
+            sortBy: this.sortBy,
+            orderBy: this.orderBy,
+            accName: this.acc_name 
+          }).then(r=>{
+            this.transactions = r.data.transaction;
+            this.numOfPages = Math.ceil(r.data.pages / 20);
+            this.displayingPages = [];
+            this.allPagesArray = [];
+            
+            //Get all pages
+            for(let i = 1; i<=this.numOfPages; i++){
+              this.allPagesArray.push(i);
+            }
+            
+            //Set pages to display
+            if (this.numOfPages > 5){
+              for(let i = 1; i<=5; i++){
+                this.displayingPages.push(i);
+              }
+            }else{
+              for(let i = 1; i<=this.numOfPages; i++){
+                this.displayingPages.push(i);
+              }
+            }
+          })
 
-      let filteredTransactions = this.transactions.filter(function(tran){
-          return tran.acc_name === acc_name;
-      })
-
-      this.transactions = filteredTransactions;
-
-      //apply selected
-      for(let i = 0; i<this.accounts.length; i++){
-        if(this.accounts[i].acc_name === acc_name){
-          this.accounts[i].selected = true;
-        }else{
-          this.accounts[i].selected = false;
+        //apply selected
+        for(let i = 0; i<this.accounts.length; i++){
+          if(this.accounts[i].acc_name === acc_name){
+            this.accounts[i].selected = true;
+          }else{
+            this.accounts[i].selected = false;
+          }
         }
+        this.showingAccPlaceholder = false;
       }
-      this.showingAccPlaceholder = false;
     },
     getAccounts(){
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAccounts/all", {sid: localStorage.getItem('sid')})
@@ -150,9 +196,27 @@ export default {
         this.transactions = filteredTransactions;
       }
     },
-    // transactionSortBy(property){
-      
-    // },
+    transactionSortBy(property){
+      if(this.sortBy === property){
+        if(this.orderBy === 'ASC'){
+          this.orderBy = 'DESC'
+        }else{
+          this.orderBy = 'ASC'
+        }
+      }else{
+        this.sortBy = property;
+      }
+
+      axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
+        sid: localStorage.getItem('sid'),
+        page: this.currentPage,
+        sortBy: property,
+        orderBy: this.orderBy,
+        accName: this.acc_name
+      }).then(r=>{
+        this.transactions = r.data.transaction;
+      })
+    },
     showCalendarFunc(x){
       this.showingCalendar = true;
       this.targetInput = x;
@@ -175,11 +239,61 @@ export default {
       this.getTransactionsByDate();
     },
     accountPlaceholder(){
-      this.transactions = this.allTransactions;
+      //Applying classes
       this.showingAccPlaceholder = true;
       for(let i = 0; i<this.accounts.length; i++){
         this.accounts[i].selected = false;
       }
+      //Validation to prevent displaying the same results
+      if(this.acc_name !== null){
+        this.getTransactions();
+      }
+      this.acc_name = null;
+    },
+    setPage(page){
+      //Validation for "next" and "previous" page buttons
+      if(page<1){
+        page=1;
+      }else if (page>this.allPagesArray.length){
+        page = this.allPagesArray.length;
+      }
+      //If page is changed
+      if(page !== this.currentPage){
+        //Fetching data
+        axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
+          sid: localStorage.getItem('sid'),
+          page,
+          sortBy: this.sortBy,
+          orderBy: this.orderBy,
+          accName: this.acc_name 
+        }).then(r=>{
+          this.transactions = r.data.transaction;
+        })
+      }
+
+      //This part is for rendering the pages navigation bar
+      let localallPagesArray = this.allPagesArray; //keyword "this" in filter method doesnt refer to vue properties.
+      
+      this.displayingPages = this.allPagesArray.filter(function(oldPage){
+        //if the page clicked is the last page
+        if (page === localallPagesArray[localallPagesArray.length-1]){
+          return oldPage == page-4 || oldPage == page-3 || oldPage == page-2|| oldPage == page-1 || oldPage == page;
+        //if the page clicked is one before the last
+        }else if (page === localallPagesArray[localallPagesArray.length-2]){
+          return oldPage == page-3 || oldPage == page-2 || oldPage == page-1|| oldPage == page || oldPage == page+1;
+        //if its second page
+        }else if (page === localallPagesArray[1]){
+          return oldPage == page-1 || oldPage == page || oldPage == page+1|| oldPage == page+2 || oldPage == page+3;
+        //If its first page
+        }else if (page === localallPagesArray[0]){
+          return oldPage == page || oldPage == page+1 || oldPage == page+2|| oldPage == page+3 || oldPage == page+4;
+        //In any other case
+        }else{
+          return oldPage == page-2 || oldPage == page-1 || oldPage == page || oldPage == page+1 || oldPage == page+2
+        }
+      })
+      
+      this.currentPage = page;
     }
   },
   mounted(){
@@ -257,7 +371,12 @@ export default {
 .pagination-wrap{
   width: 100%;
   height: 8%;
-  background-color: black;
+  display:flex;
+  justify-content: center;
+}
+.pages{
+  display:flex;
+  flex-direction: row;
 }
 .table-data{
   height: 84%;

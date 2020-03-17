@@ -111,6 +111,16 @@ export default {
 };
 </script>
 <style >
+.app{
+   font-family: 'Teko', sans-serif;
+   font-size:1.2em;
+}
+
+
+
+
+
+
 /* .nav {
   border-bottom: 1px solid black;
 }
@@ -194,6 +204,7 @@ body{
   padding:0;
   margin:0;
   font-family: Arial, Helvetica, sans-serif;
+   font-family: 'Teko', sans-serif;
 }
 
 main{

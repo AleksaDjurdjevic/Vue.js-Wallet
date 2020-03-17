@@ -1,10 +1,16 @@
 <template>
   <div class="dashboard" @click="resetMessage">
-    <div v-if="createAccDiv" class="createAccDiv">
-      <form class="createAccDivChaild">
+
+
+   <!-- DIV CREATE ACCOUNT -->
+      <div v-if="createAccDiv" class="createAccDiv"></div>
+    <div v-if="createAccDiv" class="createAccDiv2">
+      <form >
+         <p class="exit" @click="showCreateAccDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
+     <br>
         <h2>
           Kreiraj novi račun
-          <span class="exit" @click="showCreateAccDiv(false)">x</span>
+         
         </h2>
         <label>Izaberi tip računa</label>
         <br />
@@ -30,7 +36,49 @@
       </form>
       <!-- end form createAccDivChaild -->
     </div>
-    <!-- end createAccDiv -->
+    <!-- end DIV CREATE ACCOUNT -->
+
+
+    <!-- start DELETE ACCOUNT CLASS=createAccDiv is just for style -->
+    <div v-if="deleteAccDiv" class="createAccDiv"></div>
+    <div v-if="deleteAccDiv" class="createAccDiv2">
+      
+      <p class="exit" @click="showDeleteAccountDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
+     
+           <h2>   DA LI STE SIGURNI DA ŽELITE DA IZBRISETE 
+           " {{defAcc.acc_name}} " RAČUN?
+             </h2>
+       
+        <br />
+        
+          <input type="button" class="inputWrite" value="Izbriši Račun" @click="deleteAccount" />
+        <br />
+  
+      <!-- -->
+    </div>
+    <!-- END DELETE ACCOUNT -->
+
+
+
+    <!-- start DELETE TRANSACTION CLASS=createAccDiv is just for style -->
+    <div v-if="deleteTransactionDiv" class="createAccDiv"></div>
+    <div v-if="deleteTransactionDiv" class="createAccDiv2">
+      
+      <p class="exit" @click="showDeleteTransactionDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
+     
+           <h2>   DA LI STE SIGURNI DA ŽELITE DA OPOZOVETE TRANSAKCIJU 
+           " {{traDescriptionForDelete}} " ?
+             </h2>
+             <p>Opozivanjem transakcije pare će Vam automatski biti vraćene na račun sa kojeg su uzete.</p>
+     
+        <br />
+        
+          <input type="button" class="inputWrite" value="OPOZOVI TRANSAKCIJU" @click="cancelTransaction(transactionForDelete)" />
+        <br />
+  
+      <!-- -->
+    </div>
+    <!-- END DELETE TRANSACTION -->
 
     <h1>where the money goes???</h1>
     <!-- show all bils -->
@@ -38,24 +86,75 @@
       <div class="bill" v-for="acc in accounts" :key="acc.acc_id" @click="setBill(acc)">
         <p>{{acc.acc_name}}</p>
       </div>
-      <div class="bill create" @click="showCreateAccDiv(true)">+</div>
+      <div class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
     </div>
     <!-- end bills-->
-    <h1 v-if="this.isLoggedIn">
-      Naziv računa:
-      <span class="orange">{{defAcc.acc_name}}</span> Stanje:
-      <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}}</span>
-    </h1>
+    <div class="nameBill" v-if="this.isLoggedIn">
+     <p> Naziv računa:
+      <span class="orange">{{defAcc.acc_name}}</span> 
+     </p>  
+     <p>Stanje:
+      <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}} </span> 
+      </p>  
+      <i @click="showDeleteAccountDiv(true)" class="fas fa-trash-alt" style="font-size:16px"></i>
+    
+   </div>
     <br />
     <p v-if="message">{{message}}</p>
     <p v-if="err" class="err">{{err}}</p>
+
+
+    
     <div class="main">
-      <div class="transaction">
+
+<div class="transaction allTrans">
+      <div class="transaction2">
+        <callendar
+          v-if="showCallendar"
+          class="callendar"
+          v-on:showCallEmit="showCallendarMet($event)"
+          v-on:selectDate="showTransactionByDate($event)"
+          v-on:selectMonthYear="showTransactionByDate($emit)"
+        ></callendar>
+        <div class="pickOut3" @click="getTransactions(defAcc.acc_name);">Transakcije računa</div>
+        <div @click="showCallendar=!showCallendar" class="pickOut3">Prikaz po datumu</div>
+      </div>
+      <!-- end transaction 2 -->
+
+      
+        <div class="showTransaction scrollTD" >
+          <table >
+          <tr>
+            <th class="scrollTD">Tip tranakcije:</th> 
+            <th class="scrollTD"> Iznos:</th>
+            <th class="scrollTD"> Opis:</th>
+            <th class="scrollTD"> Datum: </th>
+            <th class="scrollTD">Opozovi transakciju: </th>
+          </tr>
+          <tr v-for="acc in allTransaction" :key="acc.tra_id">
+            <td class="scrollTD">{{acc.tra_type_name}}</td> 
+            <td class="scrollTD">{{acc.tra_amount}}</td>
+            <td class="scrollTD">{{acc.tra_description}}</td>
+            <td class="scrollTD">{{formateDate(acc.tra_date)}}</td>
+            <td class="scrollTD cancelTransaction" @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)">Opozovi</td>
+          </tr>
+          </table>
+              
+     
+      </div>
+    </div><!-- END transaction-->
+
+
+
+
+
+
+      <div class="transaction" v-bind:class="{black:selectTransaction}">
         <div class="pickOut pickOut2" @click="selectTranM(true)">Rashod</div>
         <div class="pickOut" @click="selectTranM(false)">Prihod</div>
 
         <!-- buy transaction -->
-        <div v-if="selectTransaction" class="tranType black">
+        <div v-if="selectTransaction" class="tranType">
           <h2>
             <span class="orange">Rashod</span> - Potrošnja
           </h2>
@@ -100,53 +199,14 @@
       </div>
       <!-- transaction -->
 
-      <div class="showGraf">
+      <div class="showGraf scrollTD">
         <ChartCircle v-if="setParamsForChartTrue"/>
       </div>
       <!-- end showGraf -->
     </div>
     <!-- end main -->
 
-    <div class="main2">
-      <div class="transaction2">
-        <callendar
-          v-if="showCallendar"
-          class="callendar"
-          v-on:showCallEmit="showCallendarMet($event)"
-          v-on:selectDate="showTransactionByDate($event)"
-          v-on:selectMonthYear="showTransactionByDate($emit)"
-        ></callendar>
-        <div class="pickOut3" @click="getTransactions(defAcc.acc_name);">Transakcije računa</div>
-        <div @click="showCallendar=!showCallendar" class="pickOut3">Prikaz po datumu</div>
-      </div>
-      <!-- end transaction2 -->
-
-      <div class="reverse">
-        <div class="showTransaction" v-for="acc in allTransaction" :key="acc.tra_id">
-          <div>
-            Naziv računa:
-            <span class="orange">{{acc.acc_name }}</span>
-          </div>
-          <div>
-            Tip tranakcije:
-            <span class="orange">{{acc.tra_type_name}}</span>
-          </div>
-          <div>
-            Iznos:
-            <span class="orange">{{acc.tra_amount}}</span>
-          </div>
-          <div>
-            Opis:
-            <span class="orange">{{acc.tra_description}}</span>
-          </div>
-          <div>
-            Datum:
-            <span class="orange">{{formateDate(acc.tra_date)}}</span>
-          </div>
-          <div class="cancelTransaction" @click="cancelTransaction(acc.tra_id)">Opozovi</div>
-        </div>
-      </div>
-    </div>
+    
     <!-- end main2 -->
   </div>
   <!-- end of dashBoard -->
@@ -196,7 +256,12 @@ export default {
 
       addSum: null,
       addDesc: null,
-      addErrors: []
+      addErrors: [],
+
+      deleteAccDiv:false,
+      deleteTransactionDiv:false,
+      transactionForDelete:0,
+      tra_description:''
     };
   },
   async mounted() {
@@ -206,6 +271,10 @@ export default {
     await this.getCategory();
   },
   methods: {
+    displayDelete(e){
+      e.preventDefault();
+      alert("cao");
+    },
     //call in  get accounts and setBill - set value for chart- for default bill 
      getParamsForChart(acc_name) {
      
@@ -231,7 +300,7 @@ export default {
       return date
         .split("-")
         .reverse()
-        .join(" / ");
+        .join("/");
     },
     selectTranM(x) {
       this.selectTransaction = x;
@@ -356,6 +425,21 @@ export default {
       this.createSum = null;
       this.createName = null;
     },
+    deleteAccount(){
+      let sid =localStorage.getItem('sid')
+      console.log(this.defAcc.acc_name )
+      if(sid){
+        axios.post("http://053n122.mars-e1.mars-hosting.com/api/delete/deleteAccount",
+        {sid:sid ,account:this.defAcc.acc_name }
+        )
+        .then(
+          response=>{
+            this.message=response.data.message
+            this.deleteAccDiv=false
+            this.getAccounts()
+          } );
+      }
+    },
     checkFormBuy() {
       this.buyErrors = [];
       if (this.buySum && this.buyDesc) {
@@ -441,6 +525,11 @@ export default {
           });
       }
     },
+    checkCancelTransaction(id_transaction,tra_description){
+      this.deleteTransactionDiv=true;
+      this.transactionForDelete=id_transaction;
+      this.traDescriptionForDelete=tra_description;
+    },
     cancelTransaction(tra_id) {
       let sid = localStorage.getItem("sid");
 
@@ -459,7 +548,11 @@ export default {
               this.defAcc.acc_amount = response.data.acc_amount;
               this.refreshChart(this.defAcc.acc_name);
             }
+             this.showDeleteTransactionDiv(false);
+             this.transactionForDelete=0;
+             this.traDescriptionForDelete='';
           });
+         
       }
     },
     // set default bill on click and all value for that bill
@@ -468,14 +561,23 @@ export default {
       this.defAcc = bill;
       this.setDefAcc(bill); // set new account as default in vuex
       this.getTransactions(this.defAcc.acc_name);
-      this.setParamsForChart(this.defAcc.acc_name);
+      localStorage.setItem('setDefAcc',this.defAcc.acc_name)
 
     },
+    
     showCreateAccDiv(x) {
       this.createAccDiv = x;
     },
     showCallendarMet(x) {
       this.showCallendar = x;
+    },
+    showDeleteAccountDiv(x){
+      this.deleteAccDiv=x;
+    },
+    showDeleteTransactionDiv(x){
+      this.deleteTransactionDiv=x;
+      this.transactionForDelete=0;
+      this.traDescriptionForDelete='';
     },
     resetMessage() {
       this.message = null;
@@ -502,9 +604,37 @@ export default {
 };
 </script>
 <style scoped >
+/* width */
+::-webkit-scrollbar {
+  height: 8px;
+  width:3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671); 
+  /* border-radius: 10px; */
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(172, 168, 168); 
+ /*  border-radius: 10px; */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(116, 113, 113, 0.774);; 
+}
+.scrollTD{
+  overflow: auto;
+}
+
+
+
 .dashboard {
   text-align: center;
-  position: relative;
+  padding:3% 0 0 0 ;
   width: 100%;
 }
 .bills {
@@ -517,13 +647,13 @@ export default {
 .bill {
   cursor: pointer;
   font-size: 1.2em;
-
+  min-width:99px;
   font-weight: 500;
   margin: 0.6%;
   width: 18%;
   height: 60px;
   background-color: rgb(0, 0, 0);
-  
+  overflow:hidden;
 }
 .bill p {
   margin: 0 auto;
@@ -533,18 +663,19 @@ export default {
 }
 .create {
   cursor: pointer;
-  line-height: 1.23;
-  font-size: 3em;
+
   text-shadow: 1.5px 1.5px 1.5px #000000;
   background-color: rgba(0, 0, 0, 0.5);
+ 
 }
+
 .bill:hover {
   box-shadow: 0px 2px 8px 2px #888888;
   font-size: 1.3em;
 }
 .create:hover {
   box-shadow: 0px 2px 8px 2px #888888;
-  font-size: 3.3em;
+  font-size: 1.26em;
   text-shadow: 2.9px 2.95px 2.95px #000000;
 }
 .bill:active {
@@ -553,28 +684,38 @@ export default {
   font-size: 1.2em;
 }
 .create:active {
-  font-size: 3em;
+  box-shadow: 0px 1px 3px 1px #888888;
+  font-size: 1.2em;
 }
 .main {
   width: 100%;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content:center;
 }
 .transaction {
   box-sizing: border-box;
-  width: 50%;
+  width: 33.3%;
   display: flex;
   flex-wrap: wrap;
   background-color: #cccccc;
-  padding-bottom: 30px;
+  max-height:100%;
+  align-content: flex-start;
+ 
   min-width: 300px;
+}
+.allTrans,
+.showGraf{
+  background-color: #bebebe79;
+  
 }
 .showGraf {
   box-sizing: border-box;
-  width: 45%;
+  width: 33.3%;
   display: flex;
   flex-wrap: wrap;
+  max-height:50%;
   min-width: 300px;
 }
 
@@ -585,6 +726,7 @@ export default {
   width: 50%;
   padding: 10px;
   height: 50px;
+  background:#cccccc;
   /* border:1px solid rgba(92, 86, 74, 0.527); */
 }
 .pickOut2 {
@@ -593,7 +735,7 @@ export default {
 .pickOut:hover,
 .pickOut3:hover {
   cursor: pointer;
-  text-shadow: 1.5px 1.5px 1.5px #000000;
+  text-shadow: 1px 1px 1px #000000;
 }
 .pickOut:active,
 .pickOut3:active {
@@ -602,7 +744,9 @@ export default {
 }
 
 .tranType {
+  padding:10% 0%;
   width: 100%;
+ 
 }
 .tranType h2 {
   /* text-decoration: underline rgb(250, 174, 33);  */
@@ -614,20 +758,22 @@ export default {
 }
 
 .black {
+  box-sizing:border-box;
   background: rgb(234, 236, 236);
   color: rgb(85, 81, 81) !important;
-  height: 100%;
+  
+
 }
 .inputWrite {
   padding: 1%;
   margin-bottom: 2%;
-  width: 40%;
+  width: 60%;
   background-color: rgb(255, 255, 255);
   border-color: rgb(196, 188, 188);
 }
 select.inputWrite {
   
-  width: 42.5%;
+  /* width: 42.5%; */
   border: inset 2px rgb(196, 188, 188);
 }
 .option:hover {
@@ -641,12 +787,12 @@ input:focus {
 
 input[type="button"] {
   font-size: 1.3em;
-  width: 42.5%;
+ /* width: 42.5%; */
   border: inset 2px rgb(196, 188, 188);
   cursor: pointer;
 }
 input[type="button"]:hover {
-  text-shadow: 1.5px 1.5px 1.5px #000000;
+  text-shadow: 0.8px 0.8px 0.8px #000000;
 }
 input[type="button"]:active {
   text-shadow: 0.3px 0.3px 0.3px #000000;
@@ -669,28 +815,42 @@ input[type="button"]:active {
   font-size: 1.5em;
   line-height: 2.23;
   width: 50%;
-  padding: 3% 0;
+  padding:  0;
   z-index: 5;
 }
+
 
 .showTransaction {
   box-sizing: border-box;
   padding-bottom: 25px;
-  margin: 25px 60px;
+  margin: 20px 9px;
   max-width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  border-bottom: solid 2px rgba(0, 0, 0, 0.5);
+  
+  
 }
-.reverse {
+table{
   box-sizing: border-box;
-  max-width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-
-  flex-direction: column-reverse;
+  min-width:100%;
+  border: solid 2px rgba(0, 0, 0, 0.5);
 }
+
+
+td, th{
+  padding:8px;
+  border:solid 1px rgba(0,0,0.5);
+  max-width: 100px;
+  min-width:60px;
+  
+}
+th{
+  background-color: #17a2b8;
+
+  max-height: 50px;
+    /*  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; */
+    /* letter-spacing:0.5px; */
+}
+
+
 h1:nth-of-type(2) {
   margin: 0 auto;
   padding: 3% 0 0 0;
@@ -701,37 +861,60 @@ h1:nth-of-type(2) {
 h1 .orange {
   word-spacing: 20px;
 }
+.nameBill p{
+  display: inline-block;
+  font-size: 2em;
+  margin-right:2.5%;
+
+}
+
+@keyframes opacity{
+    0% {opacity:0;}
+    100% {opacity: 0.6;}
+}
 
 .createAccDiv {
+  animation-name: opacity;
+  animation-duration: 0.3s;
   padding-top: 6%;
   color: #fff;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background: #000000;
  
   opacity: 0.7;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
-  z-index: 100; 
+  z-index: 1000100; 
 }
-.createAccDivChaild {
-  position: relative;
-  width: 70%;
-  margin: 0 auto;
-  opacity: 1 !important;
+.createAccDiv2 {
+  animation-name: opacity;
+  animation-duration: 0.2s;
+ position: fixed;
+ top:10%;
+ left:23%;
+ background:#fff;
+  width: 60%;
+  
+  z-index:1000200;
+  padding: 1%;
 }
 .exit {
+  text-align:right;
   cursor: pointer;
   padding-left: 14%;
 }
 .exit :hover {
-  font-size: 4.1em;
-  text-shadow: 3.5px 3.5px 3.5px #000000;
+  font-size: 1.1em;
+  text-shadow: 1.5px 1.5px 1.5px #000000;
 }
 .err {
+  font-size:1.1em;
+  letter-spacing: 1px;
   color: rgba(255, 0, 0, 0.733);
-  text-shadow: 1.5px 1.5px 1.5px #000000;
+  text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
+
 }
 .callendar {
   background: #fff;
@@ -742,5 +925,9 @@ h1 .orange {
 }
 .cancelTransaction:hover {
   cursor: pointer;
+}
+ i :hover{
+  font-size:1.1em;
+  cursor:pointer;
 }
 </style>

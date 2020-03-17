@@ -4,6 +4,7 @@
       <MonthYear v-bind:accounts="accounts" v-on:selectMonthYear="changeParamsForChart($event)" />
     </div>
     <h1 v-if="message">{{message}}</h1>
+    <h1 v-else-if="selectAcc">Statistika transakcija za račun "{{selectAcc}}"</h1>
     <div class="statisticsRow">
       <ChartXY class="chart" />
       <ChartCircle class="chart" />
@@ -31,11 +32,13 @@ export default {
       accName: "",
       accounts: [],
       paramsForChart:[],
-      message:''
+      message:'',
+      selectAcc:null
     };
   },
    mounted() {
      this.getAccounts();
+    this.selectAcc=localStorage.getItem('setDefAcc')
     this.getParamsForChartStatists((this.defAccV!==null)?this.defAccV.acc_name:localStorage.getItem('setDefAcc'));
      
   },
@@ -102,6 +105,10 @@ export default {
 </script>
 
 <style  scoped>
+.statistics{
+  background-color:#bebebe79;
+ /*   background-color:aliceblue; */
+}
 .statisticsRow {
   display: flex;
 }
@@ -111,5 +118,6 @@ export default {
 }
 h1{
   text-align: center;
+  margin-top:1%;
 }
 </style>

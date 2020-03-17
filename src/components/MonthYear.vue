@@ -4,15 +4,15 @@
            
             <div class="divM"><h6 >{{month}}</h6></div>
             <div class="divM">
-             <div class="divI ch"  @click="addMonth"> <i class="fa fa-caret-up" style="font-size:20px;" ></i></div>
-            <div class="divI ch" @click="subtractMonth"><i class="fa fa-caret-down" style="font-size:20px;"></i> </div>
+             <div class="divI ch"  @click="addMonth"> <i class="fa fa-sort-asc" style="font-size:20px;" ></i></div>
+            <div class="divI ch" @click="subtractMonth"><i class="fa fa-sort-desc" style="font-size:20px;"></i> </div>
             </div>
         </div><!-- round -->
      <div class="round">
           <div class="divM"><h6 @click="selectMonthYear"  >{{year}}</h6></div>
           <div class="divM">
-            <div class="divI ch" @click="addYear" > <i class="fa fa-caret-up" style="font-size:20px;"></i></div>
-             <div class="divI ch" @click="subtractYear" ><i class="fa fa-caret-down" style="font-size:20px;" ></i> </div>
+            <div class="divI ch" @click="addYear" > <i class="fa fa-sort-asc" style="font-size:20px;"></i></div>
+             <div class="divI ch" @click="subtractYear" ><i class="fa fa-sort-desc" style="font-size:20px;" ></i> </div>
         </div>
          
       </div>  <!-- end round -->
@@ -27,7 +27,7 @@
             <div class="round ch"  @click="selectYear">
                  prikazi celu statistiku racuna za odabranu god
           </div>
-          <div class="round ch"  @click="selectBill">
+          <div class="round ch"  @click="selectMonthYear">
                  prikazi celu statistiku racuna
           </div>
         

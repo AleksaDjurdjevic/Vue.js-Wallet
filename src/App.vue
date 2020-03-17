@@ -10,7 +10,7 @@
                   <div class='nav'>
                       <ul>
                         <li><router-link to="/">Početna</router-link></li> 
-                        <li><router-link to="/transaction">Transakcije</router-link></li>
+                        <li><router-link to="/transactions">Transakcije</router-link></li>
                         <li><router-link to="/savings">Štednja</router-link></li> 
                         <li><router-link to="/statistics">Statistika</router-link></li>
                       </ul>
@@ -111,6 +111,16 @@ export default {
 };
 </script>
 <style >
+.app{
+   font-family: 'Teko', sans-serif;
+   font-size:1.2em;
+}
+
+
+
+
+
+
 /* .nav {
   border-bottom: 1px solid black;
 }
@@ -194,6 +204,7 @@ body{
   padding:0;
   margin:0;
   font-family: Arial, Helvetica, sans-serif;
+   font-family: 'Teko', sans-serif;
 }
 
 main{

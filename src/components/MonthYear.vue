@@ -4,15 +4,15 @@
            
             <div class="divM"><h6 >{{month}}</h6></div>
             <div class="divM">
-             <div class="divI ch"  @click="addMonth"> <i class="fa fa-sort-asc" style="font-size:20px;" ></i></div>
-            <div class="divI ch" @click="subtractMonth"><i class="fa fa-sort-desc" style="font-size:20px;"></i> </div>
+             <div class="divI ch"  @click="addMonth"> <i class="fas fa-caret-up" style="font-size:20px;" ></i></div>
+            <div class="divI ch" @click="subtractMonth"><i class="fas fa-caret-down" style="font-size:20px;"></i> </div>
             </div>
         </div><!-- round -->
      <div class="round">
-          <div class="divM"><h6 @click="selectMonthYear"  >{{year}}</h6></div>
+          <div class="divM ch" @click="selectYear"><h6>{{year}}</h6></div>
           <div class="divM">
-            <div class="divI ch" @click="addYear" > <i class="fa fa-sort-asc" style="font-size:20px;"></i></div>
-             <div class="divI ch" @click="subtractYear" ><i class="fa fa-sort-desc" style="font-size:20px;" ></i> </div>
+            <div class="divI ch" @click="addYear" > <i class="fa fa-caret-up" style="font-size:20px;"></i></div>
+             <div class="divI ch" @click="subtractYear" ><i class="fa fa-caret-down" style="font-size:20px;" ></i> </div>
         </div>
          
       </div>  <!-- end round -->
@@ -27,7 +27,7 @@
             <div class="round ch"  @click="selectYear">
                  prikazi celu statistiku racuna za odabranu god
           </div>
-          <div class="round ch"  @click="selectMonthYear">
+          <div class="round ch"  @click="selectBill">
                  prikazi celu statistiku racuna
           </div>
         
@@ -103,13 +103,18 @@ export default {
         box-sizing:border-box;
         display:flex;
         flex-wrap:wrap;
-        margin-top:2%;
 
+        /*      background:#120aff;
+        color:rgb(255, 255, 255);      */
+        background-color:white;
+        border:solid 2px #5e5a5aa4;
+        justify-content: center;
+        box-shadow: 1px 1.1px 1px 1.1px #888888;
     }
     .round{
         display:flex;
         box-sizing:border-box;
-        width:15%;
+        width:16.66%;
         min-width:109px;
         text-align:center;
         padding:2px;
@@ -138,14 +143,15 @@ export default {
         flex-direction: column;
         box-sizing:border-box;
         width:50%;
-       justify-content: center;
+        height:100%;
+        justify-content: center;
         align-items: center;
      }
-
+    
     .divI{
         box-sizing: border-box;
         width:100%;
-        height:50%;
+        min-height:50%;
         border:solid 0.1px  #88888856;
     }
     

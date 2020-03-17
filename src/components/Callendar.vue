@@ -4,7 +4,7 @@
            <div class="divI"> <i class="fa fa-fw fa-chevron-left" @click="subtractMonth"></i></div>
             <div class="divM"><h6 @click="selectMonthYear">{{month + ' - ' + year}}</h6></div>
             <div class="divI" ><i class="fa fa-fw fa-chevron-right" @click="addMonth"></i> </div>
-           <div class="divI" @click="showCallendarMet"> <span class="exit"> x</span></div>
+           <div class="divI" @click="showCallendarMet"> <span class="exit">  <i class="fas fa-times" style="font-size:15px"></i></span></div>
         </div>
         
         <ul class="dates" >

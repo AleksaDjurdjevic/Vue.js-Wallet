@@ -43,8 +43,8 @@ export default {
       series.dataFields.value = "iznos";
       series.dataFields.category = "tip_transakcije";
 
-      series.slices.template.cornerRadius = 5;
-      series.slices.template.innerCornerRadius = 2;
+      series.slices.template.cornerRadius = 10;
+      series.slices.template.innerCornerRadius = 7;
       //series.slices.template.draggable = true;
       series.slices.template.inert = true;
       series.alignLabels = false;
@@ -80,6 +80,6 @@ export default {
 <style scoped>
 .chartVue {
   width: 100%;
-  height: 400px;
+  height: 250px;
 }
 </style>

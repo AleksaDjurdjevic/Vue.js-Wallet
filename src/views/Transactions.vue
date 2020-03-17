@@ -17,6 +17,7 @@
           @selectDate = 'setDate'
           @showCallEmit = "showingCalendar = false"
         />
+        <button @click = "clearDate">Clear date</button>
       </div>
     </div>
 
@@ -77,21 +78,19 @@
 <script>
 import Callendar from '../components/Callendar.vue';
 import axios from 'axios';
-import moment from  'moment';
 export default {
   data(){
     return{
       showingAccPlaceholder: true,
       showingCalendar: false,
       accounts: [],
-      allTransactions: [],
       transactions: [],
       currentPage: 1,
       numOfPages: 1,
       allPagesArray: [],
       displayingPages: [],
-      fromDate: '',
-      toDate: '',
+      fromDate: null,
+      toDate: null,
       targetInput: null,
       sortBy: 'tra_date',
       orderBy: 'ASC',
@@ -105,7 +104,12 @@ export default {
     getTransactions(){
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
         sid: localStorage.getItem('sid'),
-        page: this.currentPage
+        page: this.currentPage,
+        sortBy: this.sortBy,
+        orderBy: this.orderBy,
+        accName: this.acc_name,
+        fromDate: this.fromDate,
+        toDate: this.toDate 
       })
       .then(r=>{
         this.transactions = r.data.transaction;
@@ -137,7 +141,9 @@ export default {
             page: this.currentPage,
             sortBy: this.sortBy,
             orderBy: this.orderBy,
-            accName: this.acc_name 
+            accName: this.acc_name,
+            fromDate: this.fromDate,
+            toDate: this.toDate 
           }).then(r=>{
             this.transactions = r.data.transaction;
             this.numOfPages = Math.ceil(r.data.pages / 20);
@@ -179,21 +185,40 @@ export default {
         for(let i = 0; i<this.accounts.length; i++){
           this.accounts[i].selected = false;
         }
-        
       })
     },
     getTransactionsByDate(){
-      if (this.fromDate !== "" && this.toDate !== ""){
-        this.transactions = this.allTransactions;
-
-        let localFrom = this.fromDate;
-        let localTo = this.toDate;
-        let filteredTransactions = this.transactions.filter(function(tran){
-          return moment(tran.tra_date) >= moment(localFrom) && moment(tran.tra_date) <= moment(localTo);
+      if (this.fromDate !== null && this.toDate !== null){
+        axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
+          sid: localStorage.getItem('sid'),
+          page: this.currentPage,
+          sortBy: this.sortBy,
+          orderBy: this.orderBy,
+          accName: this.acc_name ,
+          fromDate: this.fromDate,
+          toDate: this.toDate
+        }).then(r=>{
+          this.transactions = r.data.transaction;
+          this.numOfPages = Math.ceil(r.data.pages / 20);
+          this.displayingPages = [];
+          this.allPagesArray = [];
+          
+          //Get all pages
+          for(let i = 1; i<=this.numOfPages; i++){
+            this.allPagesArray.push(i);
+          }
+          
+          //Set pages to display
+          if (this.numOfPages > 5){
+            for(let i = 1; i<=5; i++){
+              this.displayingPages.push(i);
+            }
+          }else{
+            for(let i = 1; i<=this.numOfPages; i++){
+              this.displayingPages.push(i);
+            }
+          }
         })
-        
-
-        this.transactions = filteredTransactions;
       }
     },
     transactionSortBy(property){
@@ -212,7 +237,9 @@ export default {
         page: this.currentPage,
         sortBy: property,
         orderBy: this.orderBy,
-        accName: this.acc_name
+        accName: this.acc_name,
+        fromDate: this.fromDate,
+        toDate: this.toDate 
       }).then(r=>{
         this.transactions = r.data.transaction;
       })
@@ -238,6 +265,18 @@ export default {
 
       this.getTransactionsByDate();
     },
+    clearDate(){
+      if (this.targetInput === 'from'){
+        this.fromDate = null;
+      }else if(this.targetInput === 'to'){
+        this.toDate = null;
+      }
+
+      this.showingCalendar = false;
+      if(this.fromDate === null ^ this.toDate === null){
+        this.getTransactions();
+      }
+    },
     accountPlaceholder(){
       //Applying classes
       this.showingAccPlaceholder = true;
@@ -246,9 +285,9 @@ export default {
       }
       //Validation to prevent displaying the same results
       if(this.acc_name !== null){
+        this.acc_name = null;
         this.getTransactions();
       }
-      this.acc_name = null;
     },
     setPage(page){
       //Validation for "next" and "previous" page buttons

@@ -2,29 +2,9 @@
   <div class="transactions">
     <!-- Left side -->
     <div class="aside">
-      <p>Pretraga</p>
-      <span>Od datuma</span>
-      <input type="text" readonly v-model = "fromDate">
-        <i class="far fa-calendar-alt" @click = "showCalendarFunc('from')"></i>
-        <br>
-      <span>Do datuma</span>
-      <input type="text" readonly v-model = "toDate">
-        <i class="far fa-calendar-alt" @click = "showCalendarFunc('to')"></i>
-        <br>
-      <!-- Calendar -->
-      <div class="calendar-wrapper" v-if="showingCalendar">
-        <calendar
-          @selectDate = 'setDate'
-          @showCallEmit = "showingCalendar = false"
-        />
-        <button @click = "clearDate">Clear date</button>
-      </div>
-    </div>
-
-    <!-- Right side -->
-    <div class="main">
       <!-- Accounts -->
-      <div :class="{accounts}">
+      <p class = "heading">Kliknite na racun kako biste filtrirali transakcije po racunu</p>
+      <div class="accounts">
         <div class = "each-account-placeholder" :class = "{selected: showingAccPlaceholder}" @click = "accountPlaceholder"><p>Pregled sa svih racuna</p></div>
         <div v-for="account in accounts" class = "each-account"
           :class = "{selected: account.selected}"
@@ -32,6 +12,34 @@
           @click = "getTransactionsByAccount(account.acc_name)"
         >
           <p>{{account.acc_name}}</p>
+        </div>
+      </div>
+      <!-- Calendar -->
+      <div class="calendar-wrapper" v-if="showingCalendar">
+        <calendar
+          @selectDate = 'setDate'
+          @showCallEmit = "showingCalendar = false"
+        />
+        <button @click = "clearDate">Obrisite unet datum</button>
+      </div>
+    </div>
+
+    <!-- Right side -->
+    <div class="main">
+      <div class="search-date">
+        <div class="each-search-date">
+          <span>Od datuma</span>
+          <div class="input-calendar">
+            <input type="text" readonly v-model = "fromDate">
+            <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('from')"></i>
+          </div>
+        </div>
+        <div class="each-search-date">
+          <span>Do datuma</span>
+          <div class="input-calendar">
+            <input type="text" readonly v-model = "toDate">
+            <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('to')"></i>
+          </div>
         </div>
       </div>
       <!-- Table -->
@@ -56,16 +64,22 @@
             <div class= "cell">{{tr.tra_description}}</div>
           </div>
         </div>
+        <div class = "table-shade" v-if = "showingTableShade"></div>
+        <p class = "table-shade-p" v-if = "showingTableShade">Nemate transakcije po zadatim kriterijumima</p>
         <!-- Pagination -->
         <div class="pagination-wrap" v-if = "allPagesArray.length > 1">
-          <div class="pages">
+          <div class="pages-dynamic">
             <button class="page-btn" @click= "setPage(1)">Prva strana</button>
             <button class="page-btn" @click= "setPage(currentPage-1)">Prethodna strana</button>
+          </div>
 
-            <button class="page-array" v-for = "page in displayingPages" :key="page" @click= "setPage(page)">
+          <div class="pages-dynamic">
+            <button v-for = "page in displayingPages" :key="page" @click= "setPage(page)">
               {{page}}
             </button>
-            
+          </div>
+
+          <div class="pages-dynamic">
             <button class="page-btn" @click= "setPage(currentPage+1)">Sledeca strana</button>
             <button class="page-btn" @click= "setPage(allPagesArray.length)">Poslednja strana</button>
           </div>
@@ -94,7 +108,8 @@ export default {
       targetInput: null,
       sortBy: 'tra_date',
       orderBy: 'ASC',
-      acc_name: null
+      acc_name: null,
+      showingTableShade: false
     }
   },
   components : {
@@ -112,23 +127,33 @@ export default {
         toDate: this.toDate 
       })
       .then(r=>{
-        this.transactions = r.data.transaction;
-        this.numOfPages = Math.ceil(r.data.pages / 20);
-        this.allPagesArray = [];
-        this.displayingPages = [];
-        //Get all pages
-        for(let i = 1; i<=this.numOfPages; i++){
-          this.allPagesArray.push(i);
-        }
-        
-        //Set pages to display
-        if (this.numOfPages > 5){
-          for(let i = 1; i<=5; i++){
-            this.displayingPages.push(i);
-          }
+        //Check for empty result set, if its empty - apply table shade
+        if (r.data.transaction.length === 0){
+          this.showingTableShade = true;
         }else{
+          //If shade is previously applied, remove it
+          if(this.showingTableShade){
+            this.showingTableShade = false;
+          }
+
+          this.transactions = r.data.transaction;
+          this.numOfPages = Math.ceil(r.data.pages / 20);
+          this.allPagesArray = [];
+          this.displayingPages = [];
+          //Get all pages
           for(let i = 1; i<=this.numOfPages; i++){
-            this.displayingPages.push(i);
+            this.allPagesArray.push(i);
+          }
+          
+          //Set pages to display
+          if (this.numOfPages > 5){
+            for(let i = 1; i<=5; i++){
+              this.displayingPages.push(i);
+            }
+          }else{
+            for(let i = 1; i<=this.numOfPages; i++){
+              this.displayingPages.push(i);
+            }
           }
         }
       })
@@ -145,24 +170,34 @@ export default {
             fromDate: this.fromDate,
             toDate: this.toDate 
           }).then(r=>{
-            this.transactions = r.data.transaction;
-            this.numOfPages = Math.ceil(r.data.pages / 20);
-            this.displayingPages = [];
-            this.allPagesArray = [];
-            
-            //Get all pages
-            for(let i = 1; i<=this.numOfPages; i++){
-              this.allPagesArray.push(i);
-            }
-            
-            //Set pages to display
-            if (this.numOfPages > 5){
-              for(let i = 1; i<=5; i++){
-                this.displayingPages.push(i);
-              }
+            //Check for empty result set, if its empty - apply table shade
+            if (r.data.transaction.length === 0){
+              this.showingTableShade = true;
             }else{
+              //If shade is previously applied, remove it
+              if(this.showingTableShade){
+                this.showingTableShade = false;
+              }
+
+              this.transactions = r.data.transaction;
+              this.numOfPages = Math.ceil(r.data.pages / 20);
+              this.displayingPages = [];
+              this.allPagesArray = [];
+              
+              //Get all pages
               for(let i = 1; i<=this.numOfPages; i++){
-                this.displayingPages.push(i);
+                this.allPagesArray.push(i);
+              }
+              
+              //Set pages to display
+              if (this.numOfPages > 5){
+                for(let i = 1; i<=5; i++){
+                  this.displayingPages.push(i);
+                }
+              }else{
+                for(let i = 1; i<=this.numOfPages; i++){
+                  this.displayingPages.push(i);
+                }
               }
             }
           })
@@ -198,24 +233,34 @@ export default {
           fromDate: this.fromDate,
           toDate: this.toDate
         }).then(r=>{
-          this.transactions = r.data.transaction;
-          this.numOfPages = Math.ceil(r.data.pages / 20);
-          this.displayingPages = [];
-          this.allPagesArray = [];
-          
-          //Get all pages
-          for(let i = 1; i<=this.numOfPages; i++){
-            this.allPagesArray.push(i);
-          }
-          
-          //Set pages to display
-          if (this.numOfPages > 5){
-            for(let i = 1; i<=5; i++){
-              this.displayingPages.push(i);
-            }
+          //Check for empty result set, if its empty - apply table shade
+          if (r.data.transaction.length === 0){
+            this.showingTableShade = true;
           }else{
+            //If shade is previously applied, remove it
+            if(this.showingTableShade){
+              this.showingTableShade = false;
+            }
+
+            this.transactions = r.data.transaction;
+            this.numOfPages = Math.ceil(r.data.pages / 20);
+            this.displayingPages = [];
+            this.allPagesArray = [];
+            
+            //Get all pages
             for(let i = 1; i<=this.numOfPages; i++){
-              this.displayingPages.push(i);
+              this.allPagesArray.push(i);
+            }
+            
+            //Set pages to display
+            if (this.numOfPages > 5){
+              for(let i = 1; i<=5; i++){
+                this.displayingPages.push(i);
+              }
+            }else{
+              for(let i = 1; i<=this.numOfPages; i++){
+                this.displayingPages.push(i);
+              }
             }
           }
         })
@@ -355,15 +400,15 @@ export default {
   0% {background-color: rgb(234, 236, 236);}
   100% {background-color: rgb(196, 188, 188);}
 }
-
+/* Main parts */
 .transactions{
   display:flex;
-  margin: 50px auto;
+  margin: 20px auto;
   font-weight: 600;
 }
 .aside{
   width:14%;
-  margin-left: 3%;
+  margin-left: 2%;
 }
 .main{
   width:80%;
@@ -371,6 +416,34 @@ export default {
   display:flex;
   flex-direction: column;
 }
+/* Inputs for date filter */
+.search-date{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.each-search-date{
+  margin: 5px 15px;
+}
+.each-search-date span{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  right: 9%;
+}
+.input-calendar{
+  display: flex;
+  align-content: center;
+}
+.input-calendar input {
+  margin-right: 8px;
+}
+.far.fa-calendar-alt{
+  cursor: pointer;
+  position: relative;
+  bottom: 2px;
+}
+/* Arrows on table */
 .arrow-down{
   width: 0;
   height: 0;
@@ -385,7 +458,9 @@ export default {
   border-right: 5px solid transparent;
   border-bottom: 5px solid white;
 }
+/* Table */
 .main-table {
+  position: relative;
   overflow: hidden;
   border-radius: 25px;
   display: flex;
@@ -405,20 +480,19 @@ export default {
   flex-direction: row;
   width: 100%;
   background-color: #17A2B8 !important;
-  height: 8%;
+  height: 7%;
 }
 .pagination-wrap{
   width: 100%;
-  height: 8%;
+  height: 7%;
   display:flex;
-  justify-content: center;
+  justify-content: space-evenly;
 }
-.pages{
-  display:flex;
-  flex-direction: row;
+.pages-dynamic{
+  display: flex;
 }
 .table-data{
-  height: 84%;
+  height: 86%;
 }
 .row-other:hover{
   animation-name: color-change-row;
@@ -442,23 +516,52 @@ export default {
 .row-first .cell:hover{
   cursor: pointer;
 }
+.table-shade{
+  width: 100%;
+  height: 700px;
+  z-index: 100;
+  background-color: gray;
+  position: absolute;
+  opacity: 0.8;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.table-shade-p {
+  font-size: 45px;
+  font-weight: 600;
+  width: 100%;
+  height: 700px;
+  z-index: 101;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  top: 170px;
+}
+/* Calendar */
 .calendar-wrapper{
   position: absolute;
   top: 140px;
   left: 270px;
-  z-index:1;
+  z-index:101;
+}
+/* Accounts */
+.aside .heading{
+  opacity: 0.6;
 }
 .accounts{
+  margin-top: 19px;
   display:flex;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+  flex-direction: column;
 }
 .each-account.selected{
   background-color: #17A2B8;
   color: white;
   border: 1px solid gray;
-  width: 8%;
-  margin: 5px;
+  width: 90%;
+  margin-right: 10%;
+  margin-top: 1%;
 }
 .each-account.selected:hover{
   animation-name: color-change-blue-shade;
@@ -466,10 +569,17 @@ export default {
   animation-fill-mode: forwards;
 }
 .each-account{
+  height: 80px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid gray;
-  width: 8%;
-  margin: 5px;
-  text-align: center;
+  width: 90%;
+  margin-right: 10%;
+  margin-top: 1%;
+}
+.each-account p, .each-account-placeholder p {
+  margin: 0;
 }
 .each-account:hover{
   cursor: pointer;
@@ -478,17 +588,23 @@ export default {
   animation-fill-mode: forwards;
 }
 .each-account-placeholder{
+  height: 80px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid gray;
-  margin: 5px;
-  margin-right: 30px;
+  width: 90%;
+  margin-right: 10%;
+  margin-top: 1%;
   text-align: center;
 }
 .each-account-placeholder.selected{
   background-color: #17A2B8;
   color: white;
   border: 1px solid gray;
-  margin: 5px;
-  margin-right: 30px;
+  width: 90%;
+  margin-right: 10%;
+  margin-top: 1%;
 }
 .each-account-placeholder:hover{
   cursor: pointer;
@@ -500,8 +616,5 @@ export default {
   animation-name: color-change-blue-shade;
   animation-duration: 0.6s;
   animation-fill-mode: forwards;
-}
-.far.fa-calendar-alt{
-  cursor: pointer;
 }
 </style>

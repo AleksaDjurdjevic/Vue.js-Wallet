@@ -108,13 +108,18 @@ export default {
 .statistics{
   background-color:#bebebe79;
  /*   background-color:aliceblue; */
+    background-image: linear-gradient(#bebebebb,#FFFFFF, #bebebebb);
+
 }
 .statisticsRow {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .chart {
   box-sizing: border-box;
   width: 50%;
+  min-width:300px;
 }
 h1{
   text-align: center;

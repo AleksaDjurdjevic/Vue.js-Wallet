@@ -11,8 +11,13 @@
      <div class="round">
           <div class="divM ch" @click="selectYear"><h6>{{year}}</h6></div>
           <div class="divM">
+<<<<<<< HEAD
             <div class="divI ch" @click="addYear" > <i class="fa fa-caret-up" style="font-size:20px;"></i></div>
              <div class="divI ch" @click="subtractYear" ><i class="fa fa-caret-down" style="font-size:20px;" ></i> </div>
+=======
+            <div class="divI ch" @click="addYear" > <i class="fas fa-caret-up" style="font-size:20px;"></i></div>
+             <div class="divI ch" @click="subtractYear" ><i class="fas fa-caret-down" style="font-size:20px;" ></i> </div>
+>>>>>>> 3f4db471569d5d504b2f653f198757913da05e91
         </div>
          
       </div>  <!-- end round -->

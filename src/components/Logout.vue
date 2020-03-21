@@ -20,6 +20,7 @@ export default {
           this.$store.state.isLoggedIn = false;
           localStorage.removeItem("sid");
           localStorage.removeItem("user");
+          localStorage.removeItem("setDefAcc");
           console.log("usepsno logout");
           console.log(
             "ovo je iz vuexa isLogedIn ",

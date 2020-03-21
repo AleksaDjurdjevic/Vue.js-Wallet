@@ -123,7 +123,7 @@
 
       
         <div class="showTransaction scrollTD" >
-          <table >
+          <table v-if="allTransaction && allTransaction.length > 0">
           <tr>
             <th class="scrollTD">Tip tranakcije:</th> 
             <th class="scrollTD"> Iznos:</th>
@@ -137,6 +137,23 @@
             <td class="scrollTD">{{acc.tra_description}}</td>
             <td class="scrollTD">{{formateDate(acc.tra_date)}}</td>
             <td class="scrollTD cancelTransaction" @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)">Opozovi</td>
+          </tr>
+          </table>
+          <table v-else>
+          <tr>
+            <th class="scrollTD">Tip tranakcije:</th> 
+            <th class="scrollTD"> Iznos:</th>
+            <th class="scrollTD"> Opis:</th>
+            <th class="scrollTD"> Datum: </th>
+            <th class="scrollTD">Opozovi transakciju: </th>
+          </tr>
+          <tr><td colspan="5">Nema podataka za prikazivanje</td></tr>
+          <tr v-for="a in 6" :key="a">
+            <td class="scrollTD"> <br> </td> 
+            <td class="scrollTD"> <br> </td>
+            <td class="scrollTD"> <br> </td>
+            <td class="scrollTD"> <br> </td>
+            <td class="scrollTD cancelTransaction"></td>
           </tr>
           </table>
               
@@ -200,7 +217,10 @@
       <!-- transaction -->
 
       <div class="showGraf scrollTD">
-        <ChartCircle v-if="setParamsForChartTrue"/>
+        <h2 v-if="setParamsForChartTrue">Statistika svih transakcija računa</h2>
+        <h2 v-else>Primer transakcija računa</h2>
+        <ChartCircle />
+        
       </div>
       <!-- end showGraf -->
     </div>
@@ -717,6 +737,9 @@ export default {
   flex-wrap: wrap;
   max-height:50%;
   min-width: 300px;
+  justify-content: center;
+  padding-top:2%;
+ 
 }
 
 .pickOut {
@@ -831,15 +854,21 @@ input[type="button"]:active {
 table{
   box-sizing: border-box;
   min-width:100%;
-  border: solid 2px rgba(0, 0, 0, 0.5);
+ 
+}
+tr{
+   border-top:solid 1px rgba(113, 113, 116);
+    border-bottom:solid 1px rgba(113, 113, 116);
 }
 
 
 td, th{
   padding:8px;
-  border:solid 1px rgba(0,0,0.5);
   max-width: 100px;
   min-width:60px;
+  border-right:solid 1px rgba(113, 113, 116, 0.2);
+    border-left:solid 1px rgba(113, 113, 116, 0.2);
+
   
 }
 th{
@@ -882,7 +911,7 @@ h1 .orange {
   min-height: 100%;
   background: #000000;
  
-  opacity: 0.7;
+  opacity: 0.6;
   position: fixed;
   left: 0;
   top: 0;

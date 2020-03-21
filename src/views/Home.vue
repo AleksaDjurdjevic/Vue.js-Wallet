@@ -218,7 +218,7 @@
 
       <div class="showGraf scrollTD">
         <h2 v-if="setParamsForChartTrue">Statistika svih transakcija računa</h2>
-        <h2 v-else>Primer transakcija računa</h2>
+        <p v-else>Primer statistike računa sa nasumičnim podatcima</p>
         <ChartCircle />
         
       </div>
@@ -467,13 +467,13 @@ export default {
           this.createBuy();
           return;
         }
-        this.buyErrors.push("Sum must be a number");
+        this.buyErrors.push("Iznos mora biti upisan numeričkim vrednostima");
       }
       if (!this.buySum) {
-        this.buyErrors.push("Sum required");
+        this.buyErrors.push("Iznos mora biti upisan");
       }
       if (!this.buyDesc) {
-        this.buyErrors.push("Description required");
+        this.buyErrors.push("Unesite opis radi lakšeg praćenja toka novca");
       }
     },
     createBuy() {
@@ -513,13 +513,13 @@ export default {
           this.createAddMoney();
           return;
         }
-        this.addErrors.push("Sum must be a number");
+        this.addErrors.push("Iznos mora biti upisan numeričkim vrednostima");
       }
       if (!this.addSum) {
-        this.addErrors.push("Sum required");
+        this.addErrors.push("Iznos mora biti upisan");
       }
       if (!this.addDesc) {
-        this.addErrors.push("Description required");
+        this.addErrors.push("Unesite opis radi lakšeg praćenja toka novca");
       }
     },
     createAddMoney() {
@@ -614,7 +614,8 @@ export default {
           console.log(`old value- ${oldValue.acc_name}  newValue- ${newValue.acc_name}`);
        if(oldValue.acc_name !== undefined){
          this.refreshChart(newValue.acc_name);
-       } 
+       } else{ this.setParamsForChart('')
+}
       }
   },
   computed: {

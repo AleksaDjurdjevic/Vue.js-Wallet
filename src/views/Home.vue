@@ -654,6 +654,7 @@ export default {
 
 
 .dashboard {
+  font-size: 0.8em;
   text-align: center;
   padding:3% 0 0 0 ;
   width: 100%;
@@ -791,7 +792,7 @@ export default {
 .inputWrite {
   padding: 1%;
   margin-bottom: 2%;
-  width: 60%;
+  width: 60% !important; 
   background-color: rgb(255, 255, 255);
   border-color: rgb(196, 188, 188);
 }

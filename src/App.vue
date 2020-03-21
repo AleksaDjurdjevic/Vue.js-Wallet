@@ -157,11 +157,8 @@ export default {
 
 .nav a.router-link-exact-active {
   /* color: #42b983; */
- 
  /* border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
-}
-*/
-
+}*/
 
 body {
   padding: 0;
@@ -263,7 +260,7 @@ article p {
   padding: 40px 0;
 }
 
-#app p {
+.app p {
   font-weight: bold;
   margin: 5px 0;
 }
@@ -331,7 +328,7 @@ article p {
 .item {
   padding: 20px;
   border-radius: 8px;
-  background: #ffb973;
+  background: #968f88;
   margin-bottom: 30px;
 }
 
@@ -426,21 +423,21 @@ h6 {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: yellow;
+  background-color:#17a2b8;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
 .dropdown-content a {
-  color: #17a2b8;
+  color: #f8feff;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
 
 .dropdown-content a:hover {
-  background-color: pink;
+  background-color:  #56afbd;
 }
 
 .dropdown:hover .dropdown-content {

@@ -181,7 +181,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .userProfile {
   /*ovo obrisati, ove margine */
   margin-top: 60px;

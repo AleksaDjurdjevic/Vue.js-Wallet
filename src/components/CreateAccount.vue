@@ -106,7 +106,7 @@ export default {
 };
 </script>
 
-<style sccoped>
+<style scoped>
 
 .createAccDivChaild{
     border: 1px solid black;

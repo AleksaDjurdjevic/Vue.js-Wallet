@@ -4,9 +4,9 @@
       <h5 id="store-name">Enon Solutions d.o.o</h5>
       <address id="store-adress">
         <p>
-          Funny street 55, East Heaven 343
-          <br />Long Beach Country
-        </p>Phone: +0123456789
+          Omladniskih Brigada 86
+          <br />Beograd
+        </p>Phone: +00 000 000 00
       </address>
       <div id="social"></div>
     </div>

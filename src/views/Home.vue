@@ -796,11 +796,7 @@ export default {
 }
 select.inputWrite {
   
-<<<<<<< HEAD
-  /* width: 42.5%; */
-=======
  /* width: 42.5%; */
->>>>>>> 3f4db471569d5d504b2f653f198757913da05e91
   border: inset 2px rgb(196, 188, 188);
 }
 .option:hover {
@@ -814,11 +810,7 @@ input:focus {
 
 input[type="button"] {
   font-size: 1.3em;
-<<<<<<< HEAD
- /* width: 42.5%; */
-=======
 /*  width: 42.5%; */
->>>>>>> 3f4db471569d5d504b2f653f198757913da05e91
   border: inset 2px rgb(196, 188, 188);
   cursor: pointer;
 }

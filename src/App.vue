@@ -1,53 +1,5 @@
 <template>
   <div class="app">
-<<<<<<< HEAD
-    <div class="wrraper">
-        <header id="page-header">
-            <div class="container">
-              
-                  <div>
-                    <img src="./assets/logo.png" alt="" id="logo">
-                  </div>
-                  <div class='nav'>
-                      <ul>
-                        <li><router-link to="/">Početna</router-link></li> 
-                        <li><router-link to="/transactions">Transakcije</router-link></li>
-                        <li><router-link to="/savings">Štednja</router-link></li> 
-                        <li><router-link to="/statistics">Statistika</router-link></li>
-                      </ul>
-                      
-                  </div>
-             
-
-                <div class='nav' id="nav">
-                  <div class="cart" id="cart">      
-                    <!-- <img src="./assets/basket.png" alt="Shopping basket"> -->
-                    <ul>
-                      <li><router-link to="/login" v-if='!$store.state.isLoggedIn'>Ulogujte se</router-link></li>
-                    </ul>
-                   
-                    <!-- Ovo se prikazuje kad je user ulogovan -->
-                    <div class="dropdown" v-if="$store.state.isLoggedIn">
-                      <ul>
-                        <li>
-                          <router-link to="/profile" class="dropbtn">Uros Dimitrijevic</router-link>
-                        </li>
-                      </ul>
-                      
-                      <div class="dropdown-content">
-                        <router-link to="/profile">Profil</router-link>
-                        <router-link to="/logOut">Izlogujte se</router-link>
-                      </div>
-                    </div> 
-
-                    <ul>
-                      <li><router-link to="/registartion">Registracija</router-link></li>
-                    </ul>
-
-                  </div>
-                </div>
-                
-=======
     <header id="page-header">
       <div class="container">
         <div class="nav cart" >    
@@ -76,7 +28,6 @@
                 <router-link to="/profile">Profil</router-link>
                 <router-link to="/logOut">Izlogujte se</router-link>
               </div>
->>>>>>> 3f4db471569d5d504b2f653f198757913da05e91
             </div>
 
             <router-link to="/registartion">Registracija</router-link>
@@ -167,54 +118,16 @@ export default {
   }
 };
 </script>
-<<<<<<< HEAD
-<style >
-.app{
-   font-family: 'Teko', sans-serif;
-   font-size:1.2em;
-}
-
-
-
-
-
-
-/* .nav {
-  border-bottom: 1px solid black;
-}
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-   
-}
-.nav a {
-  font-weight: bold;
-  color: #2c3e50;
-  font-size: 18px;
-}
-
-.nav a.router-link-exact-active {
-  color: #42b983;
-  border: 1px solid #2c3e50;
-}
-=======
 <style>
->>>>>>> 3f4db471569d5d504b2f653f198757913da05e91
-
-
-
 .nav a.router-link-exact-active {
   /* color: #42b983; */
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
 }
 body {
   padding: 0;
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-   font-family: 'Teko', sans-serif;
+  margin: 0; 
+  font-family: 'Teko', sans-serif;
+  font-size:1.2em;
 }
 
 main {

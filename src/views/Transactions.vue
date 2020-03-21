@@ -14,14 +14,6 @@
           <p>{{account.acc_name}}</p>
         </div>
       </div>
-      <!-- Calendar -->
-      <div class="calendar-wrapper" v-if="showingCalendar">
-        <calendar
-          @selectDate = 'setDate'
-          @showCallEmit = "showingCalendar = false"
-        />
-        <button @click = "clearDate">Obrisite unet datum</button>
-      </div>
     </div>
 
     <!-- Right side -->
@@ -44,6 +36,14 @@
       </div>
       <!-- Table -->
       <div class="main-table">
+        <!-- Calendar -->
+        <div class="calendar-wrapper" v-if="showingCalendar">
+          <calendar
+            @selectDate = 'setDate'
+            @showCallEmit = "showingCalendar = false"
+          />
+          <button @click = "clearDate">Obrisite unet datum</button>
+        </div>
         <!-- First row -->
         <div class="row-first">
           <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
@@ -65,23 +65,23 @@
           </div>
         </div>
         <div class = "table-shade" v-if = "showingTableShade"></div>
-        <p class = "table-shade-p" v-if = "showingTableShade">Nemate transakcije po zadatim kriterijumima</p>
+        <p class = "table-shade-p" v-if = "showingTableShade">Nemate transakcije za prikaz</p>
         <!-- Pagination -->
         <div class="pagination-wrap" v-if = "allPagesArray.length > 1">
           <div class="pages-dynamic">
-            <button class="page-btn" @click= "setPage(1)">Prva strana</button>
-            <button class="page-btn" @click= "setPage(currentPage-1)">Prethodna strana</button>
+            <button class="page-btn" @click= "setPage(allPagesArray[0])">Prva strana</button>
+            <button class="page-btn" @click= "setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))">Prethodna strana</button>
           </div>
 
           <div class="pages-dynamic">
-            <button v-for = "page in displayingPages" :key="page" @click= "setPage(page)">
-              {{page}}
+            <button v-for = "page in displayingPages" :key="page.page" @click= "setPage(page)" :class = "{selected: page.selected}">
+              {{page.page}}
             </button>
           </div>
 
           <div class="pages-dynamic">
-            <button class="page-btn" @click= "setPage(currentPage+1)">Sledeca strana</button>
-            <button class="page-btn" @click= "setPage(allPagesArray.length)">Poslednja strana</button>
+            <button class="page-btn" @click= "setPage(validateDisplayingPages('next', allPagesArray[currentPage]))">Sledeca strana</button>
+            <button class="page-btn" @click= "setPage(allPagesArray[allPagesArray.length-1])">Poslednja strana</button>
           </div>
         </div>
       </div>
@@ -140,68 +140,68 @@ export default {
           this.numOfPages = Math.ceil(r.data.pages / 20);
           this.allPagesArray = [];
           this.displayingPages = [];
+
           //Get all pages
           for(let i = 1; i<=this.numOfPages; i++){
-            this.allPagesArray.push(i);
+            //Page one will be selected
+              if(i === 1){
+                let pageObj = {
+                  page: i,
+                  selected: true
+                };
+                 this.allPagesArray.push(pageObj);
+              }else{
+                let pageObj = {
+                  page: i,
+                  selected: false
+                };
+                this.allPagesArray.push(pageObj);
+              }
           }
           
           //Set pages to display
           if (this.numOfPages > 5){
             for(let i = 1; i<=5; i++){
-              this.displayingPages.push(i);
+              //Page one will be selected
+              if(i === 1){
+                let pageObj = {
+                  page: i,
+                  selected: true
+                };
+                this.displayingPages.push(pageObj);
+              }else{
+                let pageObj = {
+                  page: i,
+                  selected: false
+                };
+                this.displayingPages.push(pageObj);
+              }  
             }
           }else{
             for(let i = 1; i<=this.numOfPages; i++){
-              this.displayingPages.push(i);
+              //Page one will be selected
+              if(i === 1){
+                let pageObj = {
+                  page: i,
+                  selected: true
+                };
+                this.displayingPages.push(pageObj);
+              }else{
+                let pageObj = {
+                  page: i,
+                  selected: false
+                };
+                this.displayingPages.push(pageObj);
+              }  
             }
-          }
+          } 
         }
       })
     },
     getTransactionsByAccount(acc_name){
       if(this.acc_name !== acc_name){
         this.acc_name = acc_name;
-        axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
-            sid: localStorage.getItem('sid'),
-            page: this.currentPage,
-            sortBy: this.sortBy,
-            orderBy: this.orderBy,
-            accName: this.acc_name,
-            fromDate: this.fromDate,
-            toDate: this.toDate 
-          }).then(r=>{
-            //Check for empty result set, if its empty - apply table shade
-            if (r.data.transaction.length === 0){
-              this.showingTableShade = true;
-            }else{
-              //If shade is previously applied, remove it
-              if(this.showingTableShade){
-                this.showingTableShade = false;
-              }
-
-              this.transactions = r.data.transaction;
-              this.numOfPages = Math.ceil(r.data.pages / 20);
-              this.displayingPages = [];
-              this.allPagesArray = [];
-              
-              //Get all pages
-              for(let i = 1; i<=this.numOfPages; i++){
-                this.allPagesArray.push(i);
-              }
-              
-              //Set pages to display
-              if (this.numOfPages > 5){
-                for(let i = 1; i<=5; i++){
-                  this.displayingPages.push(i);
-                }
-              }else{
-                for(let i = 1; i<=this.numOfPages; i++){
-                  this.displayingPages.push(i);
-                }
-              }
-            }
-          })
-
+        this.getTransactions();
         //apply selected
         for(let i = 0; i<this.accounts.length; i++){
           if(this.accounts[i].acc_name === acc_name){
@@ -224,46 +224,7 @@ export default {
     },
     getTransactionsByDate(){
       if (this.fromDate !== null && this.toDate !== null){
-        axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
-          sid: localStorage.getItem('sid'),
-          page: this.currentPage,
-          sortBy: this.sortBy,
-          orderBy: this.orderBy,
-          accName: this.acc_name ,
-          fromDate: this.fromDate,
-          toDate: this.toDate
-        }).then(r=>{
-          //Check for empty result set, if its empty - apply table shade
-          if (r.data.transaction.length === 0){
-            this.showingTableShade = true;
-          }else{
-            //If shade is previously applied, remove it
-            if(this.showingTableShade){
-              this.showingTableShade = false;
-            }
-
-            this.transactions = r.data.transaction;
-            this.numOfPages = Math.ceil(r.data.pages / 20);
-            this.displayingPages = [];
-            this.allPagesArray = [];
-            
-            //Get all pages
-            for(let i = 1; i<=this.numOfPages; i++){
-              this.allPagesArray.push(i);
-            }
-            
-            //Set pages to display
-            if (this.numOfPages > 5){
-              for(let i = 1; i<=5; i++){
-                this.displayingPages.push(i);
-              }
-            }else{
-              for(let i = 1; i<=this.numOfPages; i++){
-                this.displayingPages.push(i);
-              }
-            }
-          }
-        })
+        this.getTransactions();
       }
     },
     transactionSortBy(property){
@@ -334,24 +295,44 @@ export default {
         this.getTransactions();
       }
     },
+    validateDisplayingPages(direction, obj){
+      if(obj === undefined){
+        if(direction === 'next'){
+          return this.allPagesArray[this.allPagesArray.length-1];
+        }else if (direction === 'previous'){
+          return this.allPagesArray[0];
+        }
+      }else{
+        return obj;
+      }
+    },
     setPage(page){
       //Validation for "next" and "previous" page buttons
-      if(page<1){
-        page=1;
-      }else if (page>this.allPagesArray.length){
-        page = this.allPagesArray.length;
+      if(page.page<1){
+        page.page=1;
+      }else if (page.page>this.allPagesArray.length){
+        page.page = this.allPagesArray.length;
       }
       //If page is changed
-      if(page !== this.currentPage){
+      if(page.page !== this.currentPage){
         //Fetching data
         axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
           sid: localStorage.getItem('sid'),
-          page,
+          page: page.page,
           sortBy: this.sortBy,
           orderBy: this.orderBy,
           accName: this.acc_name 
         }).then(r=>{
           this.transactions = r.data.transaction;
+
+          //Apply "selected" to page number in pageNav bar, and remove selected from other
+          for(let i = 0; i < this.displayingPages.length; i++){
+            if(this.displayingPages[i].page === page.page){
+              this.displayingPages[i].selected = true;
+            }else{
+              this.displayingPages[i].selected = false;
+            }
+          }
         })
       }
 
@@ -360,24 +341,24 @@ export default {
       
       this.displayingPages = this.allPagesArray.filter(function(oldPage){
         //if the page clicked is the last page
-        if (page === localallPagesArray[localallPagesArray.length-1]){
-          return oldPage == page-4 || oldPage == page-3 || oldPage == page-2|| oldPage == page-1 || oldPage == page;
+        if (page.page === localallPagesArray[localallPagesArray.length-1].page){
+          return oldPage.page == page.page-4 || oldPage.page == page.page-3 || oldPage.page == page.page-2|| oldPage.page == page.page-1 || oldPage.page == page.page;
         //if the page clicked is one before the last
-        }else if (page === localallPagesArray[localallPagesArray.length-2]){
-          return oldPage == page-3 || oldPage == page-2 || oldPage == page-1|| oldPage == page || oldPage == page+1;
+        }else if (page.page === localallPagesArray[localallPagesArray.length-2].page){
+          return oldPage.page == page.page-3 || oldPage.page == page.page-2 || oldPage.page == page.page-1|| oldPage.page == page.page || oldPage.page == page.page+1;
         //if its second page
-        }else if (page === localallPagesArray[1]){
-          return oldPage == page-1 || oldPage == page || oldPage == page+1|| oldPage == page+2 || oldPage == page+3;
+        }else if (page.page === localallPagesArray[1].page){
+          return oldPage.page == page.page-1 || oldPage.page == page.page || oldPage.page == page.page+1|| oldPage.page == page.page+2 || oldPage.page == page.page+3;
         //If its first page
-        }else if (page === localallPagesArray[0]){
-          return oldPage == page || oldPage == page+1 || oldPage == page+2|| oldPage == page+3 || oldPage == page+4;
+        }else if (page.page === localallPagesArray[0].page){
+          return oldPage.page == page.page || oldPage.page == page.page+1 || oldPage.page == page.page+2|| oldPage.page == page.page+3 || oldPage.page == page.page+4;
         //In any other case
         }else{
-          return oldPage == page-2 || oldPage == page-1 || oldPage == page || oldPage == page+1 || oldPage == page+2
+          return oldPage.page == page.page-2 || oldPage.page == page.page-1 || oldPage.page == page.page || oldPage.page == page.page+1 || oldPage.page == page.page+2
         }
       })
       
-      this.currentPage = page;
+      this.currentPage = page.page;
     }
   },
   mounted(){
@@ -389,7 +370,7 @@ export default {
 
 <style scoped>
 @keyframes color-change-blue-shade {
-  0% {background-color: #17A8B9;}
+  0% {background-color: #17a2b8;}
   100% {background-color: rgb(148, 222, 233);}
 }
 @keyframes color-change-white-gray {
@@ -400,11 +381,14 @@ export default {
   0% {background-color: rgb(234, 236, 236);}
   100% {background-color: rgb(196, 188, 188);}
 }
+@keyframes opacity {
+  0% {opacity: 0;}
+  100% {opacity: 0.9}
+}
 /* Main parts */
 .transactions{
   display:flex;
   margin: 20px auto;
-  font-weight: 600;
 }
 .aside{
   width:14%;
@@ -479,17 +463,8 @@ export default {
   display: flex;
   flex-direction: row;
   width: 100%;
-  background-color: #17A2B8 !important;
+  background-color: #17a2b8 !important;
   height: 7%;
-}
-.pagination-wrap{
-  width: 100%;
-  height: 7%;
-  display:flex;
-  justify-content: space-evenly;
-}
-.pages-dynamic{
-  display: flex;
 }
 .table-data{
   height: 86%;
@@ -520,13 +495,16 @@ export default {
   width: 100%;
   height: 700px;
   z-index: 100;
-  background-color: gray;
+  background-color: rgb(196, 188, 188);
   position: absolute;
-  opacity: 0.8;
+  opacity: 0;
   border-radius: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
+  animation-name: opacity;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
 }
 .table-shade-p {
   font-size: 45px;
@@ -537,14 +515,28 @@ export default {
   position: absolute;
   display: flex;
   justify-content: center;
-  top: 170px;
+  top: 200px;
+}
+/* Pagination */
+.pagination-wrap{
+  width: 100%;
+  height: 7%;
+  display:flex;
+  justify-content: space-evenly;
+}
+.pages-dynamic{
+  display: flex;
+}
+.pagination-wrap button.selected{
+  background-color:#17A2B8;
+  color: white;
 }
 /* Calendar */
 .calendar-wrapper{
   position: absolute;
-  top: 140px;
-  left: 270px;
-  z-index:101;
+  top: 0%;
+  left: 40%;
+  z-index:105;
 }
 /* Accounts */
 .aside .heading{

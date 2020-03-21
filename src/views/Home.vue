@@ -627,7 +627,7 @@ export default {
 }
 select.inputWrite {
   
-  width: 42.5%;
+ /* width: 42.5%; */
   border: inset 2px rgb(196, 188, 188);
 }
 .option:hover {
@@ -641,7 +641,7 @@ input:focus {
 
 input[type="button"] {
   font-size: 1.3em;
-  width: 42.5%;
+/*  width: 42.5%; */
   border: inset 2px rgb(196, 188, 188);
   cursor: pointer;
 }

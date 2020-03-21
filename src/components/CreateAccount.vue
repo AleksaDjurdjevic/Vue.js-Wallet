@@ -1,28 +1,29 @@
 <template>
   <div  class="createAccDiv">
     <form class="createAccDivChaild">
-      <h2> Kreiraj novi račun</h2>
-      <label>Izaberi tip računa</label>
-      <br />
-      <select v-model="createSelected">
-        <option
-          v-for="typ in typeAccount"
-          :key="typ.acc_type_id"
-          class="option"
-        >{{typ.acc_type_name}}</option>
-      </select>
-      <br />
-      <label>Suma</label>
-      <br />
-      <input type="text" v-model="createSum" />
-      <br />
-      <label>Naziv računa</label>
-      <br />
-      <input type="text" v-model="createName" />
-      <br />
-      <input type="button" value="Kreiraj Račun" @click="checkFormCreateAcc" />
-      <br />
-      <p v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
+     <div class="forma">
+        <label>Izaberi tip računa</label>
+        <br />
+        <select v-model="createSelected">
+          <option
+            v-for="typ in typeAccount"
+            :key="typ.acc_type_id"
+            class="option"
+          >{{typ.acc_type_name}}</option>
+        </select>
+        <br />
+        <label>Suma</label>
+        <br />
+        <input type="text" v-model="createSum" />
+        <br />
+        <label>Naziv računa</label>
+        <br />
+        <input type="text" v-model="createName" />
+        <br />
+        <input type="button" value="Kreiraj Račun" @click="checkFormCreateAcc" />
+        <br />
+        <p v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
+      </div>
     </form>
 
   </div> <!-- end createAccDiv -->
@@ -85,6 +86,10 @@ export default {
       }
       this.createSum = null;
       this.createName = null;
+
+      this.$router.push({
+        name: 'Home'  
+      })
     },
     getTypeAccount() {
       axios
@@ -112,5 +117,11 @@ export default {
     justify-content: center;
     margin-bottom: 50px;
 }
-
+.forma{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+input[type=button]{
+  margin-top: 25px;
+}
 </style>

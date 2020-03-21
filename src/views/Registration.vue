@@ -1,7 +1,7 @@
 <template>
   <div class="registration">
     <!-- v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )" TREBA U BLA DA SE UBACI -->
-    <div class="bla" >
+    <div class="bla" v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )">
       <h1>Registration</h1> 
       <div>
         
@@ -20,7 +20,7 @@
       <button @click="registration()">Registracija</button>
     </div> 
     
-      <!-- Kada je user ulogovan -->
+    <!-- Kada je user ulogovan -->
     <div v-if="($store.state.isRegistrated || $store.state.isLoggedIn )" class="welcome">
       <h3>Uspesno ste registrovali</h3>
       <br><br>

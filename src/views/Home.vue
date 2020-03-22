@@ -124,14 +124,14 @@
       
         <div class="showTransaction scrollTD" >
           <table v-if="allTransaction && allTransaction.length > 0">
-          <tr>
+          <tr class="tr">
             <th class="scrollTD">Tip tranakcije:</th> 
             <th class="scrollTD"> Iznos:</th>
             <th class="scrollTD"> Opis:</th>
             <th class="scrollTD"> Datum: </th>
             <th class="scrollTD">Opozovi transakciju: </th>
           </tr>
-          <tr v-for="acc in allTransaction" :key="acc.tra_id">
+          <tr class="tr" v-for="acc in allTransaction" :key="acc.tra_id">
             <td class="scrollTD">{{acc.tra_type_name}}</td> 
             <td class="scrollTD">{{acc.tra_amount}}</td>
             <td class="scrollTD">{{acc.tra_description}}</td>
@@ -140,26 +140,26 @@
           </tr>
           </table>
           <table v-else>
-          <tr>
+          <tr class="tr">
             <th class="scrollTD">Tip tranakcije:</th> 
             <th class="scrollTD"> Iznos:</th>
             <th class="scrollTD"> Opis:</th>
             <th class="scrollTD"> Datum: </th>
             <th class="scrollTD">Opozovi transakciju: </th>
           </tr>
-          <tr><td colspan="5">Nema podataka za prikazivanje</td></tr>
-          <tr v-for="a in 6" :key="a">
+          <tr class="tr"><td colspan="5">Nema podataka za prikazivanje</td></tr>
+          <tr class="tr" v-for="a in 8" :key="a">
             <td class="scrollTD"> <br> </td> 
             <td class="scrollTD"> <br> </td>
             <td class="scrollTD"> <br> </td>
             <td class="scrollTD"> <br> </td>
-            <td class="scrollTD cancelTransaction"></td>
+            <td class="scrollTD"> <br> </td>
           </tr>
           </table>
               
      
       </div>
-    </div><!-- END transaction-->
+    </div><!-- END transaction allTrans-->
 
 
 
@@ -218,7 +218,7 @@
 
       <div class="showGraf scrollTD">
         <h2 v-if="setParamsForChartTrue">Statistika svih transakcija računa</h2>
-        <p v-else>Primer statistike računa sa nasumičnim podatcima</p>
+        <h2 v-else>Primer statistike računa sa nasumičnim podatcima</h2>
         <ChartCircle />
         
       </div>
@@ -654,10 +654,12 @@ export default {
 
 
 .dashboard {
-  font-size: 0.8em;
+ 
+
   text-align: center;
-  padding:3% 0 0 0 ;
+  padding:0 0 0 0 ;
   width: 100%;
+   
 }
 .bills {
   padding: 6px 0;
@@ -680,7 +682,7 @@ export default {
 .bill p {
   margin: 0 auto;
   box-sizing: border-box;
-  line-height: 2.8;
+  line-height: 2.1;
   font-weight: 500;
 }
 .create {
@@ -729,10 +731,12 @@ export default {
 }
 .allTrans,
 .showGraf{
+  font-size:initial;
   background-color: #bebebe79;
   
 }
 .showGraf {
+  font-size:initial;
   box-sizing: border-box;
   width: 33.3%;
   display: flex;
@@ -743,6 +747,7 @@ export default {
   padding-top:2%;
  
 }
+
 
 .pickOut {
   box-sizing: border-box;
@@ -790,15 +795,17 @@ export default {
 
 }
 .inputWrite {
-  padding: 1%;
+  padding: 1.5% 1%;
   margin-bottom: 2%;
   width: 60% !important; 
   background-color: rgb(255, 255, 255);
   border-color: rgb(196, 188, 188);
+  font-family: 'Teko', sans-serif !important;
+  font-size: initial;
 }
 select.inputWrite {
   
- /* width: 42.5%; */
+  width: 62.5% !important; 
   border: inset 2px rgb(196, 188, 188);
 }
 .option:hover {
@@ -813,8 +820,10 @@ input:focus {
 input[type="button"] {
   font-size: 1.3em;
 /*  width: 42.5%; */
+  width:62.5% !important;
   border: inset 2px rgb(196, 188, 188);
   cursor: pointer;
+  padding:initial;
 }
 input[type="button"]:hover {
   text-shadow: 0.8px 0.8px 0.8px #000000;
@@ -829,6 +838,7 @@ input[type="button"]:active {
   flex-wrap: wrap;
 }
 .transaction2 {
+  font-size:1.3em;
   position: relative;
   width: 100%;
   display: flex;
@@ -850,26 +860,28 @@ input[type="button"]:active {
   padding-bottom: 25px;
   margin: 20px 9px;
   max-width: 100%;
+  font-size:1.1em;
   
   
 }
 table{
   box-sizing: border-box;
   min-width:100%;
+  border-collapse:collapse;
  
 }
-tr{
-   border-top:solid 1px rgba(113, 113, 116);
-    border-bottom:solid 1px rgba(113, 113, 116);
+.tr{
+   border-top:solid 1px rgb(113, 113, 116, 0.459) !important;
+    border-bottom:solid 1px rgba(113, 113, 116, 0.459) !important;
 }
 
 
 td, th{
-  padding:8px;
+  padding:6px;
   max-width: 100px;
   min-width:60px;
   border-right:solid 1px rgba(113, 113, 116, 0.2);
-    border-left:solid 1px rgba(113, 113, 116, 0.2);
+  border-left:solid 1px rgba(113, 113, 116, 0.2);
 
   
 }
@@ -882,21 +894,23 @@ th{
 }
 
 
-h1:nth-of-type(2) {
+h1 {
+  font-weight: normal;
   margin: 0 auto;
-  padding: 3% 0 0 0;
+  padding: 1% 0 0 0;
   max-width: fit-content;
-  border-bottom: solid rgb(250, 174, 33);
-  border-bottom: double black;
+
+ 
 }
 h1 .orange {
   word-spacing: 20px;
 }
+
 .nameBill p{
   display: inline-block;
   font-size: 2em;
   margin-right:2.5%;
-
+  border-bottom: double black;
 }
 
 @keyframes opacity{
@@ -923,13 +937,13 @@ h1 .orange {
   animation-name: opacity;
   animation-duration: 0.2s;
  position: fixed;
- top:10%;
- left:23%;
+ top:9%;
+ left:20%;
  background:#fff;
   width: 60%;
   
   z-index:1000200;
-  padding: 1%;
+  padding: 1% 1% 3% 1%;
 }
 .exit {
   text-align:right;

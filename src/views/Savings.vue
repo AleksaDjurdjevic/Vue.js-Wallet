@@ -3,25 +3,27 @@
         <!-- div of whole component -->
         <!-- Left side -->
         <div class="aside">
-            <button @click = "addingSaving = true">Dodaj Stednju</button>
+            <div class="add-saving">
+                <button @click = "addingSaving = true">Dodaj Stednju</button>
+            </div>
             <!-- Sort -->
             <div class="sorting">
-                <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort">
+                <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort" @click = "savingSort">
                 <label for="sort1">Po cilju</label>
                 <br>
-                <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort">
+                <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort" @click = "savingSort">
                 <label for="sort2">Po uplacenom iznosu</label>
                 <br>
-                <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort">
+                <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort" @click = "savingSort">
                 <label for="sort3">Po periodu</label>
                 <br>
-                <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort">
+                <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort" @click = "savingSort">
                 <label for="sort4">Po preostalom iznosu</label>
                 <br>
-                <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort">
+                <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort" @click = "savingSort">
                 <label for="sort5">Po uplatama</label>
                 <br>
-                <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort">
+                <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort" @click = "savingSort">
                 <label for="sort6">Po mesecnoj rati</label>
 
                 <div class="sort-order">
@@ -100,8 +102,6 @@
             @get-savings = "getSavings"
             @viewing-payments = "viewingPayments = false"
         />
-
-        
     </div>
 </template>
 
@@ -134,9 +134,9 @@ export default {
     methods: {
         savingSort(){
             if (this.savings !== []) {
-                if(this.sortOrder == 'asc'){
+                if(this.sortOrder === 'asc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? 1 : -1);
-                }else if(this.sortOrder == 'desc'){
+                }else if(this.sortOrder === 'desc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? -1 : 1);
                 }
             } 
@@ -145,6 +145,8 @@ export default {
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/get/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{
                 this.savings = r.data.all_savings;
+                console.log(this.savings);
+                
             })
         },
         calculateRate(leftover_amount, start, period){
@@ -180,6 +182,9 @@ export default {
 </script>
 
 <style scoped>
+p{
+    margin: 0;
+}
 .test{
     width: 95%;
     height: 190px;
@@ -187,7 +192,7 @@ export default {
     margin-bottom: 1%;
 }
 .test1 p{
-    font-size: 31px;
+    font-size: 1.8em;
     width: 20%;
     position: relative;
     top: 10%;
@@ -275,12 +280,14 @@ export default {
     justify-content: center;
 }
 .rectangle p{
-    font-size: 22px;
+    font-size: 1.2em;
     width: 80%;
     height: 80%;
     word-break: break-all; 
     word-wrap: break-word;
     text-align: center;
+    margin: 0;
+    margin-top: 2%;
 }
 .data{
     position: absolute;
@@ -290,6 +297,10 @@ export default {
     width: 65%;
     height: 50%;
     line-height: 75%;
+}
+.data div{
+    display: flex;
+    justify-content: space-around;
 }
 .buttons{
     position: absolute;
@@ -302,9 +313,34 @@ export default {
     border-radius: 13px;
     background-color: white;
     border: none;
+    font-family: "Teko";
+    font-size: 1em;
 }
-button:active, button:focus{
-    outline:none;
+@keyframes button{
+    0% {background-color: white}
+    100%{background-color: rgb(234, 236, 236)}
+}
+button:active, button:focus, button:hover{
+    outline: none;
+    cursor: pointer;
+}
+button::-moz-focus-inner {
+    border: 0;
+}
+button{
+    border-radius: 13px;
+    background-color: white;
+    border: none;
+    font-family: "Teko";
+    font-size: 1em;
+    animation-name: button-rev;
+    animation-duration: 0.6s;
+    animation-fill-mode: forwards;
+}
+button:hover{
+    animation-name: button;
+    animation-duration: 0.6s;
+    animation-fill-mode: forwards;
 }
 /* Old css */
 .savings-wrapper{
@@ -312,18 +348,26 @@ button:active, button:focus{
     margin: 0 auto;
     padding-top: 0.5%;
     background: radial-gradient(36% 51% at 36% 50%, #eaecec 0%, #CACACA 100%) repeat 50% 50% / 100% 100%;
-    min-height: 100vh;
+    min-height: 92vh;
+    box-sizing: border-box;
+    padding-bottom: 10%;
 }
 .aside{
     width:14%;
     margin-left: 2%;
 }
+.aside .add-saving{
+    width:80%;
+    height: 10%;
+    margin: 0 auto;
+}
+.add-saving button{
+    width: 90%;
+    height: 90%;
+}
 .main{
     width:80%;
     margin-right: 3%;
-}
-.each-savings{
-    margin: 50px;
 }
 .span-details{
     display: inline-block;
@@ -349,25 +393,19 @@ button:active, button:focus{
     justify-content: center;
     align-content: center;
 }
-.paymentForm, .addSavingsForm, .delete-saving, .view-payments {
-    display:flex;
+.payment-form, .add-savings-form, .delete-saving, .view-payments {
     background-color: #FAFBFC;
-    margin: 100px auto;
-    position: absolute;
+    position: fixed;
     z-index: 10001;
-    top: 100px;
-    left: 600px;
-    flex-direction: column;
-}
-.accounts{
-    display: flex;
-    justify-content: space-evenly;
-}
-.each-account{
-    margin: 10px;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 .sort-order{
     margin-top: 30px;
 }
-
+.sorting{
+    position: sticky;
+    top: 25%;
+}
 </style>

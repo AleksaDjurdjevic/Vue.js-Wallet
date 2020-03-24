@@ -1,24 +1,25 @@
 <template>
-        <div class="addSavingsForm">
-            <h2>Dodaj novu stednju</h2>
-            <label for="newSavDesc">Dodaj naziv/opis stednje</label>
-                <input id = "newSavDesc" type="text" v-model = "newSavDesc">
-            <label for="newSavAmount">Zeljena kolicina novca</label>
-                <input id = "newSavAmount" type="number" v-model = "newSavAmount">
-            <label for="newSavPeriod">Period za koji zelite da ustedite</label>
-                <input id = "newSavPeriod" type="number" v-model = "newSavPeriod">
-            <button @click = "addSaving">Kreiraj</button>
+    <div class="add-savings-form">
+        <h2>Dodaj novu stednju</h2>
+        <label for="new-sav-desc">Dodaj naziv/opis stednje</label>
+            <input id = "new-sav-desc" type="text" v-model = "newSavDesc">
+        <label for="new-sav-amount">Zeljena kolicina novca</label>
+            <input id = "new-sav-amount" type="number" v-model = "newSavAmount">
+        <label for="new-sav-period">Period za koji zelite da ustedite (u mesecima)</label>
+            <input id = "new-sav-period" type="number" v-model = "newSavPeriod">
 
-            <select class="add-accounts" v-model = "type">
-                <option disabled value="">Izaberite tip racuna:</option>
-                <option v-for = "eachType in accounts" 
-                :value = "eachType.acc_type_id" 
-                :key="eachType.acc_type_id">
-                    {{eachType.acc_type_name}}</option>
-            </select>
+        <select class="add-accounts" v-model = "type">
+            <option disabled value="">Izaberite tip stednje:</option>
+            <option v-for = "eachType in accounts" 
+            :value = "eachType.acc_type_id" 
+            :key="eachType.acc_type_id">
+                {{eachType.acc_type_name}}</option>
+        </select>
 
-            <p>{{error}}</p>
-        </div>
+        <button @click = "addSaving">Kreiraj</button>
+
+        <p>{{error}}</p>
+    </div>
 </template>
 
 <script>
@@ -74,6 +75,46 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    @keyframes button{
+        0% {background-color: rgb(234, 236, 236)}
+        100%{background-color: rgb(192, 190, 190)}
+    }
+    @keyframes button-rev{
+        0% {background-color: rgb(192, 190, 190)}
+        100%{background-color: rgb(234, 236, 236)}
+    }
+    .add-savings-form{
+        font-size: 1.5em;
+        display: flex;
+        flex-direction: column;
+        width: 30%;
+        align-items: center;
+    }
+    input, select{
+        width: 80%;
+        margin-bottom: 1%;
+    }
+    button{
+        border-radius: 13px;
+        background-color: white;
+        border: none;
+        font-family: "Teko";
+        font-size: 1em;
+        width: 30%;
+        margin-top: 5%;
+        animation-name: button-rev;
+        animation-duration: 0.6s;
+        animation-fill-mode: forwards;
+    }
+    button:hover, button:focus{
+        cursor: pointer;
+        outline: none;
+        animation-name: button;
+        animation-duration: 0.6s;
+        animation-fill-mode: forwards;
+    }
+    button::-moz-focus-inner {
+        border: 0;
+    }
 </style>

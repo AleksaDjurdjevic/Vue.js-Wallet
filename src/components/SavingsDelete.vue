@@ -3,8 +3,11 @@
       <div class="">
           <p>Da li ste sigurni da zelite da obrisete stednju?</p>
           <p>Novac uplacen na stednju ce vam biti refundiran na racun ili racune sa kojih ste uplacivali.</p>
-          <button @click = "deleteSavings">Da</button>
-          <button @click = "$emit('deleting-saving')">Ne</button>
+          <div class="buttons">
+            <button @click = "deleteSavings">Da</button>
+            <button @click = "$emit('deleting-saving')">Ne</button>
+          </div>
+          
       </div>
   </div>
 </template>
@@ -51,5 +54,33 @@ export default {
 </script>
 
 <style scoped>
-
+    @keyframes button-blue{
+        0% {background-color: white}
+        100%{background-color: #17a2b8; color: white}
+    }
+    .delete-saving{
+        width: 30%;
+    }
+    .buttons{
+        display:flex;
+        justify-content: space-evenly;
+    }
+    button{
+        background-color: lightgray;
+        border-radius: 10px;
+        border: none;
+        font-family: "Teko";
+        font-size: 1em;
+        width: 30%;
+    }
+    button:hover, button:focus{
+        cursor: pointer;
+        outline: none;
+        animation-name: button-blue;
+        animation-duration: 0.4s;
+        animation-fill-mode: forwards;
+    }
+    button::-moz-focus-inner {
+        border: 0;
+    }
 </style>

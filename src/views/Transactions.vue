@@ -201,6 +201,7 @@ export default {
     getTransactionsByAccount(acc_name){
       if(this.acc_name !== acc_name){
         this.acc_name = acc_name;
+        this.currentPage = 1;
         this.getTransactions();
         //apply selected
         for(let i = 0; i<this.accounts.length; i++){
@@ -292,6 +293,7 @@ export default {
       //Validation to prevent displaying the same results
       if(this.acc_name !== null){
         this.acc_name = null;
+        this.currentPage = 1;
         this.getTransactions();
       }
     },
@@ -389,6 +391,7 @@ export default {
 .transactions{
   display:flex;
   margin: 20px auto;
+  min-height: 90vh;
 }
 .aside{
   width:14%;
@@ -399,6 +402,19 @@ export default {
   margin-right: 3%;
   display:flex;
   flex-direction: column;
+}
+button::-moz-focus-inner {
+  border: 0;
+}
+button{
+  border-radius: 13px;
+  background-color: white;
+  border: none;
+  font-family: "Teko";
+  font-size: 1em;
+}
+button:hover{
+  cursor: pointer;
 }
 /* Inputs for date filter */
 .search-date{
@@ -541,6 +557,7 @@ export default {
 /* Accounts */
 .aside .heading{
   opacity: 0.6;
+  margin: 0;
 }
 .accounts{
   margin-top: 19px;

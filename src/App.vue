@@ -37,13 +37,7 @@
     </header>
     <router-view />
     <main>
-      <section id="banner"></section>
-
-      <div class="container">
-        <section id="menu">
-          <div class="row"></div>
-        </section>
-      </div>
+      
     </main>
     <footer class="page-footer">
       <Footer />
@@ -64,16 +58,9 @@ export default {
       url: ''
     }
   },
-  beforeCreate(){
-    localStorage.removeItem('sid');
-    localStorage.removeItem('user')
-  },
   mounted() {
     setInterval(this.checkSession(), 900000);
     this.checkSid();
-  },
-  beforeUpdate() {
-    this.checkSid(), this.checkSession();
   },
   methods: {
     checkSid() {

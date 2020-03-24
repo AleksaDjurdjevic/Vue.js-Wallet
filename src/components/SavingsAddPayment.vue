@@ -1,26 +1,34 @@
 <template>
-  <div class="paymentForm">
+    <div class="payment-form">
         <h2>{{singleSaving.sav_description}}</h2>
-            <p class='span-details'>Cilj: {{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</p>
-            <p class='span-details'>Do sad uplaceno: {{singleSaving.sav_amount_accumulated}}{{" " + singleSaving.acc_type_name}}</p>
-            <p class='span-details'>Preostala kolicina novca za uplatu: {{singleSaving.leftover_amount}}{{" " + singleSaving.acc_type_name}}</p>
-            <p class='span-details'>Mesecna rata za preostali period: {{singleSaving.sav_month_rate}}{{" " + singleSaving.acc_type_name}}</p>
-            
-            <div class="accounts" v-if = "accounts.length>1">
-                <div class="each-account" 
-                    v-for = "account in accounts" 
-                    :key="account.acc_id"
-                    @click = "setAcc(account)"
-                >
-                    <p>{{account.acc_name}}</p>
-                    <p>{{account.acc_amount + " " + account.acc_type_name}}</p>
-                </div>
+        <div class = "data">
+            <p>Cilj: {{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</p>
+            <p>Do sad uplaceno: {{singleSaving.sav_amount_accumulated}}{{" " + singleSaving.acc_type_name}}</p>
+        </div>
+        <div class = "data">
+            <p>Preostala kolicina novca za uplatu: {{singleSaving.leftover_amount}}{{" " + singleSaving.acc_type_name}}</p>
+            <p>Mesecna rata za preostali period: {{singleSaving.sav_month_rate}}{{" " + singleSaving.acc_type_name}}</p>
+        </div>
+        
+        <p>Odaberite racun sa kojeg uplacujete:</p>
+        
+        <div class="accounts" v-if = "accounts.length>1">
+            <div class="each-account" 
+                v-for = "account in accounts" 
+                :key="account.acc_id"
+                @click = "setAcc(account)"
+            >
+                <p>{{account.acc_name}}</p>
+                <p>{{account.acc_amount + " " + account.acc_type_name}}</p>
             </div>
-            <div class="accounts" v-if = "accounts.length==1">
+        </div>
+        <div class="accounts" v-if = "accounts.length==1">
+            <div class="each-account">
                 <p>{{accounts[0].acc_name}}</p>
                 <p>{{accounts[0].acc_amount + " " + accounts[0].acc_type_name}}</p>
             </div>
-            <p>Izvrsi uplatu sa racuna: <strong>{{acc_name}}</strong></p>
+        </div>
+        <p>Izvrsi uplatu sa racuna: <strong>{{acc_name}}</strong></p>
             
         <input type="text" v-model = "paymentValue">
         <button @click = "makePayment">Uplati</button>
@@ -71,10 +79,13 @@ export default {
         },
         makePayment(){
             if(this.acc_id == ""){
-                this.error = "Izaberi racun s kojeg ces da uplatis na stednju"
+                this.error = "Izaberi racun s kojeg ces da uplatis na stednju";
             }else if(isNaN(Number(this.paymentValue))){
-                this.error = ""
-                this.error = "Kolicina uplate mora biti broj"
+                this.error = "";
+                this.error = "Kolicina uplate mora biti broj";
+            }else if(this.paymentValue === ""){
+                this.error = "";
+                this.error = "Unesite kolicinu";
             }else{
                 axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/paymentSavings', {
                     sid: localStorage.getItem('sid'),
@@ -98,6 +109,80 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    .payment-form{
+        display: flex;
+        flex-direction: column;
+        width: 40%;
+        align-items: center;
+        font-size: 1.5em;
+    }
+    h2{
+        margin: 0;
+        margin-top: 2%;
+    }
+    .data{
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        max-height: 100vh;
+    }
+    .data p {
+        margin: 0;
+        margin-bottom: 5%;
+    }
+    input{
+        width: 50%;
+    }
+    @keyframes button{
+        0% {background-color: rgb(234, 236, 236)}
+        100%{background-color: rgb(192, 190, 190)}
+    }
+    @keyframes button-rev{
+        0% {background-color: rgb(192, 190, 190)}
+        100%{background-color: rgb(234, 236, 236)}
+    }
+    button{
+        border-radius: 13px;
+        background-color: white;
+        border: none;
+        font-family: "Teko";
+        font-size: 1em;
+        width: 30%;
+        margin-top: 5%;
+        animation-name: button-rev;
+        animation-duration: 0.6s;
+        animation-fill-mode: forwards;
+    }
+    button:hover, button:focus{
+        cursor: pointer;
+        outline: none;
+        animation-name: button;
+        animation-duration: 0.6s;
+        animation-fill-mode: forwards;
+    }
+    button::-moz-focus-inner {
+        border: 0;
+    }
+    .accounts{
+        width: 90%;
+        display: flex;
+        justify-content: space-around;
+    }
+    .each-account{
+        background-color: #17a2b8;
+        color: white;
+        font-size: 0.8em;
+        width: 20%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .each-account:hover{
+        cursor: pointer;
+    }
+    .each-account p{
+        margin: 0;
+    }
 </style>

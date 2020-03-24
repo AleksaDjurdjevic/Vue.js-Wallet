@@ -32,8 +32,6 @@ export default {
           password: this.password
         })
         .then(res => {
-          console.log("usepsno logovanje");
-          
           localStorage.setItem("sid", res.data.sid);
           localStorage.setItem("user", res.data.user);
           
@@ -47,21 +45,19 @@ export default {
         })
         .catch(err => {
           console.log(err);
-          console.log("pogresno uneti email ili pass");
         });
-
-        // this.$router.push({
-        //   name: '/login'
-        // })
     },
-    
-    
+    // checkState(){
+    //   if(localStorage.getItem('sid')){
+
+    //   }
+    // }
   }
 };
 </script>
 
 <style scoped >
- h1 {
+h1 {
   margin-bottom: 35px;
 }
 

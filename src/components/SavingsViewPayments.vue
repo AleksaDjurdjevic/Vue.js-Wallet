@@ -1,26 +1,25 @@
 <template>
   <div class="view-payments">
-      <p v-if= "payments.length == 0">Nema uplata</p>
-      <div class="each-payment" v-for = "(payment, index) in payments" :key='index'>
-        <span>{{"Iznos uplate " + payment.sav_pay_amount + " " + payment.acc_type_name}} |</span>
-        <span>{{" Datum uplate " + payment.sav_pay_date}}</span>
-        <span 
+    <p v-if= "payments.length === 0">Nema uplata</p>
+    <div class="each-payment" v-for = "(payment, index) in payments" :key='index'>
+        <div class = "each-info"><span>{{"Iznos uplate: " + payment.sav_pay_amount + " " + payment.acc_type_name}}</span></div>
+        <div class = "each-info"><span>{{"Datum uplate: " + payment.sav_pay_date}}</span></div>
+        <div class = "each-info"><span
             @click = "deleteSinglePayment(payment.sav_pay_id, payment.acc_id, payment.sav_pay_amount)" 
-            style = "font-size: 20px;"
-            > X
-        </span>
-      </div>
-      <p>{{msg}}</p>
-      <p v-if = "showingCalendar == false" @click = "showingCalendar = true">Klikni za prikaz uplata po datumu</p>
-      <div v-if = "showingCalendar">
-        <span>Izaberi datum</span>
-        <span @click = "resetPayments">Nazad</span>
+        > 
+            Obrisi 
+        </span></div>
+    </div>
+    <p class="click-for-calendar" v-if = "showingCalendar === false" @click = "showingCalendar = true">Klikni za prikaz uplata po datumu</p>
+    <div class = "show-calendar" v-if = "showingCalendar">
+        <p>Izaberi datum</p>
         <calendar
             @selectDate = 'getPaymentsByDate'
             @showCallEmit = "showingCalendar = false"
         />
-      </div>
-      
+        <button @click = "getPayments(); showingCalendar = false">Ponisti pretragu po datumu</button>
+    </div>
+    <p>{{msg}}</p>   
   </div>
 </template>
 
@@ -79,10 +78,6 @@ export default {
                 this.getPayments();
                 this.$emit("get-savings");
             })
-        },
-        resetPayments(){
-            this.showingCalendar = false;
-            this.payments = this.allPayments;
         }
     },
     mounted(){
@@ -92,8 +87,68 @@ export default {
 </script>
 
 <style scoped>
-.showingCalendar{
-    margin: 15px;
-}
-
+    .view-payments{
+        width: 30%;
+        max-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .each-payment{
+        box-sizing: border-box;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    .each-info:nth-of-type(3):hover{
+        cursor: pointer;
+        color: #17a2b8;
+    }
+    .each-payment:hover{
+        animation-name: button;
+        animation-duration: 0.6s;
+        animation-fill-mode: forwards;
+    }
+    .show-calendar{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    @keyframes button{
+        0% {background-color: white}
+        100%{background-color: rgb(192, 190, 190)}
+    }
+    @keyframes button-blue{
+        0% {background-color: white}
+        100%{background-color: #17a2b8; color: white}
+    }
+    button{
+        background-color: lightgray;
+        border-radius: 10px;
+        border: none;
+        font-family: "Teko";
+        font-size: 1em;
+        width: 85%;
+    }
+    button:hover, button:focus{
+        cursor: pointer;
+        outline: none;
+        animation-name: button-blue;
+        animation-duration: 0.4s;
+        animation-fill-mode: forwards;
+    }
+    button::-moz-focus-inner {
+        border: 0;
+    }
+    .click-for-calendar:hover{
+        cursor: pointer;
+        border-radius: 10px;
+        animation-name: button-blue;
+        animation-duration: 0.4s;
+        animation-fill-mode: forwards;
+    }
+    .click-for-calendar{
+        background-color: lightgray;
+        border-radius: 10px;
+    }
 </style>

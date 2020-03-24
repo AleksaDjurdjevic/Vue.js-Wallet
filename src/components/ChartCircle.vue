@@ -68,7 +68,7 @@ console.log(dataForChart + "dataForChart-------------------------------")
       series.slices.template.innerCornerRadius = 4;
     
      //series.slices.template.fillOpacity =0.5;
-     //series.slices.template.draggable = true;
+    //series.slices.template.draggable = true;
       series.slices.template.inert = true;
       series.alignLabels = false;
     

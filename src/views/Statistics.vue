@@ -106,6 +106,7 @@ export default {
 
 <style  scoped>
 .statistics{
+ 
   background-color:#bebebe79;
  /*   background-color:aliceblue; */
     background-image: linear-gradient(#bebebebb,#FFFFFF, #bebebebb);

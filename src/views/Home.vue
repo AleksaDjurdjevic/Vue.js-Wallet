@@ -7,7 +7,7 @@
     <div v-if="createAccDiv" class="createAccDiv2">
       <form >
          <p class="exit" @click="showCreateAccDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
-     <br>
+     
         <h2>
           Kreiraj novi račun
          
@@ -46,7 +46,7 @@
       <p class="exit" @click="showDeleteAccountDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
      
            <h2>   DA LI STE SIGURNI DA ŽELITE DA IZBRISETE 
-           " {{defAcc.acc_name}} " RAČUN?
+            {{defAcc.acc_name}}  RAČUN?
              </h2>
        
         <br />
@@ -80,13 +80,14 @@
     </div>
     <!-- END DELETE TRANSACTION -->
 
-    <h1>where the money goes???</h1>
+    <h1><span v-if="!this.isLoggedIn"> Try it!</span> Where the money goes???</h1>
+    <p v-if="!this.isLoggedIn" >Napravite probni račun. Sve transakcije koje budete izvršili nece biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.</p>
     <!-- show all bils -->
     <div class="bills">
       <div class="bill" v-for="acc in accounts" :key="acc.acc_id" @click="setBill(acc)">
         <p>{{acc.acc_name}}</p>
       </div>
-      <div class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
+      <div v-if="!createName"   class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
     </div>
     <!-- end bills-->
     <div class="nameBill" v-if="this.isLoggedIn">
@@ -95,6 +96,16 @@
      </p>  
      <p>Stanje:
       <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}} </span> 
+      </p>  
+      <i @click="showDeleteAccountDiv(true)" class="fas fa-trash-alt" style="font-size:16px"></i>
+    
+   </div><!-- end isLoggedIn -->
+   <div class="nameBill" v-else-if="this.createSum && !this.isLoggedIn">
+     <p> Naziv računa:
+      <span class="orange">{{this.createName}}</span> 
+     </p>  
+     <p>Stanje:
+      <span class="orange">{{this.createSum}} - {{this.createSelected}} </span> 
       </p>  
       <i @click="showDeleteAccountDiv(true)" class="fas fa-trash-alt" style="font-size:16px"></i>
     
@@ -268,6 +279,7 @@ export default {
       createName: null,
       createErrors: [],
       createSelected: null,
+      arrTryTransaction:[],
 
       categorySelected: null,
       buySum: null,
@@ -404,19 +416,22 @@ export default {
           this.createSum !== null + " checkFormCreateAcc"
       );
       if (this.createName && this.createSum) {
-        if (!isNaN(this.createSum) && this.createSum !== null) {
+        if (!isNaN(this.createSum) && this.createSum !== null && this.createSum >= 0 ) {
           this.createNewAccount();
           return;
         }
 
-        this.createErrors.push("Sum must be a number required.");
+        this.createErrors.push("Iznos mora biti brojna vrednost.");
       }
       if (!this.createSum) {
-        this.createErrors.push("Sum required.");
+        this.createErrors.push("Iznos mora biti unešen.");
+      }
+      if(this.createSum < 0){
+        this.createErrors.push("Iznos ne sme biti negativna vrednost.");
       }
 
       if (!this.createName) {
-        this.createErrors.push("Name of account required.");
+        this.createErrors.push("Ime računa je obavezno zbog lakšeg praćenja novca.");
       }
     },
     createNewAccount() {
@@ -441,9 +456,14 @@ export default {
               this.showCreateAccDiv(false);
             }
           });
-      }
-      this.createSum = null;
-      this.createName = null;
+          this.createSum = null;
+          this.createName = null;
+      }else{
+         //pravljenje probnog racuna
+         this.showCreateAccDiv2();
+         // this.showCreateAccDiv(false);
+        }
+      
     },
     deleteAccount(){
       let sid =localStorage.getItem('sid')
@@ -459,10 +479,15 @@ export default {
             this.getAccounts()
           } );
       }
+      else{
+        this.deleteAccDiv=false;
+        this.createSum = null;
+        this.createName = null;
+      }
     },
     checkFormBuy() {
       this.buyErrors = [];
-      if (this.buySum && this.buyDesc) {
+      if (this.buySum && this.buyDesc && this.buySum > 0) {
         if (!isNaN(this.buySum) && this.buySum !== null) {
           this.createBuy();
           return;
@@ -471,6 +496,9 @@ export default {
       }
       if (!this.buySum) {
         this.buyErrors.push("Iznos mora biti upisan");
+      }
+      if( this.buySum <= 0){
+        this.buyErrors.push("Iznos za transakciju mora biti veći od 0");
       }
       if (!this.buyDesc) {
         this.buyErrors.push("Unesite opis radi lakšeg praćenja toka novca");
@@ -502,6 +530,8 @@ export default {
               this.buySum = null;
             }
           });
+      }else if(this.createName){
+        //
       }
     },
     checkFormAddToAccount() {
@@ -586,7 +616,14 @@ export default {
     },
     
     showCreateAccDiv(x) {
-      this.createAccDiv = x;
+      
+          this.createSum = null;
+          this.createName = null;
+        
+     this.createAccDiv = x;
+    },
+    showCreateAccDiv2() {
+       this.createAccDiv = false;
     },
     showCallendarMet(x) {
       this.showCallendar = x;
@@ -937,13 +974,13 @@ h1 .orange {
   animation-name: opacity;
   animation-duration: 0.2s;
  position: fixed;
- top:9%;
- left:20%;
+ top:2%;
+ left:25%;
  background:#fff;
-  width: 60%;
+  width: 50%;
   
   z-index:1000200;
-  padding: 1% 1% 3% 1%;
+  padding: 0 1% 3% 1%;
 }
 .exit {
   text-align:right;

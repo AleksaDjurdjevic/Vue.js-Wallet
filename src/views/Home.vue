@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard" @click="resetMessage">
+  <div class="dashboard" @dblclick="resetMessage">
 
 
    <!-- DIV CREATE ACCOUNT -->
@@ -45,8 +45,9 @@
       
       <p class="exit" @click="showDeleteAccountDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
      
-           <h2>   DA LI STE SIGURNI DA ŽELITE DA IZBRISETE 
-            {{defAcc.acc_name}}  RAČUN?
+           <h2>   DA LI STE SIGURNI DA ŽELITE DA IZBRISETE  
+           <span class="orange"> {{defAcc.acc_name}} </span>  RAČUN?
+
              </h2>
        
         <br />
@@ -67,8 +68,8 @@
       <p class="exit" @click="showDeleteTransactionDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
      
            <h2>   DA LI STE SIGURNI DA ŽELITE DA OPOZOVETE TRANSAKCIJU 
-           " {{traDescriptionForDelete}} " ?
-             </h2>
+           <span class="orange" > {{traDescriptionForDelete}} </span> ?
+             </h2> 
              <p>Opozivanjem transakcije pare će Vam automatski biti vraćene na račun sa kojeg su uzete.</p>
      
         <br />
@@ -87,7 +88,7 @@
       <div class="bill" v-for="acc in accounts" :key="acc.acc_id" @click="setBill(acc)">
         <p>{{acc.acc_name}}</p>
       </div>
-      <div v-if="!createName"   class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
+      <div v-if="!showTryAcc"   class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
     </div>
     <!-- end bills-->
     <div class="nameBill" v-if="this.isLoggedIn">
@@ -100,7 +101,7 @@
       <i @click="showDeleteAccountDiv(true)" class="fas fa-trash-alt" style="font-size:16px"></i>
     
    </div><!-- end isLoggedIn -->
-   <div class="nameBill" v-else-if="this.createSum && !this.isLoggedIn">
+   <div class="nameBill" v-else-if="this.showTryAcc && !this.isLoggedIn">
      <p> Naziv računa:
       <span class="orange">{{this.createName}}</span> 
      </p>  
@@ -110,8 +111,9 @@
       <i @click="showDeleteAccountDiv(true)" class="fas fa-trash-alt" style="font-size:16px"></i>
     
    </div>
+
     <br />
-    <p v-if="message">{{message}}</p>
+    <p v-if="message">{{ message}}</p>
     <p v-if="err" class="err">{{err}}</p>
 
 
@@ -148,6 +150,22 @@
             <td class="scrollTD">{{acc.tra_description}}</td>
             <td class="scrollTD">{{formateDate(acc.tra_date)}}</td>
             <td class="scrollTD cancelTransaction" @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)">Opozovi</td>
+          </tr>
+          </table>
+          <table v-else-if="arrTryTransaction.length>0 && showTryAcc">
+          <tr class="tr">
+            <th class="scrollTD">Tip tranakcije:</th> 
+            <th class="scrollTD"> Iznos:</th>
+            <th class="scrollTD"> Opis:</th>
+            <th class="scrollTD"> Datum: </th>
+            <th class="scrollTD">Opozovi transakciju: </th>
+          </tr>
+          <tr class="tr" v-for="(a,index) in arrTryTransaction" :key="index">
+            <td class="scrollTD"> {{a.tip}} </td> 
+            <td class="scrollTD"> {{a.iznos}} </td>
+            <td class="scrollTD"> {{a.opis}} </td>
+            <td class="scrollTD"> {{a.datum}} </td>
+           <td class="scrollTD cancelTransaction" @click="checkCancelTransaction(index ,a.opis)">Opozovi</td>
           </tr>
           </table>
           <table v-else>
@@ -272,6 +290,7 @@ export default {
       err: null,
       sid: null,
       setParamsForChartTrue:false,
+      showTryAcc:false,
 
       createAccDiv: false,
       createSum: null,
@@ -301,6 +320,7 @@ export default {
     await this.getAccounts();
     await this.getTypeAccount();
     await this.getCategory();
+    this.resetMessage() ;
   },
   methods: {
     displayDelete(e){
@@ -339,6 +359,7 @@ export default {
       console.log(this.selectTransaction);
     },
     getTypeAccount() {
+      this.resetMessage() ;
       axios
         .get(
           "http://053n122.mars-e1.mars-hosting.com/api/get/getTypesOfAccounts"
@@ -357,6 +378,7 @@ export default {
         });
     },
     getAccounts() {
+      this.showTryAcc=false;
       let sid = localStorage.getItem("sid");
       console.log(sid);
       if (sid) {
@@ -380,6 +402,7 @@ export default {
       // hendlujemo ako nema sid 
     },
     getTransactions(acc_name) {
+      this.resetMessage() ;
       if (acc_name !== "" && localStorage.getItem("sid")) {
         axios
           .post(
@@ -394,6 +417,7 @@ export default {
       }
     },
     showTransactionByDate(date) {
+      this.resetMessage() ;
       console.log(date);
       let sid = localStorage.getItem("sid");
       if (sid) {
@@ -435,6 +459,7 @@ export default {
       }
     },
     createNewAccount() {
+      this.resetMessage() ;
       let sid = localStorage.getItem("sid");
       if (sid) {
         axios
@@ -461,11 +486,13 @@ export default {
       }else{
          //pravljenje probnog racuna
          this.showCreateAccDiv2();
+         this.showTryAcc=true;
          // this.showCreateAccDiv(false);
         }
       
     },
     deleteAccount(){
+      this.resetMessage() ;
       let sid =localStorage.getItem('sid')
       console.log(this.defAcc.acc_name )
       if(sid){
@@ -481,8 +508,10 @@ export default {
       }
       else{
         this.deleteAccDiv=false;
+         this.showTryAcc=false;
         this.createSum = null;
         this.createName = null;
+        this.arrTryTransaction=[];
       }
     },
     checkFormBuy() {
@@ -505,6 +534,7 @@ export default {
       }
     },
     createBuy() {
+      this.resetMessage() ;
       let sid = localStorage.getItem("sid");
       if (sid) {
         axios
@@ -531,13 +561,32 @@ export default {
             }
           });
       }else if(this.createName){
-        //
+        // tip transakcija Rashod 
+        //parametri this.categorySelcted  this.buySum this.buyDesc
+
+          if(this.createSum - this.buySum < 0){
+            this.message="Trnsakcija ne može biti obavljena, nemate dovoljno sredstava na računu!";
+          }
+          else{
+            this.message ="Transakcija je uspesna";
+            let d=new Date();
+            d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
+            this.createSum = this.createSum - this.buySum;
+            this.arrTryTransaction.push({tip:"rashod",iznos:this.buySum,opis:this.buyDesc,datum:d});
+              this.buyDesc = null;
+              this.buySum = null;
+
+          }
+
+
+
       }
     },
     checkFormAddToAccount() {
+      this.resetMessage() ;
       this.addErrors = [];
 
-      if (this.addSum && this.addDesc) {
+      if (this.addSum && this.addDesc && this.addSum > 0) {
         console.log(!isNaN(this.addSum) && this.addSum !== null + "uslov");
         if (!isNaN(this.addSum) && this.addSum !== null) {
           this.createAddMoney();
@@ -545,14 +594,19 @@ export default {
         }
         this.addErrors.push("Iznos mora biti upisan numeričkim vrednostima");
       }
+     
       if (!this.addSum) {
         this.addErrors.push("Iznos mora biti upisan");
+      }
+       if(this.addSum <= 0){
+        this.addErrors.push("Iznos mora biti veći od 0");
       }
       if (!this.addDesc) {
         this.addErrors.push("Unesite opis radi lakšeg praćenja toka novca");
       }
     },
     createAddMoney() {
+      this.resetMessage() ;
       let sid = localStorage.getItem("sid");
       if (sid) {
         axios
@@ -573,14 +627,25 @@ export default {
               this.addSum = null;
             }
           });
-      }
+      }else if(this.createName){
+            this.message="Transakcija je uspesna"
+            let d=new Date();
+            d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
+            this.createSum = parseFloat(this.createSum) + parseFloat(this.addSum);
+            this.arrTryTransaction.push({tip:"prihod",iznos:this.addSum,opis:this.addDesc,datum:d});
+            this.addDesc = null;
+            this.addSum = null;
+     
+     }
     },
     checkCancelTransaction(id_transaction,tra_description){
+      
       this.deleteTransactionDiv=true;
       this.transactionForDelete=id_transaction;
       this.traDescriptionForDelete=tra_description;
     },
     cancelTransaction(tra_id) {
+      this.resetMessage() ;
       let sid = localStorage.getItem("sid");
 
       if (sid) {
@@ -603,7 +668,18 @@ export default {
              this.traDescriptionForDelete='';
           });
          
-      }
+      }else if(this.createSum){
+       
+        let x=this.arrTryTransaction.splice(tra_id, 1);
+        if(x[0].tip === 'rashod'){
+          this.createSum= parseFloat(this.createSum) + parseFloat(x[0].iznos);
+        }else{
+           this.createSum= parseFloat(this.createSum) - parseFloat(x[0].iznos);
+        }
+        this.showDeleteTransactionDiv(false);
+             this.transactionForDelete=0;
+             this.traDescriptionForDelete='';
+     }
     },
     // set default bill on click and all value for that bill
     setBill(bill) {
@@ -637,13 +713,16 @@ export default {
       this.traDescriptionForDelete='';
     },
     resetMessage() {
-      this.message = null;
+     this.message = null;
       this.err = null;
     },
     refreshChart(newValue){
       this.setParamsForChartTrue=false
         this.getParamsForChart(newValue);
         this.setParamsForChartTrue=true
+    },
+    changeMessage(x){
+     this.message = x;
     }
   },
   watch:{
@@ -657,30 +736,56 @@ export default {
   },
   computed: {
     ...mapState(["isLoggedIn"]),
-    ...mapState(["defAccV"])
+    ...mapState(["defAccV"]),
+    showMessageErr(){
+      console.log(this.message +'---- computed')
+      return this.message;
+    }
   }
 };
 </script>
 <style scoped >
+
+.scrollTD{
+  overflow: auto;
+  
+}
+
 /* width */
+ ::-moz-scrollbar{
+  height: 8px; 
+  width:3px;
+}
 ::-webkit-scrollbar {
   height: 8px;
   width:3px;
 }
 
 /* Track */
+ ::-moz-scrollbar-track{
+  box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671); 
+  /* border-radius: 10px; */
+}
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671); 
   /* border-radius: 10px; */
 }
  
 /* Handle */
+::-moz-scrollbar-thumb{
+  background: rgb(172, 168, 168); 
+ /*  border-radius: 10px; */
+}
 ::-webkit-scrollbar-thumb {
   background: rgb(172, 168, 168); 
  /*  border-radius: 10px; */
 }
 
+
 /* Handle on hover */
+::-moz-scrollbar-thumb:hover{
+  background: rgba(116, 113, 113, 0.774);; 
+}
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(116, 113, 113, 0.774);; 
 }

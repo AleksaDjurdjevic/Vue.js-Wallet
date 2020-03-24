@@ -351,6 +351,7 @@ button:hover{
     min-height: 92vh;
     box-sizing: border-box;
     padding-bottom: 10%;
+    font-size: 0.82em;
 }
 .aside{
     width:14%;

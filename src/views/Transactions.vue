@@ -392,6 +392,7 @@ export default {
   display:flex;
   margin: 20px auto;
   min-height: 90vh;
+  font-size: 0.87em;
 }
 .aside{
   width:14%;
@@ -523,7 +524,7 @@ button:hover{
   animation-fill-mode: forwards;
 }
 .table-shade-p {
-  font-size: 45px;
+  font-size: 1.5em;
   font-weight: 600;
   width: 100%;
   height: 700px;

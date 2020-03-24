@@ -15,17 +15,10 @@ export default {
         .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/logout", {
           sid: localStorage.getItem("sid")
         })
-        .then(res => {
-          console.log(res.data);
+        .then(() => {
           this.$store.state.isLoggedIn = false;
-          localStorage.removeItem("sid");
-          localStorage.removeItem("user");
-          localStorage.removeItem("setDefAcc");
-          console.log("usepsno logout");
-          console.log(
-            "ovo je iz vuexa isLogedIn ",
-            this.$store.state.isLoggedIn
-          );
+          localStorage.clear();
+          this.$store.state.isLoggedIn;
         })
         .catch(err => {
           console.log("nesto ne valja", err);

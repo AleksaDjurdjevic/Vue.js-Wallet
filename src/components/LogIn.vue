@@ -39,19 +39,16 @@ export default {
           this.name = res.data.name;
           this.surname = res.data.surname;
 
+          this.$root.$emit('change-id');
+          this.$root.$emit('change-usr-data');
+          this.$root.$emit('change-pic');
+
           this.$router.push({
             name: 'Home'
           })
-        })
-        .catch(err => {
-          console.log(err);
+          
         });
-    },
-    // checkState(){
-    //   if(localStorage.getItem('sid')){
-
-    //   }
-    // }
+    }
   }
 };
 </script>

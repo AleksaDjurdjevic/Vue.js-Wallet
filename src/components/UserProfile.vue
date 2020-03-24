@@ -2,7 +2,7 @@
   <div class="userProfile">
     <div class="profile-img">
       <img v-if="url === null" src="../assets/placeholder-img.jpg" alt="">
-      <img v-else :src="readPic()" alt="profilePicture" />
+      <img v-else :src="url" alt="profilePicture" />
     </div>
     <div class="picEdit">
       <label for="myfile">Select a new profile photo:</label>
@@ -98,9 +98,6 @@ export default {
   methods: {
     photoData(e) {
       this.img = e.target.files[0];
-      console.log('kad se klikne na dugmeeeee',this.img = e.target.files[0]);
-      
-      console.log("slika", this.img);
     },
     
     update() {
@@ -129,53 +126,31 @@ export default {
         formData.append("usr_password", updateParams.usr_password);
       }
       if (this.img != null) {
-        console.log('registrovana promena slike');
-        
         updateParams.usr_img = this.img;
         formData.append("usr_img", updateParams.usr_img);
       }
-      console.log("Update params", updateParams);
-
       axios
         .patch(
           "http://053n122.mars-e1.mars-hosting.com/api/wallet/updateUser",
           formData, {headers : {'Content-Type': 'multipart/formdata'}}
-        )
-        .then(res => {
-          console.log(`korisnik je upisan u bazu, status: ${res.data.message}`);
-          console.log('res data',res.data.img_value[0].usr_img); //vraca null ako nema slike
-          
+        ).then(()=>{
+          this.readPic();
+          this.$root.$emit('change-pic');
         })
-        .catch(err => {
-          console.log(`greska pri abdejtovanju podataka ${err.message}`);
-        });
-        
-      //reset params
-        (this.name = ""),
-        (this.surname = ""),
-        (this.email = ""),
-        (this.password = "");
     },
     
     readPic() {
       //ako nema slika
-      axios.post("http://053n122.mars-e1.mars-hosting.com/api/wallet/checkPic",
-          {
-            sid: localStorage.getItem("sid")
-          })
-          .then(res => {
-          if(res.data.img_value[0].usr_img === null){
-            this.url = null; 
-            return this.url;
-          } 
+      axios.get("http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic",
+        {
+          params: {sid: localStorage.getItem("sid")}
         })
-        .catch(err => {
-          console.log(`greskaaaaaaaaaaa ${err.message}`);
-          
-        });
-      //ako ima slika
-      this.url ="http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic/" + this.id + "/avatar";
-      return this.url;
+        .then(res => {
+          axios.get(res.data.poruka3.link)
+          .then(()=>{
+            this.url = res.data.poruka3.link;
+          });
+      })
     }
   }
 };

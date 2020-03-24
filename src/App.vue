@@ -18,19 +18,19 @@
             <img src="./assets/placeholder-img.jpg" alt="profilePic"></router-link>
             <!-- u trenutku kad se uloguje-->
             <router-link to="/profile" id="profile" v-if="$store.state.isLoggedIn">
-              <img :src="readPic()" alt="profilePicture" />
+              <img :src="url" alt="profilePicture" />
             </router-link>
             <router-link to="/login" v-if="!$store.state.isLoggedIn">Ulogujte se</router-link>
             <!-- Ovo se prikazuje kad je user ulogovan -->
             <div class="dropdown" v-if="$store.state.isLoggedIn">    
-              <router-link to="/profile" class="dropbtn cart" >Uros Dimitrijevic</router-link>
+              <router-link to="/profile" class="dropbtn cart">{{name + " " + surname}}</router-link>
               <div class="dropdown-content">
                 <router-link to="/profile">Profil</router-link>
                 <router-link to="/logOut">Izlogujte se</router-link>
               </div>
             </div>
 
-            <router-link to="/registartion">Registracija</router-link>
+            <router-link to="/registartion" v-if="!$store.state.isLoggedIn">Registracija</router-link>
           </div>
         </div>
       </div>
@@ -55,12 +55,25 @@ export default {
   data() {
     return {
       id: localStorage.getItem("user"),
-      url: ''
+      url: '',
+      name: '',
+      surname: ''
     }
   },
   mounted() {
-    setInterval(this.checkSession(), 900000);
+    setInterval(this.checkSession, 1000*60*15);
+    this.checkSession();
     this.checkSid();
+    this.readPic();
+    this.$root.$on('change-id', () => {
+        this.id = localStorage.getItem('user');
+    });
+    this.$root.$on('change-pic', () => {
+        this.readPic();
+    });
+    this.$root.$on('change-usr-data', () => {
+        this.checkSession();
+    });
   },
   methods: {
     checkSid() {
@@ -77,30 +90,31 @@ export default {
         .get(
           "http://053n122.mars-e1.mars-hosting.com/api/wallet/checkSession",
           {
-            sid: localStorage.getItem("sid")
+            params:{sid: localStorage.getItem("sid")}
           }
         )
-        .then(res => res);
-    },
-    readPic(){
-       //ako nema slika
-      axios.post("http://053n122.mars-e1.mars-hosting.com/api/wallet/checkPic",
-          {
-            sid: localStorage.getItem("sid")
-          })
-          .then(res => {
-          if(res.data.img_value[0].usr_img === null){
-            this.url = './assets/placeholder-img.jpg'; 
-            return this.url;
-          } 
-        })
-        .catch(err => {
-          console.log(`greskaaaaaaaaaaa ${err.message}`);
-          
+        .then(r => {
+          this.name = r.data.usr_data.usr_name;
+          this.surname = r.data.usr_data.usr_surname;
         });
-      //ako ima slika
-      this.url ="http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic/" + 2 + "/avatar";
-      return this.url;
+    },
+    readPic() {
+      console.log('desi se readPic');
+      
+      axios.get("http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic",
+        {
+          params: {sid: localStorage.getItem("sid")}
+        })
+        .then(res => {
+          console.log(res.data.poruka3.link);
+          
+          axios.get(res.data.poruka3.link)
+          .then(()=>{
+            this.url = res.data.poruka3.link;
+          });
+      }).catch(()=>{
+            localStorage.clear();
+          })
     }
   }
 };
@@ -111,42 +125,6 @@ export default {
    font-family: 'Teko', sans-serif;
    font-size:1.2em;
 }
-
-
-
-
-
-
-/* .nav {
-  border-bottom: 1px solid black;
-}
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-   
-}
-.nav a {
-  font-weight: bold;
-  color: #2c3e50;
-  font-size: 18px;
-}
-
-.nav a.router-link-exact-active {
-  color: #42b983;
-  border: 1px solid #2c3e50;
-}
-
-<style>
-
-
-.nav a.router-link-exact-active {
-  /* color: #42b983; */
- /* border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
-}*/
-
 body {
   padding: 0;
   margin: 0;
@@ -186,17 +164,19 @@ main {
 .container {
   display: flex;
   justify-content: space-between;
-  /* min-width: 780px; */
-  /* max-width:1380px; */
-  /* width: 100%; */
   margin: 0;
-  /* text-align: left; */
   align-items: center;
-  /* background-color: red; */
 }
-
+.page-footer .container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  align-items: center;
+  box-sizing: border-box;
+  padding-left: 5%;
+  padding-right: 5%;
+}
 #page-header {
-  /* position: sticky; */
   top: 0;
   background: #17a2b8;
   color: white;
@@ -207,7 +187,18 @@ main {
   top: 0;
   z-index: 6000;
 }
-
+@keyframes hover{
+  0% {border-bottom: 0.1em solid rgba(255, 255, 255, 0);}
+  100% {border-bottom: 0.1em solid rgba(255, 255, 255, 0.8)}
+}
+.nav.cart a:hover {
+  animation-name: hover;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
+}
+.nav.cart a:focus, .nav.cart a:active {
+  outline: none;
+}
 #page-header img {
   display: inline-block;
   width: 70px;
@@ -362,7 +353,7 @@ article p {
   width: 49%;
 }
 #powered {
-  text-align: end;
+  text-align: center;
 }
 #powered img {
   margin-left: 10px;

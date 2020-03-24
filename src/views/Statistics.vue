@@ -106,6 +106,7 @@ export default {
 
 <style  scoped>
 .statistics{
+ 
   background-color:#bebebe79;
  /*   background-color:aliceblue; */
     background-image: linear-gradient(#bebebebb,#FFFFFF, #bebebebb);
@@ -122,6 +123,7 @@ export default {
   min-width:300px;
 }
 h1{
+  font-weight: normal;
   text-align: center;
   margin-top:1%;
 }

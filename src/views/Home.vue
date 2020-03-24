@@ -7,7 +7,7 @@
     <div v-if="createAccDiv" class="createAccDiv2">
       <form >
          <p class="exit" @click="showCreateAccDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
-     <br>
+     
         <h2>
           Kreiraj novi račun
          
@@ -46,7 +46,7 @@
       <p class="exit" @click="showDeleteAccountDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
      
            <h2>   DA LI STE SIGURNI DA ŽELITE DA IZBRISETE 
-           " {{defAcc.acc_name}} " RAČUN?
+            {{defAcc.acc_name}}  RAČUN?
              </h2>
        
         <br />
@@ -80,13 +80,14 @@
     </div>
     <!-- END DELETE TRANSACTION -->
 
-    <h1>where the money goes???</h1>
+    <h1><span v-if="!this.isLoggedIn"> Try it!</span> Where the money goes???</h1>
+    <p v-if="!this.isLoggedIn" >Napravite probni račun. Sve transakcije koje budete izvršili nece biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.</p>
     <!-- show all bils -->
     <div class="bills">
       <div class="bill" v-for="acc in accounts" :key="acc.acc_id" @click="setBill(acc)">
         <p>{{acc.acc_name}}</p>
       </div>
-      <div class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
+      <div v-if="!createName"   class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
     </div>
     <!-- end bills-->
     <div class="nameBill" v-if="this.isLoggedIn">
@@ -95,6 +96,16 @@
      </p>  
      <p>Stanje:
       <span class="orange">{{defAcc.acc_amount}} - {{defAcc.acc_type_name}} </span> 
+      </p>  
+      <i @click="showDeleteAccountDiv(true)" class="fas fa-trash-alt" style="font-size:16px"></i>
+    
+   </div><!-- end isLoggedIn -->
+   <div class="nameBill" v-else-if="this.createSum && !this.isLoggedIn">
+     <p> Naziv računa:
+      <span class="orange">{{this.createName}}</span> 
+     </p>  
+     <p>Stanje:
+      <span class="orange">{{this.createSum}} - {{this.createSelected}} </span> 
       </p>  
       <i @click="showDeleteAccountDiv(true)" class="fas fa-trash-alt" style="font-size:16px"></i>
     
@@ -124,14 +135,14 @@
       
         <div class="showTransaction scrollTD" >
           <table v-if="allTransaction && allTransaction.length > 0">
-          <tr>
+          <tr class="tr">
             <th class="scrollTD">Tip tranakcije:</th> 
             <th class="scrollTD"> Iznos:</th>
             <th class="scrollTD"> Opis:</th>
             <th class="scrollTD"> Datum: </th>
             <th class="scrollTD">Opozovi transakciju: </th>
           </tr>
-          <tr v-for="acc in allTransaction" :key="acc.tra_id">
+          <tr class="tr" v-for="acc in allTransaction" :key="acc.tra_id">
             <td class="scrollTD">{{acc.tra_type_name}}</td> 
             <td class="scrollTD">{{acc.tra_amount}}</td>
             <td class="scrollTD">{{acc.tra_description}}</td>
@@ -140,26 +151,26 @@
           </tr>
           </table>
           <table v-else>
-          <tr>
+          <tr class="tr">
             <th class="scrollTD">Tip tranakcije:</th> 
             <th class="scrollTD"> Iznos:</th>
             <th class="scrollTD"> Opis:</th>
             <th class="scrollTD"> Datum: </th>
             <th class="scrollTD">Opozovi transakciju: </th>
           </tr>
-          <tr><td colspan="5">Nema podataka za prikazivanje</td></tr>
-          <tr v-for="a in 6" :key="a">
+          <tr class="tr"><td colspan="5">Nema podataka za prikazivanje</td></tr>
+          <tr class="tr" v-for="a in 8" :key="a">
             <td class="scrollTD"> <br> </td> 
             <td class="scrollTD"> <br> </td>
             <td class="scrollTD"> <br> </td>
             <td class="scrollTD"> <br> </td>
-            <td class="scrollTD cancelTransaction"></td>
+            <td class="scrollTD"> <br> </td>
           </tr>
           </table>
               
      
       </div>
-    </div><!-- END transaction-->
+    </div><!-- END transaction allTrans-->
 
 
 
@@ -218,7 +229,7 @@
 
       <div class="showGraf scrollTD">
         <h2 v-if="setParamsForChartTrue">Statistika svih transakcija računa</h2>
-        <h2 v-else>Primer transakcija računa</h2>
+        <h2 v-else>Primer statistike računa sa nasumičnim podatcima</h2>
         <ChartCircle />
         
       </div>
@@ -268,6 +279,7 @@ export default {
       createName: null,
       createErrors: [],
       createSelected: null,
+      arrTryTransaction:[],
 
       categorySelected: null,
       buySum: null,
@@ -404,19 +416,22 @@ export default {
           this.createSum !== null + " checkFormCreateAcc"
       );
       if (this.createName && this.createSum) {
-        if (!isNaN(this.createSum) && this.createSum !== null) {
+        if (!isNaN(this.createSum) && this.createSum !== null && this.createSum >= 0 ) {
           this.createNewAccount();
           return;
         }
 
-        this.createErrors.push("Sum must be a number required.");
+        this.createErrors.push("Iznos mora biti brojna vrednost.");
       }
       if (!this.createSum) {
-        this.createErrors.push("Sum required.");
+        this.createErrors.push("Iznos mora biti unešen.");
+      }
+      if(this.createSum < 0){
+        this.createErrors.push("Iznos ne sme biti negativna vrednost.");
       }
 
       if (!this.createName) {
-        this.createErrors.push("Name of account required.");
+        this.createErrors.push("Ime računa je obavezno zbog lakšeg praćenja novca.");
       }
     },
     createNewAccount() {
@@ -441,9 +456,14 @@ export default {
               this.showCreateAccDiv(false);
             }
           });
-      }
-      this.createSum = null;
-      this.createName = null;
+          this.createSum = null;
+          this.createName = null;
+      }else{
+         //pravljenje probnog racuna
+         this.showCreateAccDiv2();
+         // this.showCreateAccDiv(false);
+        }
+      
     },
     deleteAccount(){
       let sid =localStorage.getItem('sid')
@@ -459,21 +479,29 @@ export default {
             this.getAccounts()
           } );
       }
+      else{
+        this.deleteAccDiv=false;
+        this.createSum = null;
+        this.createName = null;
+      }
     },
     checkFormBuy() {
       this.buyErrors = [];
-      if (this.buySum && this.buyDesc) {
+      if (this.buySum && this.buyDesc && this.buySum > 0) {
         if (!isNaN(this.buySum) && this.buySum !== null) {
           this.createBuy();
           return;
         }
-        this.buyErrors.push("Sum must be a number");
+        this.buyErrors.push("Iznos mora biti upisan numeričkim vrednostima");
       }
       if (!this.buySum) {
-        this.buyErrors.push("Sum required");
+        this.buyErrors.push("Iznos mora biti upisan");
+      }
+      if( this.buySum <= 0){
+        this.buyErrors.push("Iznos za transakciju mora biti veći od 0");
       }
       if (!this.buyDesc) {
-        this.buyErrors.push("Description required");
+        this.buyErrors.push("Unesite opis radi lakšeg praćenja toka novca");
       }
     },
     createBuy() {
@@ -502,6 +530,8 @@ export default {
               this.buySum = null;
             }
           });
+      }else if(this.createName){
+        //
       }
     },
     checkFormAddToAccount() {
@@ -513,13 +543,13 @@ export default {
           this.createAddMoney();
           return;
         }
-        this.addErrors.push("Sum must be a number");
+        this.addErrors.push("Iznos mora biti upisan numeričkim vrednostima");
       }
       if (!this.addSum) {
-        this.addErrors.push("Sum required");
+        this.addErrors.push("Iznos mora biti upisan");
       }
       if (!this.addDesc) {
-        this.addErrors.push("Description required");
+        this.addErrors.push("Unesite opis radi lakšeg praćenja toka novca");
       }
     },
     createAddMoney() {
@@ -586,7 +616,14 @@ export default {
     },
     
     showCreateAccDiv(x) {
-      this.createAccDiv = x;
+      
+          this.createSum = null;
+          this.createName = null;
+        
+     this.createAccDiv = x;
+    },
+    showCreateAccDiv2() {
+       this.createAccDiv = false;
     },
     showCallendarMet(x) {
       this.showCallendar = x;
@@ -614,7 +651,8 @@ export default {
           console.log(`old value- ${oldValue.acc_name}  newValue- ${newValue.acc_name}`);
        if(oldValue.acc_name !== undefined){
          this.refreshChart(newValue.acc_name);
-       } 
+       } else{ this.setParamsForChart('')
+}
       }
   },
   computed: {
@@ -653,9 +691,12 @@ export default {
 
 
 .dashboard {
+ 
+
   text-align: center;
-  padding:3% 0 0 0 ;
+  padding:0 0 0 0 ;
   width: 100%;
+   
 }
 .bills {
   padding: 6px 0;
@@ -678,7 +719,7 @@ export default {
 .bill p {
   margin: 0 auto;
   box-sizing: border-box;
-  line-height: 2.8;
+  line-height: 2.1;
   font-weight: 500;
 }
 .create {
@@ -727,10 +768,12 @@ export default {
 }
 .allTrans,
 .showGraf{
+  font-size:initial;
   background-color: #bebebe79;
   
 }
 .showGraf {
+  font-size:initial;
   box-sizing: border-box;
   width: 33.3%;
   display: flex;
@@ -741,6 +784,7 @@ export default {
   padding-top:2%;
  
 }
+
 
 .pickOut {
   box-sizing: border-box;
@@ -788,15 +832,17 @@ export default {
 
 }
 .inputWrite {
-  padding: 1%;
+  padding: 1.5% 1%;
   margin-bottom: 2%;
-  width: 60%;
+  width: 60% !important; 
   background-color: rgb(255, 255, 255);
   border-color: rgb(196, 188, 188);
+  font-family: 'Teko', sans-serif !important;
+  font-size: initial;
 }
 select.inputWrite {
   
- /* width: 42.5%; */
+  width: 62.5% !important; 
   border: inset 2px rgb(196, 188, 188);
 }
 .option:hover {
@@ -811,8 +857,10 @@ input:focus {
 input[type="button"] {
   font-size: 1.3em;
 /*  width: 42.5%; */
+  width:62.5% !important;
   border: inset 2px rgb(196, 188, 188);
   cursor: pointer;
+  padding:initial;
 }
 input[type="button"]:hover {
   text-shadow: 0.8px 0.8px 0.8px #000000;
@@ -827,6 +875,7 @@ input[type="button"]:active {
   flex-wrap: wrap;
 }
 .transaction2 {
+  font-size:1.3em;
   position: relative;
   width: 100%;
   display: flex;
@@ -848,26 +897,28 @@ input[type="button"]:active {
   padding-bottom: 25px;
   margin: 20px 9px;
   max-width: 100%;
+  font-size:1.1em;
   
   
 }
 table{
   box-sizing: border-box;
   min-width:100%;
+  border-collapse:collapse;
  
 }
-tr{
-   border-top:solid 1px rgba(113, 113, 116);
-    border-bottom:solid 1px rgba(113, 113, 116);
+.tr{
+   border-top:solid 1px rgb(113, 113, 116, 0.459) !important;
+    border-bottom:solid 1px rgba(113, 113, 116, 0.459) !important;
 }
 
 
 td, th{
-  padding:8px;
+  padding:6px;
   max-width: 100px;
   min-width:60px;
   border-right:solid 1px rgba(113, 113, 116, 0.2);
-    border-left:solid 1px rgba(113, 113, 116, 0.2);
+  border-left:solid 1px rgba(113, 113, 116, 0.2);
 
   
 }
@@ -880,21 +931,23 @@ th{
 }
 
 
-h1:nth-of-type(2) {
+h1 {
+  font-weight: normal;
   margin: 0 auto;
-  padding: 3% 0 0 0;
+  padding: 1% 0 0 0;
   max-width: fit-content;
-  border-bottom: solid rgb(250, 174, 33);
-  border-bottom: double black;
+
+ 
 }
 h1 .orange {
   word-spacing: 20px;
 }
+
 .nameBill p{
   display: inline-block;
   font-size: 2em;
   margin-right:2.5%;
-
+  border-bottom: double black;
 }
 
 @keyframes opacity{
@@ -921,13 +974,13 @@ h1 .orange {
   animation-name: opacity;
   animation-duration: 0.2s;
  position: fixed;
- top:10%;
- left:23%;
+ top:2%;
+ left:25%;
  background:#fff;
-  width: 60%;
+  width: 50%;
   
   z-index:1000200;
-  padding: 1%;
+  padding: 0 1% 3% 1%;
 }
 .exit {
   text-align:right;

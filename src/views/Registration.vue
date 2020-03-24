@@ -69,7 +69,9 @@ export default {
 };
 </script>
 
-<style scoped >
+<style scoped>
+
+
  input[type="text"],
  input[type="password"] {
   width: 100%;

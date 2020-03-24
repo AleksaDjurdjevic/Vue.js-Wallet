@@ -401,6 +401,7 @@ h6 {
 .dropdown-content {
   display: none;
   position: absolute;
+  top: 100%;
   background-color:#17a2b8;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -412,6 +413,7 @@ h6 {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
+  text-align: start;
 }
 
 .dropdown-content a:hover {

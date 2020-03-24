@@ -40,7 +40,7 @@
             <!-- Wrapper for all savings -->
             <div class="test"  v-for = "(saving, index) in savings" :key = 'saving.sav_id'>
                 <div class="test1"><p>{{saving.sav_description}}</p></div>
-                <div :class="'each-saving'+(index+1)">
+                <div :class="'each-saving' + setClassForSavings(index+1)">
                     <div class="rectangle"><p>Pregled stednje</p></div>
                     <div class="data">
                         <div class="data-row">
@@ -171,7 +171,15 @@ export default {
         viewPayments(sav_id){
             this.sav_id = sav_id;
             this.viewingPayments = true;
-        }
+        },
+        setClassForSavings(i){
+            if(i<5){
+                return i;
+            }else{
+                let devider = Math.floor(i/4);
+                return i-4*devider;
+            }
+        },
     },
     mounted(){
         this.getSavings();
@@ -199,8 +207,8 @@ p{
     display:flex;
     justify-content: center;
     align-items: center;
-    word-break: break-all; 
     word-wrap: break-word;
+    /* overflow: auto; */
 }
 .test1{
     width: 80%;

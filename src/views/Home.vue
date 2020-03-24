@@ -578,9 +578,10 @@ export default {
 
           }
 
-
-
       }
+      else{
+       this.message="Prvo morate napraviti račun da bi mogli izvršiti transakcije."
+     }
     },
     checkFormAddToAccount() {
       this.resetMessage() ;
@@ -636,6 +637,8 @@ export default {
             this.addDesc = null;
             this.addSum = null;
      
+     }else{
+       this.message="Prvo morate napraviti račun da bi mogli izvršiti transakcije."
      }
     },
     checkCancelTransaction(id_transaction,tra_description){

@@ -8,7 +8,7 @@ import axios from "axios";
 export default {
   mounted() {
       this.logout()
-  },  
+  }, 
   methods: {
     logout() {
       axios
@@ -30,6 +30,7 @@ export default {
         this.$store.state.isRegistrated = false;
 
         this.$router.push('/');
+        this.$store.dispatch('paramsForChartAct', []);
     }
   }
 };

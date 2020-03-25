@@ -10,19 +10,19 @@
     </div>
     <div>
       Ime:
-      <input type="text" v-model="computedName" v-bind:placeholder="name" />
+      <input type="text" v-model="computedName" placeholder="Novo ime" />
     </div>
     <div>
       Prezime:
-      <input type="text" v-model="computedSurname" v-bind:placeholder="surname" />
+      <input type="text" v-model="computedSurname" placeholder="Novo prezime" />
     </div>
     <div>
       E-mail:
-      <input type="text" v-model="computedEmail" v-bind:placeholder="email" />
+      <input type="text" v-model="computedEmail" placeholder="Nova E-mail adresa" />
     </div>
     <div>
       Šifra
-      <input type="password" v-model="computedPassword" v-bind:placeholder="password" />
+      <input type="password" v-model="computedPassword" placeholder="Nova sifra" />
     </div>
     <div>
       <button type="submit" @click="update()">Potvrdi</button>
@@ -158,12 +158,11 @@ export default {
 
 <style scoped>
 .userProfile {
-  /*ovo obrisati, ove margine */
-  margin-top: 60px;
-  margin-bottom: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 92vh;
+  margin-top: 4%;
 }
 .userProfile div {
   width: 30%;
@@ -174,4 +173,39 @@ export default {
   height: 100px;
   width: 100px;
 }
+ input[type="text"],
+ input[type="password"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button{
+  width: 30%;
+  background-color: #17a2b8;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #17a3b8c9;
+}
+h1 {
+  margin-bottom: 35px;
+}
+.welcome{
+  text-align: center;
+}
+label {
+  font-weight: bold;
+} 
 </style>

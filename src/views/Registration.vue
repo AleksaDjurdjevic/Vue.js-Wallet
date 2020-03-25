@@ -70,7 +70,9 @@ export default {
 </script>
 
 <style scoped>
-
+.registration{
+  min-height: 92vh;
+}
 
  input[type="text"],
  input[type="password"] {
@@ -85,7 +87,7 @@ export default {
 
 button {
   width: 30%;
-  background-color: #8c92fa;
+  background-color: #17a2b8;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -96,7 +98,7 @@ button {
 }
 
 button:hover {
-  background-color: #9999ff;
+  background-color: #17a3b8c9;
 }
 
 .bla {

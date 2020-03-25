@@ -72,8 +72,8 @@ input[type="password"] {
 
 
 button {
-  width: 40%;
-  background-color: #8c92fa;
+  width: 100%;
+  background-color: #17a2b8;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -85,10 +85,9 @@ button {
 }
 
 button:hover {
-  background-color: #9999ff;
+  background-color:#17a3b8c9;
 }
 .wrapper{
-  
   display: flex;
   justify-content: center;
   background-color: #f5faff;
@@ -96,19 +95,17 @@ button:hover {
 }
 
 .login{
-  display: flex;
   border: 1px solid black;
   width: 25%;
-  margin-top: auto;
-  margin-bottom: auto;
+  height: 50%;
   background-color: white;
+  margin: 8% auto 0 auto;
 }
 .bla {
   border-radius: 5px;
   padding: 20px;
   width: 80%;
-  margin-left: 10%;
-  margin-top: 0;
+  margin: 0;
 }
 .bla p{
   margin-top: 30px;

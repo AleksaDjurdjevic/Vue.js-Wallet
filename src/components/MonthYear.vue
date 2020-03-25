@@ -89,9 +89,7 @@ export default {
 
     },
     async mounted(){
-        console.log(this.year+' -god - mesec- '+ this.month)
-       this.selectAcc=localStorage.getItem('setDefAcc')
-        console.log(this.selectAcc+ 'Month Year')
+       this.selectAcc=localStorage.getItem('setDefAcc');
     
     }
 }

@@ -13,7 +13,7 @@ am4core.useTheme(am4themes_animated);
 
 export default {
   name: "ChartCircle",
-  props:['setParamsForChartTrue'],
+  props:['setParamsForChartTrue' ,  'tryParams'],
 
   data() {
     return {
@@ -33,6 +33,19 @@ export default {
                       "iznos": 130200
                   }]
     };
+
+      //    tryParamsForChart:[],
+     //     tryParams:false,
+      //   this.arrTryTransaction.push({tip:"rashod",iznos:this.buySum,opis:this.buyDesc,datum:d});
+
+      //this.tryParamsForChart.push({"tip_transakcije":this.createName ,"iznos":this.createSum},
+       //                               {"tip_transakcije":"Rashod" , "iznos" : 0},
+       //                               {"tip_transakcije":"Prihod" , "iznos" : 0});
+        
+
+
+
+
   },
   computed: {
     ...mapState(["paramsForChart"])
@@ -45,9 +58,11 @@ export default {
 
      this.chart.paddingRight = 20;
       this.chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
-console.log(dataForChart + "dataForChart-------------------------------")
-      this.chart.data = (dataForChart != '' )?dataForChart:   this.defParamsForChart;
 
+
+      
+        this.chart.data = (dataForChart != '' ) ? dataForChart : this.defParamsForChart;
+      
       
      // this.chart.radius = am4core.percent(70);
     //  this.chart.innerRadius = am4core.percent(40);
@@ -90,10 +105,15 @@ console.log(dataForChart + "dataForChart-------------------------------")
    this.crearteChart(this.paramsForChart);
   },
   watch:{
-      paramsForChart(setNewValue){
-        if(setNewValue)
-          this.crearteChart(this.paramsForChart);
+      paramsForChart:{
+
+          deep:true,
+          handler(setNewValue){
+          this.crearteChart(setNewValue);
+          }
       }
+      
+      
   },
 
   beforeDestroy() {

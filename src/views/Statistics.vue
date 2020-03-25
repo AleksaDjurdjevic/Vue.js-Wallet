@@ -53,8 +53,6 @@ export default {
           )
           .then(response => {
             this.accounts = response.data.data;
-            for(let i=0; i<this.accounts.length;i++)
-            console.log(this.accounts[i].acc_name +" all accounts from statistic");
           });
       }
     },
@@ -77,7 +75,6 @@ export default {
         .then(response => {
           this.setParamsForChart(response.data.transactions);
           this.paramsForChart=response.data.transactions;
-          console.log(this.paramsForChart[0]);
           this.showChart = true;
           this.message=response.data.message
         });

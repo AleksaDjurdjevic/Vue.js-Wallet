@@ -20,8 +20,8 @@ export default {
           localStorage.clear();
           this.$store.state.isLoggedIn;
         })
-        .catch(err => {
-          console.log("nesto ne valja", err);
+        .catch(() => {
+          localStorage.clear();
         });
         this.email = null,
         this.password = null,

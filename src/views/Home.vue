@@ -82,7 +82,7 @@
     <!-- END DELETE TRANSACTION -->
 
     <h1><span v-if="!this.isLoggedIn"> Try it!</span> Where the money goes???</h1>
-    <p v-if="!this.isLoggedIn" >Napravite probni račun. Sve transakcije koje budete izvršili nece biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.</p>
+    <p v-if="!this.isLoggedIn" > <span v-if="!showTryAcc">Napravite probni račun.</span> Sve transakcije koje budete izvršili nece biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.</p>
     <!-- show all bils -->
     <div class="bills">
       <div class="bill" v-for="acc in accounts" :key="acc.acc_id" @click="setBill(acc)">
@@ -246,7 +246,7 @@
       <!-- transaction -->
 
       <div class="showGraf scrollTD">
-        <h2 v-if="setParamsForChartTrue">Statistika svih transakcija računa</h2>
+        <h2 v-if="setParamsForChartTrue || createName ">Statistika svih transakcija izabranog računa</h2>
         <h2 v-else>Primer statistike računa sa nasumičnim podatcima</h2>
         <ChartCircle />
         
@@ -299,6 +299,8 @@ export default {
       createErrors: [],
       createSelected: null,
       arrTryTransaction:[],
+      tryParamsForChart:[],
+      tryParams:false,
 
       categorySelected: null,
       buySum: null,
@@ -345,7 +347,7 @@ export default {
       this.$store.dispatch("changeDefAcc", acc);
     },
     setParamsForChart(params){ 
-    
+
       this.$store.dispatch('paramsForChartAct',params);
     },
     formateDate(date) {
@@ -356,7 +358,6 @@ export default {
     },
     selectTranM(x) {
       this.selectTransaction = x;
-      console.log(this.selectTransaction);
     },
     getTypeAccount() {
       this.resetMessage() ;
@@ -380,7 +381,6 @@ export default {
     getAccounts() {
       this.showTryAcc=false;
       let sid = localStorage.getItem("sid");
-      console.log(sid);
       if (sid) {
         axios
           .post(
@@ -412,13 +412,11 @@ export default {
           .then(response => {
             this.allTransaction = response.data.transaction;
             this.$store.dispatch('allTransactionVuexAct',response.data.transaction);
-            console.log(response.data.transaction);
           });
       }
     },
     showTransactionByDate(date) {
       this.resetMessage() ;
-      console.log(date);
       let sid = localStorage.getItem("sid");
       if (sid) {
         axios
@@ -435,10 +433,6 @@ export default {
     },
     checkFormCreateAcc() {
       this.createErrors = [];
-      console.log(
-        !isNaN(this.createSum) &&
-          this.createSum !== null + " checkFormCreateAcc"
-      );
       if (this.createName && this.createSum) {
         if (!isNaN(this.createSum) && this.createSum !== null && this.createSum >= 0 ) {
           this.createNewAccount();
@@ -476,7 +470,6 @@ export default {
             this.getAccounts();
             this.message = response.data.message;
             this.err = response.data.err;
-            console.log("err -" + this.err + "message- " + this.message);
             if (!this.err) {
               this.showCreateAccDiv(false);
             }
@@ -487,6 +480,11 @@ export default {
          //pravljenje probnog racuna
          this.showCreateAccDiv2();
          this.showTryAcc=true;
+         this.tryParamsForChart.push({"tip_transakcije":this.createName ,"iznos":this.createSum},
+                                      {"tip_transakcije":"Rashod" , "iznos" : 0},
+                                      {"tip_transakcije":"Prihod" , "iznos" : 0});
+          this.tryParams=true;
+          this.setParamsForChart(this.tryParamsForChart);
          // this.showCreateAccDiv(false);
         }
       
@@ -494,7 +492,6 @@ export default {
     deleteAccount(){
       this.resetMessage() ;
       let sid =localStorage.getItem('sid')
-      console.log(this.defAcc.acc_name )
       if(sid){
         axios.post("http://053n122.mars-e1.mars-hosting.com/api/delete/deleteAccount",
         {sid:sid ,account:this.defAcc.acc_name }
@@ -508,10 +505,13 @@ export default {
       }
       else{
         this.deleteAccDiv=false;
-         this.showTryAcc=false;
+        this.showTryAcc=false;
         this.createSum = null;
         this.createName = null;
         this.arrTryTransaction=[];
+        this.tryParamsForChart=[];
+        this.tryParams=false;
+         this.setParamsForChart([]);
       }
     },
     checkFormBuy() {
@@ -588,7 +588,6 @@ export default {
       this.addErrors = [];
 
       if (this.addSum && this.addDesc && this.addSum > 0) {
-        console.log(!isNaN(this.addSum) && this.addSum !== null + "uslov");
         if (!isNaN(this.addSum) && this.addSum !== null) {
           this.createAddMoney();
           return;
@@ -730,18 +729,35 @@ export default {
   },
   watch:{
       defAcc(newValue, oldValue){
-          console.log(`old value- ${oldValue.acc_name}  newValue- ${newValue.acc_name}`);
        if(oldValue.acc_name !== undefined){
          this.refreshChart(newValue.acc_name);
        } else{ this.setParamsForChart('')
 }
-      }
+      },
+      arrTryTransaction(newValue){
+          this.tryParamsForChart[0].iznos=this.createSum;
+          this.tryParamsForChart[1].iznos=0;
+          this.tryParamsForChart[2].iznos=0;
+
+        for(let i=0; i < this.arrTryTransaction.length;i++){
+
+          if(this.arrTryTransaction[i].tip === "rashod"){
+           this.tryParamsForChart[1].iznos += parseFloat(newValue[i].iznos);
+          }else if(this.arrTryTransaction[i].tip === "prihod"){
+            this.tryParamsForChart[2].iznos += parseFloat(newValue[i].iznos);
+          }
+        }
+          this.setParamsForChart(this.tryParamsForChart);
+         
+          
+      
+   }
   },
+
   computed: {
     ...mapState(["isLoggedIn"]),
     ...mapState(["defAccV"]),
     showMessageErr(){
-      console.log(this.message +'---- computed')
       return this.message;
     }
   }
@@ -896,7 +912,7 @@ export default {
 
 .pickOut {
   box-sizing: border-box;
-  font-size: 1.5em;
+  font-size: 1.4em;
   line-height: 1.23;
   width: 50%;
   padding: 10px;
@@ -907,6 +923,7 @@ export default {
 .pickOut2 {
   background: rgb(234, 236, 236);
 }
+i:hover,
 .pickOut:hover,
 .pickOut3:hover {
   cursor: pointer;

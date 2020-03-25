@@ -55,14 +55,11 @@ export default {
           email: this.email,
           password: this.password,
         })
-        .then(resp => {
-          console.log(resp);
-          console.log("uspesna registracija");
+        .then(() => {
           this.$store.state.isRegistrated = true;
         })
-        .catch(err => {
-          console.log(err);
-          console.log("neuspesna registarcija");
+        .catch(() => {
+          localStorage.clear();
         });        
 }
   }

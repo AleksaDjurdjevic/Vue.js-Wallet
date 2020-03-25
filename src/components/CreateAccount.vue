@@ -48,11 +48,7 @@ export default {
   },
   methods: {
     checkFormCreateAcc() {
-      this.createErrors = [];
-      console.log(
-        !isNaN(this.createSum) &&
-          this.createSum !== null + " checkFormCreateAcc"
-      );
+      this.createErrors = [];;
       if (this.createName && this.createSum) {
         if (!isNaN(this.createSum) && this.createSum !== null) {
           this.createNewAccount();

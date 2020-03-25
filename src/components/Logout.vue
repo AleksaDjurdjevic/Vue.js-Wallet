@@ -29,9 +29,7 @@ export default {
         this.$store.state.isLoggedIn = false;
         this.$store.state.isRegistrated = false;
 
-        this.$router.push({
-            name: 'Login'
-        })
+        this.$router.push('/');
     }
   }
 };

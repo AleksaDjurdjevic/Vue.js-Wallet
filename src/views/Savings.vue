@@ -38,7 +38,7 @@
         <!-- Right side -->
         <div class="main">
             <!-- Wrapper for all savings -->
-            <div class="test"  v-for = "(saving, index) in savings" :key = 'saving.sav_id'>
+            <div class="test"  v-for = "(saving, index) in savings" :key = 'index'>
                 <div class="test1"><p>{{saving.sav_description}}</p></div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
                     <div class="rectangle"><p>Pregled stednje</p></div>
@@ -48,7 +48,7 @@
                             <span class='span-details'>Do sad uplaceno: {{saving.sav_amount_accumulated}}{{" " + saving.acc_type_name}}</span>
                         </div>
                         <div class="data-row">
-                            <span class='span-details'>Period stednje: {{saving.sav_period}} meseci/meseca</span>
+                            <span class='span-details'>Period stednje: {{saving.sav_period +" "+ setProperWord(saving.sav_period)}} </span>
                             <span class='span-details'>Preostala kolicina novca za uplatu: {{saving.leftover_amount + " " + saving.acc_type_name}}</span>
                         </div>
                         <div class="data-row">
@@ -107,6 +107,7 @@
 
 <script>
 import axios from 'axios';
+import {mapState} from 'vuex';
 import SavingsAdd from '../components/SavingsAdd.vue';
 import SavingsAddPayment from '../components/SavingsAddPayment.vue';
 import SavingsDelete from '../components/SavingsDelete.vue';
@@ -131,6 +132,9 @@ export default {
         "savings-delete": SavingsDelete,
         "savings-view-payments": SavingsViewPayments
     },
+    computed: {
+        ...mapState(['isLoggedIn'])
+    },
     methods: {
         savingSort(){
             if (this.savings !== []) {
@@ -145,7 +149,9 @@ export default {
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/get/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{
                 this.savings = r.data.all_savings;
-            })
+            }).catch(()=>{
+                localStorage.clear();
+            });
         },
         calculateRate(leftover_amount, start, period){
             let currentDate = new Date();
@@ -180,6 +186,23 @@ export default {
                 return i-4*devider;
             }
         },
+        setProperWord(p){
+            p = p.toString().split("");
+            if(    (p[p.length-1] === "1" && p[p.length-2] === "1")
+                || (p[p.length-1] === "2" && p[p.length-2] === "1") 
+                || (p[p.length-1] === "3" && p[p.length-2] === "1")
+                || (p[p.length-1] === "4" && p[p.length-2] === "1"))
+            {
+                return 'meseci';
+            }
+            else if(p[p.length-1] == '1'){
+                return 'mesec'
+            }else if(["2", "3", "4"].includes(p[p.length-1])){
+                return 'meseca';
+            }else{
+                return 'meseci'
+            }
+        }
     },
     mounted(){
         this.getSavings();
@@ -414,5 +437,30 @@ button:hover{
 .sorting{
     position: sticky;
     top: 25%;
+}
+.reg-notice{
+    position:fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 102;
+    color: white;
+    font-size: 3em;
+}
+.payment-processing-logged{
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background-color: black;
+    opacity: 0.6;
+    z-index: 10;
+    animation-name: opacity;
+    animation-duration: 0.6s;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 </style>

@@ -92,6 +92,7 @@
 <script>
 import Callendar from '../components/Callendar.vue';
 import axios from 'axios';
+import {mapState} from 'vuex';
 export default {
   data(){
     return{
@@ -115,7 +116,24 @@ export default {
   components : {
     'calendar': Callendar
   },
+  computed: {
+      ...mapState(['isLoggedIn'])
+  },
   methods: {
+    placeholderTra(){
+      for(let i=0; i<20; i++){
+        let obj = {
+          tra_date: '2020-03-20',
+          acc_name: 'Primer 1',
+          acc_type_name: 'RSD',
+          tra_type_name: 'Rashod',
+          tra_amount: 100*(i+1),
+          cat_name: 'Ostalo',
+          tra_description: 'Primer Opisa'
+        }
+        this.transactions.push(obj);
+      }
+    },
     getTransactions(){
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
         sid: localStorage.getItem('sid'),
@@ -196,7 +214,9 @@ export default {
             }
           } 
         }
-      })
+      }).catch(()=>{
+        localStorage.clear();
+      });
     },
     getTransactionsByAccount(acc_name){
       if(this.acc_name !== acc_name){
@@ -221,7 +241,9 @@ export default {
         for(let i = 0; i<this.accounts.length; i++){
           this.accounts[i].selected = false;
         }
-      })
+      }).catch(()=>{
+        localStorage.clear();
+      });
     },
     getTransactionsByDate(){
       if (this.fromDate !== null && this.toDate !== null){
@@ -249,6 +271,8 @@ export default {
         toDate: this.toDate 
       }).then(r=>{
         this.transactions = r.data.transaction;
+      }).catch(()=>{
+        localStorage.clear();
       })
     },
     showCalendarFunc(x){
@@ -335,7 +359,9 @@ export default {
               this.displayingPages[i].selected = false;
             }
           }
-        })
+        }).catch(()=>{
+          localStorage.clear();
+        });
       }
 
       //This part is for rendering the pages navigation bar
@@ -364,8 +390,8 @@ export default {
     }
   },
   mounted(){
-    this.getAccounts();
-    this.getTransactions();
+      this.getAccounts();
+      this.getTransactions();
   }
 }
 </script>
@@ -626,5 +652,30 @@ button:hover{
   animation-name: color-change-blue-shade;
   animation-duration: 0.6s;
   animation-fill-mode: forwards;
+}
+.reg-notice{
+    position:fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 102;
+    color: white;
+    font-size: 3em;
+}
+.payment-processing-logged{
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0.685);
+    opacity: 0.9;
+    z-index: 10;
+    animation-name: opacity;
+    animation-duration: 0.6s;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 </style>

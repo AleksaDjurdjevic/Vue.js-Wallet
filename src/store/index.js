@@ -46,6 +46,9 @@ export default new Vuex.Store({
   getters: {
     getDeffAcc: state => {
       return state.defAccV
+    },
+    getState: state => {
+      return state.isLoggedIn;
     }
   }
 })

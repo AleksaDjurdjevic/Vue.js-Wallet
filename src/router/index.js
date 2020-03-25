@@ -8,13 +8,23 @@ import Profile from '@/views/Profile.vue'
 import LogOut from '@/views/LogOut.vue'
 import Transactions from '@/views/Transactions.vue'
 import Statistics from '@/views/Statistics.vue'
+import store from '../store/index.js';
 
 Vue.use(VueRouter)
+
+function blockRoute(to, from, next){
+  if(store.getters.getState){
+    next();
+  }else{
+    next({name: "Home"});
+  }
+}
 
 const routes = [
   {
     path: '/savings',
-    component: Savings
+    component: Savings,
+    beforeEnter: blockRoute
   },
   {
     path: '/',
@@ -35,22 +45,29 @@ const routes = [
     path: '/logOut',
     name: 'LogOut',
     component: LogOut,
+    beforeEnter: blockRoute
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    beforeEnter: blockRoute
   },
   {
     path: '/transactions',
     name: 'Transactions',
-    component: Transactions
-  }
-  ,
+    component: Transactions,
+    beforeEnter: blockRoute
+  },
   {
     path: '/statistics',
     name: 'Statistics',
-    component: Statistics
+    component: Statistics,
+    beforeEnter: blockRoute
+  },
+  {
+    path: '*',
+    component: Home
   }
   
 ]

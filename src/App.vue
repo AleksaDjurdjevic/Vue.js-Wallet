@@ -5,9 +5,9 @@
         <div class="nav cart" >    
           <router-link to="/"><img src="./assets/logo.png" alt id="logo" /></router-link>
           <router-link to="/">Početna</router-link>
-          <router-link to="/transactions">Transakcije</router-link>
-          <router-link to="/savings">Štednja</router-link>
-          <router-link to="/statistics">Statistika</router-link>
+          <router-link to="/transactions" v-if="isLoggedIn">Transakcije</router-link>
+          <router-link to="/savings" v-if="isLoggedIn">Štednja</router-link>
+          <router-link to="/statistics" v-if="isLoggedIn">Statistika</router-link>
         </div>
 
         <div class="nav" id="nav">
@@ -20,13 +20,13 @@
             <router-link to="/profile" id="profile" v-if="$store.state.isLoggedIn">
               <img :src="url" alt="profilePicture" />
             </router-link>
-            <router-link to="/login" v-if="!$store.state.isLoggedIn">Ulogujte se</router-link>
+            <router-link to="/login" v-if="!$store.state.isLoggedIn">Prijavite se</router-link>
             <!-- Ovo se prikazuje kad je user ulogovan -->
             <div class="dropdown" v-if="$store.state.isLoggedIn">    
               <router-link to="/profile" class="dropbtn cart">{{name + " " + surname}}</router-link>
               <div class="dropdown-content">
                 <router-link to="/profile">Profil</router-link>
-                <router-link to="/logOut">Izlogujte se</router-link>
+                <router-link to="/logOut">Odjavite se</router-link>
               </div>
             </div>
 
@@ -48,6 +48,7 @@
 <script>
 import Footer from "./components/Footer.vue";
 import axios from "axios";
+import {mapState} from 'vuex';
 export default {
   components: {
     Footer
@@ -75,6 +76,9 @@ export default {
         this.checkSession();
     });
   },
+  computed: {
+    ...mapState(['isLoggedIn'])
+  },
   methods: {
     checkSid() {
       let sid = localStorage.getItem("sid");
@@ -96,18 +100,16 @@ export default {
         .then(r => {
           this.name = r.data.usr_data.usr_name;
           this.surname = r.data.usr_data.usr_surname;
+        }).catch(()=>{
+          localStorage.clear();
         });
     },
     readPic() {
-      console.log('desi se readPic');
-      
       axios.get("http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic",
         {
           params: {sid: localStorage.getItem("sid")}
         })
         .then(res => {
-          console.log(res.data.poruka3.link);
-          
           axios.get(res.data.poruka3.link)
           .then(()=>{
             this.url = res.data.poruka3.link;
@@ -195,6 +197,9 @@ main {
   animation-name: hover;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
+}
+.nav.cart a:nth-child(1):hover {
+  animation: none;
 }
 .nav.cart a:focus, .nav.cart a:active {
   outline: none;

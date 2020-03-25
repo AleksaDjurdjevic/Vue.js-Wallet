@@ -3,10 +3,10 @@
   <div class="login" >
     <div class="bla">
       <div v-if="!$store.state.isLoggedIn">
-        <h1>Login</h1>
+        <h1>Prijava</h1>
         <input type="email" placeholder="Unesite email.." v-model="email" />
         <input type="password" placeholder="Unesite sifru.." v-model="password" />
-        <button @click="login()">LogIn</button>
+        <button @click="login()">Prijavite se</button>
         <p>Niste se registrovali? <router-link to="/registartion">Registruj se.</router-link></p>
       </div>
     </div>
@@ -88,16 +88,11 @@ button:hover {
   background-color:#17a3b8c9;
 }
 .wrapper{
-  display: flex;
-  justify-content: center;
-  background-color: #f5faff;
   height: 100vh;
 }
-
 .login{
   border: 1px solid black;
   width: 25%;
-  height: 50%;
   background-color: white;
   margin: 8% auto 0 auto;
 }
@@ -110,7 +105,5 @@ button:hover {
 .bla p{
   margin-top: 30px;
 } 
-
-
 </style>
 

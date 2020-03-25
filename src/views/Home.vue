@@ -82,7 +82,7 @@
     <!-- END DELETE TRANSACTION -->
 
     <h1><span v-if="!this.isLoggedIn"> Try it!</span> Where the money goes???</h1>
-    <p v-if="!this.isLoggedIn" >Napravite probni račun. Sve transakcije koje budete izvršili nece biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.</p>
+    <p v-if="!this.isLoggedIn" > <span v-if="!showTryAcc">Napravite probni račun.</span> Sve transakcije koje budete izvršili nece biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.</p>
     <!-- show all bils -->
     <div class="bills">
       <div class="bill" v-for="acc in accounts" :key="acc.acc_id" @click="setBill(acc)">
@@ -246,7 +246,7 @@
       <!-- transaction -->
 
       <div class="showGraf scrollTD">
-        <h2 v-if="setParamsForChartTrue">Statistika svih transakcija računa</h2>
+        <h2 v-if="setParamsForChartTrue || createName ">Statistika svih transakcija izabranog računa</h2>
         <h2 v-else>Primer statistike računa sa nasumičnim podatcima</h2>
         <ChartCircle />
         
@@ -299,6 +299,8 @@ export default {
       createErrors: [],
       createSelected: null,
       arrTryTransaction:[],
+      tryParamsForChart:[],
+      tryParams:false,
 
       categorySelected: null,
       buySum: null,
@@ -345,7 +347,7 @@ export default {
       this.$store.dispatch("changeDefAcc", acc);
     },
     setParamsForChart(params){ 
-    
+
       this.$store.dispatch('paramsForChartAct',params);
     },
     formateDate(date) {
@@ -487,6 +489,11 @@ export default {
          //pravljenje probnog racuna
          this.showCreateAccDiv2();
          this.showTryAcc=true;
+         this.tryParamsForChart.push({"tip_transakcije":this.createName ,"iznos":this.createSum},
+                                      {"tip_transakcije":"Rashod" , "iznos" : 0},
+                                      {"tip_transakcije":"Prihod" , "iznos" : 0});
+          this.tryParams=true;
+          this.setParamsForChart(this.tryParamsForChart);
          // this.showCreateAccDiv(false);
         }
       
@@ -508,10 +515,13 @@ export default {
       }
       else{
         this.deleteAccDiv=false;
-         this.showTryAcc=false;
+        this.showTryAcc=false;
         this.createSum = null;
         this.createName = null;
         this.arrTryTransaction=[];
+        this.tryParamsForChart=[];
+        this.tryParams=false;
+         this.setParamsForChart([]);
       }
     },
     checkFormBuy() {
@@ -735,8 +745,31 @@ export default {
          this.refreshChart(newValue.acc_name);
        } else{ this.setParamsForChart('')
 }
-      }
+      },
+      arrTryTransaction(newValue){
+                console.log(newValue.length +' newValue.length --------------------------------watch');
+
+        
+          this.tryParamsForChart[0].iznos=this.createSum;
+          this.tryParamsForChart[1].iznos=0;
+          this.tryParamsForChart[2].iznos=0;
+
+        for(let i=0; i < this.arrTryTransaction.length;i++){
+
+          if(this.arrTryTransaction[i].tip === "rashod"){
+           this.tryParamsForChart[1].iznos += parseFloat(newValue[i].iznos);
+          }else if(this.arrTryTransaction[i].tip === "prihod"){
+            this.tryParamsForChart[2].iznos += parseFloat(newValue[i].iznos);
+          console.log(this.tryParamsForChart[2].iznos) ;
+          }
+        }
+          this.setParamsForChart(this.tryParamsForChart);
+         
+          
+      
+   }
   },
+
   computed: {
     ...mapState(["isLoggedIn"]),
     ...mapState(["defAccV"]),
@@ -896,7 +929,7 @@ export default {
 
 .pickOut {
   box-sizing: border-box;
-  font-size: 1.5em;
+  font-size: 1.4em;
   line-height: 1.23;
   width: 50%;
   padding: 10px;
@@ -907,6 +940,7 @@ export default {
 .pickOut2 {
   background: rgb(234, 236, 236);
 }
+i:hover,
 .pickOut:hover,
 .pickOut3:hover {
   cursor: pointer;

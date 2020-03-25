@@ -22,5 +22,11 @@ export default {};
 </script>
 
 <style scoped>
+#store-name,
+#store-adress{
+  text-align:left;
+  text-shadow: none !important;
+  
 
+}
 </style>

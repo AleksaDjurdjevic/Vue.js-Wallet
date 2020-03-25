@@ -3,7 +3,7 @@
     <header id="page-header">
       <div class="container">
         <div class="nav cart" >    
-          <router-link to="/"><img src="./assets/logo.png" alt id="logo" /></router-link>
+          <router-link to="/"><img src="./assets/logo.jpg"  alt id="logo" /></router-link>
           <router-link to="/">Početna</router-link>
           <router-link to="/transactions">Transakcije</router-link>
           <router-link to="/savings">Štednja</router-link>

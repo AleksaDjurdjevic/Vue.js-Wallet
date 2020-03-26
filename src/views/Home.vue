@@ -930,7 +930,7 @@ export default {
   flex-wrap: flex;
   justify-content: center;
   min-width: 300px;
-  min-height: 550px;
+  min-height: 580px;
 }
 .allTrans,
 .showGraf{

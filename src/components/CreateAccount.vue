@@ -1,6 +1,5 @@
 <template>
   <div  class="createAccDiv">
-    <form class="createAccDivChaild">
      <div class="forma">
         <label>Izaberi tip računa</label>
         <br />
@@ -20,12 +19,10 @@
         <br />
         <input type="text" v-model="createName" />
         <br />
-        <input type="button" value="Kreiraj Račun" @click="checkFormCreateAcc" />
+        <button @click="checkFormCreateAcc">Kreiraj Račun</button>
         <br />
-        <p v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
+        <p class= "msg" v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
       </div>
-    </form>
-
   </div> <!-- end createAccDiv -->
 </template>
 
@@ -35,57 +32,51 @@ export default {
   data() {
     return {
       createAccDiv: false,
-      createSum: null,
-      createType: null,
-      createName: null,
+      createSum: '',
+      createName: '',
       createErrors: [],
-      createSelected: null,
+      createSelected: '',
       typeAccount: [],
     };
   },
+  props:{
+    id: Number
+  },
   mounted(){
-      this.getTypeAccount()
+      this.getTypeAccount();
   },
   methods: {
     checkFormCreateAcc() {
       this.createErrors = [];
-      if (this.createName && this.createSum) {
-        if (!isNaN(this.createSum) && this.createSum !== null) {
+      if (this.createSum === "") {
+        this.createErrors.push("Potrebno je da unesete sumu.");
+      }else if (this.createName === "") {
+        this.createErrors.push("Potrebno je da unesete ime za račun.");
+      }else{
+        if (isNaN(this.createSum)) {
+          this.createErrors.push("Unešena suma mora da bude broj.");
+        }else{
           this.createNewAccount();
-          return;
         }
-        this.createErrors.push("Sum must be a number required.");
-      }
-      if (!this.createSum) {
-        this.createErrors.push("Sum required.");
-      }
-      if (!this.createName) {
-        this.createErrors.push("Name of account required.");
       }
     },
    
     createNewAccount() {
-      let sid = localStorage.getItem("sid");
-      if (sid) {
         axios
           .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/createAccount",
             {
-              sid: sid,
+              usr_id: this.id,
               acc_type: this.createSelected,
               acc_amounth: this.createSum,
               acc_name: this.createName
             }
-          )
-          .then(response => {
-            this.message = response.data.message;         
-          });
-      }
-      this.createSum = null;
-      this.createName = null;
-
-      this.$router.push({
-        name: 'Home'  
-      })
+          ).then(()=>{
+            this.$router.push('/login');
+            this.$store.state.isRegistrated = false;
+          }).catch((e)=>{
+            this.createErrors.push(e.response.data.err)
+          })
+      
     },
     getTypeAccount() {
       axios
@@ -104,20 +95,34 @@ export default {
 
 <style scoped>
 
-.createAccDivChaild{
-    border: 1px solid black;
-    width: 30%;
-}
 .createAccDiv{
     display: flex;
     justify-content: center;
     margin-bottom: 50px;
+    width: 30%;
+    margin: 0 auto;
 }
 .forma{
-  margin-top: 20px;
-  margin-bottom: 20px;
+  width: 90%;
 }
 input[type=button]{
   margin-top: 25px;
+}
+.msg{
+  color: #e80000;
+}
+button {
+  width: 45%;
+  background-color: #17a2b8;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #17a3b8c9;
 }
 </style>

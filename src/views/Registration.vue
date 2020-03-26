@@ -2,31 +2,30 @@
   <div class="registration">
     <!-- v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )" TREBA U BLA DA SE UBACI -->
     <div class="bla" v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )">
-      <h1>Registration</h1> 
+      <h1>Registracija</h1> 
       <div>
         
         <label for="fname">Ime</label>
-        <input type="text" placeholder="Insert name.." v-model="name" />
+        <input type="text" placeholder="Unesite svoje ime" v-model="name" />
         
         <label for="lname">Prezime</label>
-        <input type="text" placeholder="Insert lastanem.." v-model="surname" />
+        <input type="text" placeholder="Unesite svoje prezime" v-model="surname" />
         
         <label for="email">E-mail</label>
-        <input type="text" placeholder="Insert email.." v-model="email" />
+        <input type="text" placeholder="Unesite e-mail adresu" v-model="email" />
         
         <label for="password">Šifra</label>
-        <input type="password" placeholder="Insert password.." v-model="password" />
+        <input type="password" placeholder="Unesite šifru" v-model="password" />
       </div>
       <button @click="registration">Registracija</button>
-      <p>{{msg}}</p>
+      <p class = "msg">{{msg}}</p>
     </div> 
     
     <!-- Kada je user ulogovan -->
     <div v-if="($store.state.isRegistrated || $store.state.isLoggedIn )" class="welcome">
       <h3>Uspešno ste se registrovali.</h3>
-      <br><br>
       <h3>Napravite svoj račun:</h3>
-      <CreateAccount />  
+      <CreateAccount :id="id"/>  
     </div>
   </div>
 </template>
@@ -40,17 +39,17 @@ export default {
   },
   data() {
     return {
-      name: null,
-      surname: null,
-      email: null,
-      password: null,
-      isAdmin: false,
-      msg: ''
+      name: '',
+      surname: '',
+      email: '',
+      password: '',
+      msg: '',
+      id: null
     };
   },
   methods: {
     registration() {
-      if(this.name === null || this.password === null || this.email === null || this.surname === null){
+      if(this.name === '' || this.password === '' || this.email === '' || this.surname === ''){
         this.msg = 'Unesite sva polja.'
       }else{
         axios
@@ -60,8 +59,9 @@ export default {
           email: this.email,
           password: this.password,
         })
-        .then(() => {
+        .then((r) => {
           this.$store.state.isRegistrated = true;
+          this.id = r.data.id_usera;
         })
         .catch((err) => {
           localStorage.clear();
@@ -78,7 +78,9 @@ export default {
 .registration{
   min-height: 92vh;
 }
-
+.msg{
+  color: #e80000;
+}
  input[type="text"],
  input[type="password"] {
   width: 100%;
@@ -119,6 +121,10 @@ h1 {
 }
 .welcome{
   text-align: center;
+}
+.welcome h3:nth-child(1){
+  text-align: center;
+  color: #1db802;
 }
 label {
   font-weight: bold;

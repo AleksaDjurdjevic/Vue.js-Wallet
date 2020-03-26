@@ -4,10 +4,10 @@
     <div class="bla">
       <div v-if="!$store.state.isLoggedIn">
         <h1>Prijava</h1>
-        <input type="email" placeholder="Unesite email.." v-model="email" />
+        <input type="text" placeholder="Unesite email.." v-model="email" />
         <input type="password" placeholder="Unesite sifru.." v-model="password" />
         <button @click="login">Prijavite se</button>
-        <p>{{msg}}</p>
+        <p class = "msg">{{msg}}</p>
         <p>Niste se registrovali? <router-link to="/registartion">Registruj se</router-link></p>
       </div>
     </div>
@@ -20,16 +20,15 @@ import axios from "axios";
 export default {
   data() {
     return {
-      email: null,
-      password: null,
-      name: null,
+      email: '',
+      password: '',
       msg: null
     };
   },
   methods: {
     login() {
-      if(this.password === null || this.email === null){
-        this.msg = 'Unesite sva polja.'
+      if(this.password === '' || this.email === ''){
+        this.msg = 'Unesite sva polja.';
       }else{
       axios
         .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
@@ -41,8 +40,6 @@ export default {
           localStorage.setItem("user", res.data.user);
           
           this.$store.state.isLoggedIn = true;
-          this.name = res.data.name;
-          this.surname = res.data.surname;
 
           this.$root.$emit('change-id');
           this.$root.$emit('change-usr-data');
@@ -51,6 +48,8 @@ export default {
           this.$router.push({
             name: 'Home'
           })
+        }).catch(e=>{
+          this.msg = e.response.data.err;
         });
       }
     }
@@ -62,8 +61,11 @@ export default {
 h1 {
   margin-bottom: 35px;
 }
-
-input[type="email"],
+.msg{
+  color: #e80000;
+  /* 1db802 */
+}
+input,
 input[type="password"] {
   width: 100%;
   padding: 12px 20px;

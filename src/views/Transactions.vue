@@ -3,7 +3,7 @@
     <!-- Left side -->
     <div class="aside">
       <!-- Accounts -->
-      <p class = "heading">Kliknite na račun kako biste filtrirali transakcije po racunu</p>
+      <p class = "heading">Kliknite na račun kako biste filtrirali transakcije po računu</p>
       <div class="accounts">
         <div class = "each-account-placeholder" :class = "{selected: showingAccPlaceholder}" @click = "accountPlaceholder"><p>Pregled sa svih računa</p></div>
         <div v-for="account in accounts" class = "each-account"

@@ -978,7 +978,7 @@ i:hover,
 }
 
 .tranType {
-  padding:10% 0%;
+
   width: 100%;
  
 }

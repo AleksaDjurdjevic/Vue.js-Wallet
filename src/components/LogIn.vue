@@ -6,8 +6,9 @@
         <h1>Prijava</h1>
         <input type="email" placeholder="Unesite email.." v-model="email" />
         <input type="password" placeholder="Unesite sifru.." v-model="password" />
-        <button @click="login()">Prijavite se</button>
-        <p>Niste se registrovali? <router-link to="/registartion">Registruj se.</router-link></p>
+        <button @click="login">Prijavite se</button>
+        <p>{{msg}}</p>
+        <p>Niste se registrovali? <router-link to="/registartion">Registruj se</router-link></p>
       </div>
     </div>
   </div>
@@ -22,10 +23,14 @@ export default {
       email: null,
       password: null,
       name: null,
+      msg: null
     };
   },
   methods: {
     login() {
+      if(this.password === null || this.email === null){
+        this.msg = 'Unesite sva polja.'
+      }else{
       axios
         .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
           email: this.email,
@@ -46,8 +51,8 @@ export default {
           this.$router.push({
             name: 'Home'
           })
-          
         });
+      }
     }
   }
 };

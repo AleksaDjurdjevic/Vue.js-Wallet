@@ -4,7 +4,7 @@
         <!-- Left side -->
         <div class="aside">
             <div class="add-saving">
-                <button @click = "addingSaving = true">Dodaj Stednju</button>
+                <button @click = "addingSaving = true">Dodaj Štednju</button>
             </div>
             <!-- Sort -->
             <div class="sorting">
@@ -12,7 +12,7 @@
                 <label for="sort1">Po cilju</label>
                 <br>
                 <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort" @click = "savingSort">
-                <label for="sort2">Po uplacenom iznosu</label>
+                <label for="sort2">Po uplaćenom iznosu</label>
                 <br>
                 <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort" @click = "savingSort">
                 <label for="sort3">Po periodu</label>
@@ -24,14 +24,14 @@
                 <label for="sort5">Po uplatama</label>
                 <br>
                 <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort" @click = "savingSort">
-                <label for="sort6">Po mesecnoj rati</label>
+                <label for="sort6">Po mesečnoj rati</label>
 
                 <div class="sort-order">
                     <input type="radio" id="asc" value = "asc" v-model="sortOrder" @change = "sortOrder = 'asc'">
-                    <label for="asc">Od najnizeg ka najvecem</label>
+                    <label for="asc">Od najnižeg ka najvećem</label>
                     <br>
                     <input type="radio" id="desc" value = "desc" v-model="sortOrder" @change = "sortOrder = 'desc'">
-                    <label for="desc">Od najveceg ka najnizem</label>
+                    <label for="desc">Od najvećeg ka najnižem</label>
                 </div>
             </div>
         </div>
@@ -41,25 +41,25 @@
             <div class="test"  v-for = "(saving, index) in savings" :key = 'index'>
                 <div class="test1"><p>{{saving.sav_description}}</p></div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
-                    <div class="rectangle"><p>Pregled stednje</p></div>
+                    <div class="rectangle"><p>Pregled štednje</p></div>
                     <div class="data">
                         <div class="data-row">
                             <span class='span-details'>Cilj: {{saving.sav_amount + " " + saving.acc_type_name}}</span>
-                            <span class='span-details'>Do sad uplaceno: {{saving.sav_amount_accumulated}}{{" " + saving.acc_type_name}}</span>
+                            <span class='span-details'>Do sad uplaćeno: {{saving.sav_amount_accumulated}}{{" " + saving.acc_type_name}}</span>
                         </div>
                         <div class="data-row">
-                            <span class='span-details'>Period stednje: {{saving.sav_period +" "+ setProperWord(saving.sav_period)}} </span>
-                            <span class='span-details'>Preostala kolicina novca za uplatu: {{saving.leftover_amount + " " + saving.acc_type_name}}</span>
+                            <span class='span-details'>Period štednje: {{saving.sav_period +" "+ setProperWord(saving.sav_period)}} </span>
+                            <span class='span-details'>Preostala količina novca za uplatu: {{saving.leftover_amount + " " + saving.acc_type_name}}</span>
                         </div>
                         <div class="data-row">
                             <span class='span-details'>Ukupan broj uplata: {{saving.number_of_payments}}</span>
-                            <span class='span-details'>Mesecni doprinos: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}}{{" " + saving.acc_type_name}}</span>
+                            <span class='span-details'>Mesečni doprinos: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}}{{" " + saving.acc_type_name}}</span>
                         </div>
                     </div>
                     <div class="buttons">
-                        <button @click = "preparePayment(saving.sav_id)">Uplati na stednju</button>
+                        <button @click = "preparePayment(saving.sav_id)">Uplati na štednju</button>
                         <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
-                        <button @click = "deleteSavings(saving.sav_id)">Obrisi Stednju</button>
+                        <button @click = "deleteSavings(saving.sav_id)">Obriši Štednju</button>
                     </div>
                 </div>
             </div>

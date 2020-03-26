@@ -5,7 +5,7 @@
       <img v-else :src="url" alt="profilePicture" />
     </div>
     <div class="picEdit">
-      <label for="myfile">Select a new profile photo:</label>
+      <label for="myfile">Izaberite novu profilnu sliku:</label>
       <input type="file" @change="photoData($event)" />
     </div>
     <div>
@@ -149,7 +149,7 @@ export default {
           axios.get(res.data.poruka3.link)
           .then(()=>{
             this.url = res.data.poruka3.link;
-          });
+        });
       })
     }
   }

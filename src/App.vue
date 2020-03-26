@@ -15,10 +15,11 @@
             <!-- <img src="./assets/basket.png" alt="Shopping basket"> -->
             <!-- ako nije ulogovan -->
             <router-link to="/profile" id="profile" v-if="!$store.state.isLoggedIn">
-            <img src="./assets/placeholder-img.jpg" alt="profilePic"></router-link>
+            <img src="./assets/placeholder-img.jpg" alt=""></router-link>
             <!-- u trenutku kad se uloguje-->
             <router-link to="/profile" id="profile" v-if="$store.state.isLoggedIn">
-              <img :src="url" alt="profilePicture" />
+              <img v-if= "url === './assets/placeholder-img.jpg'" src="./assets/placeholder-img.jpg" alt="">
+              <img v-else :src="url" alt="">
             </router-link>
             <router-link to="/login" v-if="!$store.state.isLoggedIn">Prijavite se</router-link>
             <!-- Ovo se prikazuje kad je user ulogovan -->
@@ -26,7 +27,7 @@
               <router-link to="/profile" class="dropbtn cart">{{name + " " + surname}}</router-link>
               <div class="dropdown-content">
                 <router-link to="/profile">Profil</router-link>
-                <router-link to="/logOut">Odjavite se</router-link>
+                <a @click = "logout">Odjavite se</a>
               </div>
             </div>
 
@@ -35,7 +36,7 @@
         </div>
       </div>
     </header>
-    <router-view />
+    <router-view :key=asd></router-view>
     <main>
       
     </main>
@@ -49,6 +50,7 @@
 import Footer from "./components/Footer.vue";
 import axios from "axios";
 import {mapState} from 'vuex';
+import {mapActions} from 'vuex';
 export default {
   components: {
     Footer
@@ -58,7 +60,8 @@ export default {
       id: localStorage.getItem("user"),
       url: '',
       name: '',
-      surname: ''
+      surname: '',
+      asd: 0
     }
   },
   mounted() {
@@ -80,6 +83,7 @@ export default {
     ...mapState(['isLoggedIn'])
   },
   methods: {
+    ...mapActions(['paramsForChartAct']),
     checkSid() {
       let sid = localStorage.getItem("sid");
       if (sid === null || sid === undefined) {
@@ -111,12 +115,33 @@ export default {
         })
         .then(res => {
           axios.get(res.data.poruka3.link)
-          .then(()=>{
-            this.url = res.data.poruka3.link;
+          .then((r)=>{
+            if(r.data.msg === 'placeholder'){
+              this.url = "./assets/placeholder-img.jpg";
+            }else{
+              this.url = res.data.poruka3.link;
+            }
           });
       }).catch(()=>{
-            localStorage.clear();
-          })
+          localStorage.clear();
+      });
+    },
+    logout() {
+      axios
+        .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/logout", {
+          sid: localStorage.getItem("sid")
+        })
+        .then(() => {
+          this.$store.state.isLoggedIn = false;
+          this.paramsForChartAct([]);
+          localStorage.clear();
+          this.asd += 1;
+          this.$store.state.isRegistrated = false;
+          this.$router.push("/");
+        })
+        .catch(() => {
+          localStorage.clear();
+        });
     }
   }
 };

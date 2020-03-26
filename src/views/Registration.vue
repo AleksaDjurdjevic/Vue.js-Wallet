@@ -17,14 +17,15 @@
         <label for="password">Šifra</label>
         <input type="password" placeholder="Insert password.." v-model="password" />
       </div>
-      <button @click="registration()">Registracija</button>
+      <button @click="registration">Registracija</button>
+      <p>{{msg}}</p>
     </div> 
     
     <!-- Kada je user ulogovan -->
     <div v-if="($store.state.isRegistrated || $store.state.isLoggedIn )" class="welcome">
-      <h3>Uspesno ste registrovali</h3>
+      <h3>Uspešno ste se registrovali.</h3>
       <br><br>
-      <h3>Napravite svoj racun:</h3>
+      <h3>Napravite svoj račun:</h3>
       <CreateAccount />  
     </div>
   </div>
@@ -44,11 +45,15 @@ export default {
       email: null,
       password: null,
       isAdmin: false,
+      msg: ''
     };
   },
   methods: {
     registration() {
-      axios
+      if(this.name === null || this.password === null || this.email === null || this.surname === null){
+        this.msg = 'Unesite sva polja.'
+      }else{
+        axios
         .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/registration", {
           name: this.name,
           surname: this.surname,
@@ -58,9 +63,12 @@ export default {
         .then(() => {
           this.$store.state.isRegistrated = true;
         })
-        .catch(() => {
+        .catch((err) => {
           localStorage.clear();
-        });        
+          this.msg = err.response.data.err;
+        }); 
+      }
+             
 }
   }
 };

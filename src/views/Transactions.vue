@@ -3,9 +3,9 @@
     <!-- Left side -->
     <div class="aside">
       <!-- Accounts -->
-      <p class = "heading">Kliknite na racun kako biste filtrirali transakcije po racunu</p>
+      <p class = "heading">Kliknite na račun kako biste filtrirali transakcije po racunu</p>
       <div class="accounts">
-        <div class = "each-account-placeholder" :class = "{selected: showingAccPlaceholder}" @click = "accountPlaceholder"><p>Pregled sa svih racuna</p></div>
+        <div class = "each-account-placeholder" :class = "{selected: showingAccPlaceholder}" @click = "accountPlaceholder"><p>Pregled sa svih računa</p></div>
         <div v-for="account in accounts" class = "each-account"
           :class = "{selected: account.selected}"
           :key = "account.acc_id"
@@ -42,12 +42,12 @@
             @selectDate = 'setDate'
             @showCallEmit = "showingCalendar = false"
           />
-          <button @click = "clearDate">Obrisite unet datum</button>
+          <button @click = "clearDate">Obrišite unet datum</button>
         </div>
         <!-- First row -->
         <div class="row-first">
           <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('ac.acc_name')"><div>Naziv Racuna</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class= "cell-first" @click = "transactionSortBy('ac.acc_name')"><div>Naziv Računa</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
           <div class= "cell-first" @click = "transactionSortBy('tra_type_name')"><div>Tip transakcije</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
           <div class= "cell-first" @click = "transactionSortBy('tra_amount')"><div>Iznos</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
           <div class= "cell-first" @click = "transactionSortBy('cat_name')"><div>Kategorija</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
@@ -80,7 +80,7 @@
           </div>
 
           <div class="pages-dynamic">
-            <button class="page-btn" @click= "setPage(validateDisplayingPages('next', allPagesArray[currentPage]))">Sledeca strana</button>
+            <button class="page-btn" @click= "setPage(validateDisplayingPages('next', allPagesArray[currentPage]))">Sledeća strana</button>
             <button class="page-btn" @click= "setPage(allPagesArray[allPagesArray.length-1])">Poslednja strana</button>
           </div>
         </div>

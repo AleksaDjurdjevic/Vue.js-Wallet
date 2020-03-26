@@ -1,15 +1,22 @@
 <template>
   <div>
+      <home />
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import {mapActions} from 'vuex';
+import Home from "../views/Home";
 export default {
   mounted() {
       this.logout()
   }, 
+  components:{
+    'home': Home
+  },
   methods: {
+    ...mapActions(['paramsForChartAct']),
     logout() {
       axios
         .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/logout", {
@@ -17,20 +24,14 @@ export default {
         })
         .then(() => {
           this.$store.state.isLoggedIn = false;
+          this.paramsForChartAct([]);
           localStorage.clear();
-          this.$store.state.isLoggedIn;
+          this.$router.push('/');
         })
         .catch(() => {
           localStorage.clear();
         });
-        this.email = null,
-        this.password = null,
-        this.name = null,
-        this.$store.state.isLoggedIn = false;
-        this.$store.state.isRegistrated = false;
-
-        this.$router.push('/');
-        this.$store.dispatch('paramsForChartAct', []);
+        this.$store.state.isRegistrated = false;  
     }
   }
 };

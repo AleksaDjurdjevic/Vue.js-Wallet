@@ -32,7 +32,8 @@
         <br />
         <input type="button" class="inputWrite" value="Kreiraj Račun" @click="checkFormCreateAcc" />
         <br />
-        <p v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
+        <p class="err" v-if="errCreate" >{{ errCreate }}</p>
+        <p class="err" v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
       </form>
       <!-- end form createAccDivChaild -->
     </div>
@@ -91,7 +92,7 @@
       <div v-if="!showTryAcc"   class="bill create" @click="showCreateAccDiv(true)"><p>napravi račun +</p></div>
     </div>
     <!-- end bills-->
-    <div class="nameBill" v-if="this.isLoggedIn">
+    <div class="nameBill" v-if="this.isLoggedIn && this.accounts ">
      <p> Naziv računa:
       <span class="orange">{{defAcc.acc_name}}</span> 
      </p>  
@@ -113,7 +114,7 @@
    </div>
 
     <br />
-    <p v-if="message">{{ message}}</p>
+    <p v-if="message" class="mess">{{ message}}</p>
     <p v-if="err" class="err">{{err}}</p>
 
 
@@ -136,6 +137,9 @@
 
       
         <div class="showTransaction scrollTD" >
+          <p v-if="messageTran" class="mess">{{ messageTran}}</p>
+           <p v-if="errTran" class="err">{{errTran}}</p>
+   
           <table v-if="allTransaction && allTransaction.length > 0">
           <tr class="tr">
             <th class="scrollTD">Tip tranakcije:</th> 
@@ -185,7 +189,7 @@
             <td class="scrollTD"> <br> </td>
           </tr>
           </table>
-              
+           
      
       </div>
     </div><!-- END transaction allTrans-->
@@ -220,7 +224,10 @@
           <br />
           <input type="button" value="Unesi" class="inputWrite" @click="checkFormBuy" />
           <br />
-          <p v-for="err in buyErrors" :key="err">{{err}}</p>
+           <p v-if="messageBuy" class="mess">{{ messageBuy}}</p>
+           <p v-if="errBuy" class="err">{{errBuy}}</p>
+
+          <p class="err" v-for="err in buyErrors" :key="err">{{err}}</p>
         </div>
         <!-- end tranType-->
 
@@ -239,13 +246,16 @@
           <br />
           <input type="button" value="Unesi" class="inputWrite" @click="checkFormAddToAccount" />
           <br />
+          <p v-if="messageAdd" class="mess">{{ messageAdd}}</p>
+           <p v-if="errAdd" class="err">{{errAdd}}</p>
+
           <p v-for="err in addErrors" :key="err">{{err}}</p>
         </div>
         <!-- end tranType -->
       </div>
       <!-- transaction -->
 
-      <div class="showGraf scrollTD">
+      <div class="transaction showGraf">
         <h2 v-if="setParamsForChartTrue || createName ">Statistika svih transakcija trenutnog računa</h2>
         <h2 v-else>Primer statistike računa sa nasumičnim podacima</h2>
         <ChartCircle />
@@ -301,20 +311,29 @@ export default {
       arrTryTransaction:[],
       tryParamsForChart:[],
       tryParams:false,
+      errCreate: null,
+      
 
       categorySelected: null,
       buySum: null,
       buyDesc: null,
       buyErrors: [],
+      messageBuy: null,
+      errBuy: null,
 
       addSum: null,
       addDesc: null,
       addErrors: [],
+      messageAdd: null,
+      errAdd: null,
 
       deleteAccDiv:false,
       deleteTransactionDiv:false,
       transactionForDelete:0,
-      tra_description:''
+      tra_description:'',
+      messageTran: null,
+      errTran: null
+     
     };
   },
   async mounted() {
@@ -426,8 +445,8 @@ export default {
           )
           .then(response => {
             this.allTransaction = response.data.transaction;
-            this.message = response.data.message;
-            this.err = response.data.err;
+            this.messageTran = response.data.message;
+            this.errTran = response.data.err;
           });
       }
     },
@@ -467,15 +486,17 @@ export default {
             }
           )
           .then(response => {
-            this.getAccounts();
+           
             this.message = response.data.message;
-            this.err = response.data.err;
-            if (!this.err) {
+            this.errCreate = response.data.err;
+            if (!this.errCreate) {
               this.showCreateAccDiv(false);
+              this.createSum = null;
+              this.createName = null;
+              this.getAccounts();
             }
           });
-          this.createSum = null;
-          this.createName = null;
+         
       }else{
          //pravljenje probnog racuna
          this.showCreateAccDiv2();
@@ -511,7 +532,7 @@ export default {
         this.arrTryTransaction=[];
       
         this.tryParams=false;
-        
+        this.tryParamsForChart=[];
         this.setParamsForChart([]);
 
       }
@@ -553,11 +574,11 @@ export default {
           .then(response => {
             this.getTransactions(this.defAcc.acc_name);
 
-            this.message = response.data.message;
-            this.err = response.data.err;
-            if (this.message) {
+            this.messageBuy = response.data.message;
+            this.errBuy = response.data.err;
+            if (this.messageBuy) {
               this.defAcc.acc_amount = response.data.amount;
-               this.refreshChart(this.defAcc.acc_name);
+              this.refreshChart(this.defAcc.acc_name);
               this.buyDesc = null;
               this.buySum = null;
             }
@@ -567,10 +588,10 @@ export default {
         //parametri this.categorySelcted  this.buySum this.buyDesc
 
           if(this.createSum - this.buySum < 0){
-            this.message="Trnsakcija ne može biti obavljena, nemate dovoljno sredstava na računu!";
+            this.errBuy="Trnsakcija ne može biti obavljena, nemate dovoljno sredstava na računu!";
           }
           else{
-            this.message ="Transakcija je uspesna";
+            this.messageBuy ="Transakcija je uspesna";
             let d=new Date();
             d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
             this.createSum = this.createSum - this.buySum;
@@ -582,7 +603,7 @@ export default {
 
       }
       else{
-       this.message="Prvo morate napraviti račun da bi mogli izvršiti transakcije."
+       this.messageBuy="Prvo morate napraviti račun da bi mogli izvršiti transakcije."
      }
     },
     checkFormAddToAccount() {
@@ -620,9 +641,9 @@ export default {
           })
           .then(response => {
             this.getTransactions(this.defAcc.acc_name);
-            this.message = response.data.message;
-            this.err = response.data.err;
-            if (this.message) {
+            this.messageAdd = response.data.message;
+            this.errAdd = response.data.err;
+            if (this.messageAdd) {
               this.defAcc.acc_amount = response.data.amount;
               this.refreshChart(this.defAcc.acc_name);
               this.addDesc = null;
@@ -630,7 +651,7 @@ export default {
             }
           });
       }else if(this.createName){
-            this.message="Transakcija je uspesna"
+            this.messageAdd="Transakcija je uspesna"
             let d=new Date();
             d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
             console.log(this.addSum);
@@ -640,7 +661,7 @@ export default {
             this.addSum = null;
      
      }else{
-       this.message="Prvo morate napraviti račun da bi mogli izvršiti transakcije."
+       this.messageAdd="Prvo morate napraviti račun da bi mogli izvršiti transakcije."
      }
     },
     checkCancelTransaction(id_transaction,tra_description){
@@ -660,10 +681,10 @@ export default {
             { sid: sid, acc_id: this.defAcc.acc_id, tra_id: tra_id }
           )
           .then(response => {
-            this.message = response.data.message;
-            this.err = response.data.err;
+            this.messageTran = response.data.message;
+            this.errTran = response.data.err;
 
-            if (this.message != "") {
+            if (this.messageTran != "") {
               this.getTransactions(this.defAcc.acc_name);
               this.defAcc.acc_amount = response.data.acc_amount;
               this.refreshChart(this.defAcc.acc_name);
@@ -718,8 +739,16 @@ export default {
       this.traDescriptionForDelete='';
     },
     resetMessage() {
-     this.message = null;
+      this.message = null;
       this.err = null;
+      this.messageBuy= null;
+      this.errBuy=null; 
+      this.messageAdd= null;
+      this.errAdd= null;
+      this.messageTran= null;
+      this.errTran= null;
+      this.errCreate=null;
+
     },
     refreshChart(newValue){
       this.setParamsForChartTrue=false
@@ -738,7 +767,10 @@ export default {
 }
       },
       arrTryTransaction(newValue){
-        if(this.tryParamsForChart !== undefined){
+        if(this.createName===null){
+          return;
+        }
+       
           this.tryParamsForChart[0].iznos=this.createSum;
           this.tryParamsForChart[1].iznos=0;
           this.tryParamsForChart[2].iznos=0;
@@ -752,9 +784,7 @@ export default {
           }
         }
           this.setParamsForChart(this.tryParamsForChart);
-        } 
-          
-      
+        
    }
   },
 
@@ -766,6 +796,10 @@ export default {
     }
   }
 };
+
+// transaction
+// transaction
+
 </script>
 <style scoped >
 
@@ -773,6 +807,7 @@ export default {
   overflow: auto;
   
 }
+
 
 /* width */
  ::-moz-scrollbar{
@@ -891,8 +926,11 @@ export default {
   background-color: #cccccc;
   max-height:100%;
   align-content: flex-start;
- 
+ display: flex;
+  flex-wrap: flex;
+  justify-content: center;
   min-width: 300px;
+  min-height: 550px;
 }
 .allTrans,
 .showGraf{
@@ -1009,6 +1047,7 @@ input[type="button"]:active {
   width: 100%;
   display: flex;
   flex-wrap: flex;
+  
 }
 
 .pickOut3 {
@@ -1121,10 +1160,15 @@ h1 .orange {
   text-shadow: 1.5px 1.5px 1.5px #000000;
 }
 .err {
-  font-size:1.1em;
-  letter-spacing: 1px;
-  color: rgba(255, 0, 0, 0.733);
+  font-weight: normal;
+  color:#e80000;
   text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
+
+}
+.mess{
+  font-weight: normal;
+  color:#1db802;
+    text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
 
 }
 .callendar {

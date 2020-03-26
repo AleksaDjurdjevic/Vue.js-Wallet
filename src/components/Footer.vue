@@ -25,7 +25,7 @@ export default {};
 #store-name,
 #store-adress{
   text-align:left;
-  text-shadow: none !important;
+  font-weight: normal !important;
   
 
 }

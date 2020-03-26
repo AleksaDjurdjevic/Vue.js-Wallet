@@ -63,7 +63,7 @@ export default {
    
     createNewAccount() {
         axios
-          .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/createAccount",
+          .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/createAccountFromReg",
             {
               usr_id: this.id,
               acc_type: this.createSelected,

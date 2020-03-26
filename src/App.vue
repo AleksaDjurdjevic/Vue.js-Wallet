@@ -265,7 +265,7 @@ article p {
   background: #555555;
   text-align: center;
   color: white;
-  padding: 40px 0;
+  padding: 0;
 }
 
 .app p {
@@ -383,7 +383,7 @@ article p {
   width: 49%;
 }
 #powered {
-  text-align: center;
+  text-align: right;
 }
 #powered img {
   margin-left: 10px;

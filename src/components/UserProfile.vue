@@ -10,19 +10,19 @@
     </div>
     <div>
       Ime:
-      <input type="text" v-model="computedName" placeholder="Novo ime" />
+      <input type="text" v-model="computedName" :placeholder="user.usr_name" />
     </div>
     <div>
       Prezime:
-      <input type="text" v-model="computedSurname" placeholder="Novo prezime" />
+      <input type="text" v-model="computedSurname" :placeholder="user.usr_surname" />
     </div>
     <div>
       E-mail:
-      <input type="text" v-model="computedEmail" placeholder="Nova E-mail adresa" />
+      <input type="text" v-model="computedEmail" :placeholder="user.usr_email" />
     </div>
     <div>
       Šifra
-      <input type="password" v-model="computedPassword" placeholder="Nova sifra" />
+      <input type="text" v-model="computedPassword" placeholder="Nova sifra" />
     </div>
     <div>
       <button type="submit" @click="update()">Potvrdi</button>
@@ -35,6 +35,8 @@ import axios from "axios";
 export default {
   data() {
     return {
+      user:{},
+
       name: null,
       surname: null,
       email: null,
@@ -94,9 +96,21 @@ export default {
   },
   mounted() {
     this.readPic();
+    this.getUser();
   },
   methods: {
-    photoData(e) {
+    getUser(){
+      let sid= localStorage.getItem('sid')
+      if(sid){
+        axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getUser",
+         {sid: sid})
+         .then(response=>{
+           this.user =response.data.user[0];
+         })
+      }
+    },
+
+   photoData(e) {
       this.img = e.target.files[0];
     },
     

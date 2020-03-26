@@ -70,7 +70,7 @@
            <h2>   DA LI STE SIGURNI DA ŽELITE DA OPOZOVETE TRANSAKCIJU 
            <span class="orange" > {{traDescriptionForDelete}} </span> ?
              </h2> 
-             <p>Opozivanjem transakcije pare će Vam automatski biti vraćene na račun sa kojeg su uzete.</p>
+             <p>Opozivanjem transakcije sredstva će Vam automatski biti vraćena na račun sa kojeg su uzeta.</p>
      
         <br />
         
@@ -246,7 +246,7 @@
       <!-- transaction -->
 
       <div class="showGraf scrollTD">
-        <h2 v-if="setParamsForChartTrue || createName ">Statistika svih transakcija izabranog računa</h2>
+        <h2 v-if="setParamsForChartTrue || createName ">Statistika svih transakcija trenutnog računa</h2>
         <h2 v-else>Primer statistike računa sa nasumičnim podatcima</h2>
         <ChartCircle />
         
@@ -449,7 +449,7 @@ export default {
       }
 
       if (!this.createName) {
-        this.createErrors.push("Ime računa je obavezno zbog lakšeg praćenja novca.");
+        this.createErrors.push("Ime računa je obavezno zbog lakšeg praćenja transakcija i sredstava.");
       }
     },
     createNewAccount() {
@@ -509,9 +509,11 @@ export default {
         this.createSum = null;
         this.createName = null;
         this.arrTryTransaction=[];
-        this.tryParamsForChart=[];
+      
         this.tryParams=false;
-         this.setParamsForChart([]);
+        
+        this.setParamsForChart([]);
+
       }
     },
     checkFormBuy() {
@@ -530,7 +532,7 @@ export default {
         this.buyErrors.push("Iznos za transakciju mora biti veći od 0");
       }
       if (!this.buyDesc) {
-        this.buyErrors.push("Unesite opis radi lakšeg praćenja toka novca");
+        this.buyErrors.push("Unesite opis radi lakšeg praćenja transakcija i sredstava.");
       }
     },
     createBuy() {
@@ -602,7 +604,7 @@ export default {
         this.addErrors.push("Iznos mora biti veći od 0");
       }
       if (!this.addDesc) {
-        this.addErrors.push("Unesite opis radi lakšeg praćenja toka novca");
+        this.addErrors.push("Unesite opis radi lakšeg praćenja transakcija i sredstava");
       }
     },
     createAddMoney() {
@@ -631,6 +633,7 @@ export default {
             this.message="Transakcija je uspesna"
             let d=new Date();
             d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
+            console.log(this.addSum);
             this.createSum = parseFloat(this.createSum) + parseFloat(this.addSum);
             this.arrTryTransaction.push({tip:"prihod",iznos:this.addSum,opis:this.addDesc,datum:d});
             this.addDesc = null;
@@ -735,6 +738,7 @@ export default {
 }
       },
       arrTryTransaction(newValue){
+        if(this.tryParamsForChart !== undefined){
           this.tryParamsForChart[0].iznos=this.createSum;
           this.tryParamsForChart[1].iznos=0;
           this.tryParamsForChart[2].iznos=0;
@@ -748,7 +752,7 @@ export default {
           }
         }
           this.setParamsForChart(this.tryParamsForChart);
-         
+        } 
           
       
    }

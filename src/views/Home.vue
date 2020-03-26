@@ -247,7 +247,7 @@
 
       <div class="showGraf scrollTD">
         <h2 v-if="setParamsForChartTrue || createName ">Statistika svih transakcija trenutnog računa</h2>
-        <h2 v-else>Primer statistike računa sa nasumičnim podatcima</h2>
+        <h2 v-else>Primer statistike računa sa nasumičnim podacima</h2>
         <ChartCircle />
         
       </div>

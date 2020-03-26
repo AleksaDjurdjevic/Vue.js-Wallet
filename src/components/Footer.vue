@@ -6,7 +6,7 @@
         <p>
           Omladniskih Brigada 86
           <br />Beograd
-        </p>Phone: +00 000 000 00
+        </p>
       </address>
       <div id="social"></div>
     </div>

@@ -24,6 +24,8 @@
       Šifra
       <input type="text" v-model="computedPassword" placeholder="Nova sifra" />
     </div>
+    <p class="err" v-if="err">{{err}}</p>
+    <p class="message">{{message}}</p>
     <div>
       <button type="submit" @click="update()">Potvrdi</button>
     </div>
@@ -36,6 +38,8 @@ export default {
   data() {
     return {
       user:{},
+      message:null,
+      err:null,
 
       name: null,
       surname: null,
@@ -147,8 +151,16 @@ export default {
         .patch(
           "http://053n122.mars-e1.mars-hosting.com/api/wallet/updateUser",
           formData, {headers : {'Content-Type': 'multipart/formdata'}}
-        ).then(()=>{
+        ).then((response)=>{
+          this.err=response.data.err;
+          this.message=response.data.message;
           this.readPic();
+          this.getUser();
+          
+          this.name= null;
+          this.surname= null;
+          this.email= null;
+          this.password= null;
           this.$root.$emit('change-pic');
         })
     },
@@ -222,4 +234,16 @@ h1 {
 label {
   font-weight: bold;
 } 
+.err {
+  font-weight: normal;
+  color:#e80000;
+  text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
+
+}
+.mess{
+  font-weight: normal;
+  color:#1db802;
+    text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
+
+}
 </style>

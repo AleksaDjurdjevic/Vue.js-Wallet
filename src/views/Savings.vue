@@ -148,9 +148,9 @@ export default {
         getSavings(){
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/get/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{
-                this.savings = r.data.all_savings;
-            }).catch(()=>{
-                localStorage.clear();
+                if(r.data.all_savings !== undefined){
+                    this.savings = r.data.all_savings;
+                }
             });
         },
         calculateRate(leftover_amount, start, period){

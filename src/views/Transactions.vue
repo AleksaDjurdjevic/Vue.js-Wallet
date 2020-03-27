@@ -18,6 +18,7 @@
 
     <!-- Right side -->
     <div class="main">
+      <p class= "message">{{error}}</p>
       <div class="search-date">
         <div class="each-search-date">
           <span>Od datuma</span>
@@ -92,7 +93,7 @@
 <script>
 import Callendar from '../components/Callendar.vue';
 import axios from 'axios';
-import {mapState, mapActions} from 'vuex';
+import {mapState} from 'vuex';
 export default {
   data(){
     return{
@@ -110,7 +111,8 @@ export default {
       sortBy: 'tra_date',
       orderBy: 'ASC',
       acc_name: null,
-      showingTableShade: false
+      showingTableShade: false,
+      error: ''
     }
   },
   components : {
@@ -200,8 +202,6 @@ export default {
             }
           } 
         }
-      }).catch(()=>{
-        localStorage.clear();
       });
     },
     getTransactionsByAccount(acc_name){
@@ -223,12 +223,18 @@ export default {
     getAccounts(){
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAccounts/all", {sid: localStorage.getItem('sid')})
       .then(r=>{
-        this.accounts = r.data.data;
-        for(let i = 0; i<this.accounts.length; i++){
-          this.accounts[i].selected = false;
+        if(r.data.data !== undefined){
+          this.accounts = r.data.data;
+          for(let i = 0; i<this.accounts.length; i++){
+            this.accounts[i].selected = false;
+          }
         }
-      }).catch(()=>{
-        localStorage.clear();
+        if(r.data.message !== undefined){
+          this.error= r.data.message;
+          setTimeout(()=>{
+            this.error = '';
+          }, 5000);
+        }
       });
     },
     getTransactionsByDate(){
@@ -257,9 +263,7 @@ export default {
         toDate: this.toDate 
       }).then(r=>{
         this.transactions = r.data.transaction;
-      }).catch(()=>{
-        localStorage.clear();
-      })
+      });
     },
     showCalendarFunc(x){
       this.showingCalendar = true;
@@ -345,8 +349,6 @@ export default {
               this.displayingPages[i].selected = false;
             }
           }
-        }).catch(()=>{
-          localStorage.clear();
         });
       }
 
@@ -373,25 +375,9 @@ export default {
       })
       
       this.currentPage = page.page;
-    },
-    ...mapActions(['changeIsLoggedIn']),
-     getState() {
-      axios
-        .get(
-          "http://053n122.mars-e1.mars-hosting.com/api/wallet/checkSession",
-          {
-            params:{sid: localStorage.getItem("sid")}
-          }
-        )
-        .then(() => {
-          this.changeIsLoggedIn(true);
-        }).catch(()=>{
-          this.$router.push('/home');
-        });
     }
   },
   mounted(){
-      this.getState();
       this.getAccounts();
       this.getTransactions();
   }
@@ -679,5 +665,10 @@ button:hover{
     display: flex;
     justify-content: center;
     align-content: center;
+}
+.message{
+  color:#e80000;
+  margin: 0 auto;
+  font-size: 1.5em;
 }
 </style>

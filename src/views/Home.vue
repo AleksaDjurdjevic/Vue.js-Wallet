@@ -415,6 +415,12 @@ export default {
               localStorage.setItem('setDefAcc',this.defAcc.acc_name)
               this.getTransactions(this.defAcc.acc_name);
               this.getParamsForChart(this.defAcc.acc_name)
+            }else{
+               this.defAcc = {};
+              this.setDefAcc(null); // set default bill in vuex
+              localStorage.setItem('setDefAcc',null)
+              this.allTransaction=[];
+               this.setParamsForChart([]);
             }
           });
       }

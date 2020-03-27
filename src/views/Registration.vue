@@ -17,7 +17,7 @@
         <label for="password">Šifra</label>
         <input type="password" placeholder="Unesite šifru" v-model="password" />
       </div>
-      <button @click="registration">Registracija</button>
+      <button @click="registration">Registrujte se</button>
       <p class = "msg">{{msg}}</p>
     </div> 
     

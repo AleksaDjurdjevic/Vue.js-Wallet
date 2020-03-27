@@ -22,7 +22,7 @@
     </div>
     <div>
       Šifra
-      <input type="text" v-model="computedPassword" placeholder="Nova sifra" />
+      <input type="text" v-model="computedPassword" placeholder="Nova šifra" />
     </div>
     <p class="err" v-if="err">{{err}}</p>
     <p class="message">{{message}}</p>

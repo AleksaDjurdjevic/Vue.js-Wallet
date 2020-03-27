@@ -109,6 +109,7 @@ export default {
 
           deep:true,
           handler(setNewValue){
+             console.log(setNewValue +' -------- setNewValue');
           this.crearteChart(setNewValue);
           }
       }

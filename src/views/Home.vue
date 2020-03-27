@@ -366,8 +366,8 @@ export default {
       this.$store.dispatch("changeDefAcc", acc);
     },
     setParamsForChart(params){ 
-
-      this.$store.dispatch('paramsForChartAct',params);
+     
+      this.$store.dispatch('paramsForChartAct', params);
     },
     formateDate(date) {
       return date
@@ -527,7 +527,7 @@ export default {
           response=>{
             this.message=response.data.message
             this.deleteAccDiv=false
-            this.getAccounts()
+            this.getAccounts();
           } );
       }
       else{
@@ -700,7 +700,7 @@ export default {
              this.traDescriptionForDelete='';
           });
          
-      }else if(this.createSum){
+      }else {
        
         let x=this.arrTryTransaction.splice(tra_id, 1);
         if(x[0].tip === 'rashod'){

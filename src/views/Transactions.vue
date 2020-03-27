@@ -92,7 +92,7 @@
 <script>
 import Callendar from '../components/Callendar.vue';
 import axios from 'axios';
-import {mapState} from 'vuex';
+import {mapState, mapActions} from 'vuex';
 export default {
   data(){
     return{
@@ -373,9 +373,25 @@ export default {
       })
       
       this.currentPage = page.page;
+    },
+    ...mapActions(['changeIsLoggedIn']),
+     getState() {
+      axios
+        .get(
+          "http://053n122.mars-e1.mars-hosting.com/api/wallet/checkSession",
+          {
+            params:{sid: localStorage.getItem("sid")}
+          }
+        )
+        .then(() => {
+          this.changeIsLoggedIn(true);
+        }).catch(()=>{
+          this.$router.push('/home');
+        });
     }
   },
   mounted(){
+      this.getState();
       this.getAccounts();
       this.getTransactions();
   }

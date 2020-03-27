@@ -91,10 +91,10 @@ export default {
 <style scoped>
     .view-payments{
         width: 30%;
-        max-height: 92vh;
         display: flex;
         flex-direction: column;
         align-items: center;
+        font-size: 1.2em;
     }
     .each-payment{
         box-sizing: border-box;
@@ -152,6 +152,7 @@ export default {
     .click-for-calendar{
         background-color: lightgray;
         border-radius: 10px;
+        margin-top: 10%;
     }
     .message{
         color: #1db802;

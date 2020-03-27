@@ -597,7 +597,7 @@ export default {
             this.errBuy="Trnsakcija ne može biti obavljena, nemate dovoljno sredstava na računu!";
           }
           else{
-            this.messageBuy ="Transakcija je uspesna";
+            this.messageBuy ="Transakcija je uspešna";
             let d=new Date();
             d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
             this.createSum = this.createSum - this.buySum;
@@ -657,7 +657,7 @@ export default {
             }
           });
       }else if(this.createName){
-            this.messageAdd="Transakcija je uspesna"
+            this.messageAdd="Transakcija je uspešna"
             let d=new Date();
             d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
             console.log(this.addSum);

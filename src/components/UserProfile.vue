@@ -1,8 +1,8 @@
 <template>
   <div class="userProfile">
     <div class="profile-img">
-      <img v-if="url === null" src="../assets/placeholder-img.jpg" alt="">
-      <img v-else :src="url" alt="profilePicture" />
+      <img v-if="url === 'placeholder'" src="../assets/placeholder-img.jpg" alt="">
+      <img v-else :src="url" alt="" />
     </div>
     <div class="picEdit">
       <label for="myfile">Izaberite novu profilnu sliku:</label>
@@ -22,7 +22,7 @@
     </div>
     <div>
       Šifra
-      <input type="text" v-model="computedPassword" placeholder="Nova šifra" />
+      <input type="password" v-model="computedPassword" placeholder="Nova šifra" />
     </div>
     <p class="err" v-if="err">{{err}}</p>
     <p class="message">{{message}}</p>
@@ -162,19 +162,27 @@ export default {
           this.email= null;
           this.password= null;
           this.$root.$emit('change-pic');
+        }).catch(e=>{
+           this.err=e.response.data.err;
         })
     },
     
     readPic() {
-      //ako nema slika
       axios.get("http://053n122.mars-e1.mars-hosting.com/api/wallet/getPic",
         {
           params: {sid: localStorage.getItem("sid")}
         })
         .then(res => {
           axios.get(res.data.poruka3.link)
-          .then(()=>{
-            this.url = res.data.poruka3.link;
+          .then((r)=>{
+            if(r.data.msg === 'placeholder'){
+              this.url = r.data.msg;
+            }else{
+              this.url = res.data.poruka3.link;
+            }
+            
+            // this.url = res.data.poruka3.link;
+
         });
       })
     }
@@ -240,7 +248,7 @@ label {
   text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
 
 }
-.mess{
+.message{
   font-weight: normal;
   color:#1db802;
     text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;

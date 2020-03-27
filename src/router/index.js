@@ -9,15 +9,24 @@ import LogOut from '@/views/LogOut.vue'
 import Transactions from '@/views/Transactions.vue'
 import Statistics from '@/views/Statistics.vue'
 import store from '../store/index.js';
+import axios from 'axios';
 
 Vue.use(VueRouter)
 
 function blockRoute(to, from, next){
-  if(store.getters.getState){
-    next();
-  }else{
-    next({name: "Home"});
-  }
+  axios
+    .get(
+      "http://053n122.mars-e1.mars-hosting.com/api/wallet/checkSession",
+      {
+        params:{sid: localStorage.getItem("sid")}
+      }
+    )
+    .then(() => {
+      store.dispatch('changeIsLoggedIn', true);
+      next();
+    }).catch(() => {
+      next('/');
+    });
 }
 
 const routes = [

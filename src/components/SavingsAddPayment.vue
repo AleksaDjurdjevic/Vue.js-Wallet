@@ -1,16 +1,13 @@
 <template>
     <div class="payment-form">
         <h2>{{singleSaving.sav_description}}</h2>
-        <div class = "data">
+        <div class="data">
             <p>Cilj: {{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</p>
-            <p>Do sad uplaceno: {{singleSaving.sav_amount_accumulated}}{{" " + singleSaving.acc_type_name}}</p>
+            <p>Do sad uplaćeno: {{singleSaving.sav_amount_accumulated}}{{" " + singleSaving.acc_type_name}}</p>
+            <p>Preostala količina novca za uplatu: {{singleSaving.leftover_amount}}{{" " + singleSaving.acc_type_name}}</p>
+            <p>Mesečna rata za preostali period: {{singleSaving.sav_month_rate}}{{" " + singleSaving.acc_type_name}}</p>
         </div>
-        <div class = "data">
-            <p>Preostala kolicina novca za uplatu: {{singleSaving.leftover_amount}}{{" " + singleSaving.acc_type_name}}</p>
-            <p>Mesecna rata za preostali period: {{singleSaving.sav_month_rate}}{{" " + singleSaving.acc_type_name}}</p>
-        </div>
-        
-        <p>Odaberite racun sa kojeg uplacujete:</p>
+        <p>Odaberite račun sa kojeg uplaćujete:</p>
         
         <div class="accounts" v-if = "accounts.length>1">
             <div class="each-account" 
@@ -28,12 +25,12 @@
                 <p>{{accounts[0].acc_amount + " " + accounts[0].acc_type_name}}</p>
             </div>
         </div>
-        <p>Izvrsi uplatu sa racuna: <strong>{{acc_name}}</strong></p>
+        <p>Izvrši uplatu sa računa: <strong>{{acc_name}}</strong></p>
             
-        <input type="text" v-model = "paymentValue">
+        <input type="text" v-model = "paymentValue" placeholder="Iznos uplate">
         <button @click = "makePayment">Uplati</button>
 
-        <p>{{error}}</p>
+        <p class = "error">{{error}}</p>
     </div>
 </template>
 
@@ -79,13 +76,16 @@ export default {
         },
         makePayment(){
             if(this.acc_id == ""){
-                this.error = "Izaberi racun s kojeg ces da uplatis na stednju";
+                this.error = "Izaberite račun s kojeg ćete da uplatite na štednju.";
             }else if(isNaN(Number(this.paymentValue))){
                 this.error = "";
-                this.error = "Kolicina uplate mora biti broj";
+                this.error = "Količina uplate mora biti broj.";
+            }else if(parseInt(this.paymentValue)===0){
+                this.error = "";
+                this.error = "Iznos mora biti veći od 0.";
             }else if(this.paymentValue === ""){
                 this.error = "";
-                this.error = "Unesite kolicinu";
+                this.error = "Unesite količinu.";
             }else{
                 axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/paymentSavings', {
                     sid: localStorage.getItem('sid'),
@@ -98,7 +98,9 @@ export default {
                     this.paymentValue = '';
                     this.error = '';
                     this.$emit('making-payment');
-                })
+                }).catch(e=>{
+                    this.error = e.response.data.error; 
+                });
             } 
         }
     },
@@ -115,7 +117,7 @@ export default {
         flex-direction: column;
         width: 40%;
         align-items: center;
-        font-size: 1.5em;
+        font-size: 1.2em;
     }
     h2{
         margin: 0;
@@ -124,12 +126,13 @@ export default {
     .data{
         width: 90%;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         max-height: 100vh;
     }
     .data p {
         margin: 0;
         margin-bottom: 5%;
+        text-align: center;
     }
     input{
         width: 50%;
@@ -184,5 +187,8 @@ export default {
     }
     .each-account p{
         margin: 0;
+    }
+    .error{
+        color: #e80000;
     }
 </style>

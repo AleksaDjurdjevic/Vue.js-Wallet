@@ -7,7 +7,7 @@
         <div class = "each-info"><span
             @click = "deleteSinglePayment(payment.sav_pay_id, payment.acc_id, payment.sav_pay_amount)" 
         > 
-            Obrisi 
+            Obriši 
         </span></div>
     </div>
     <p class="click-for-calendar" v-if = "showingCalendar === false" @click = "showingCalendar = true">Klikni za prikaz uplata po datumu</p>
@@ -17,9 +17,9 @@
             @selectDate = 'getPaymentsByDate'
             @showCallEmit = "showingCalendar = false"
         />
-        <button @click = "getPayments(); showingCalendar = false">Ponisti pretragu po datumu</button>
+        <button @click = "getPayments(); showingCalendar = false">Poništi pretragu po datumu</button>
     </div>
-    <p>{{msg}}</p>   
+    <p class = "message">{{msg}}</p>   
   </div>
 </template>
 
@@ -77,7 +77,9 @@ export default {
                 this.msg = r.data.msg;
                 this.getPayments();
                 this.$emit("get-savings");
-            })
+            }).catch(e=>{
+                this.msg = e.response.data.error; 
+            });
         }
     },
     mounted(){
@@ -150,5 +152,8 @@ export default {
     .click-for-calendar{
         background-color: lightgray;
         border-radius: 10px;
+    }
+    .message{
+        color: #1db802;
     }
 </style>

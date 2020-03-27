@@ -39,7 +39,7 @@
         <div class="main">
             <!-- Wrapper for all savings -->
             <div class="test"  v-for = "(saving, index) in savings" :key = 'index'>
-                <div class="test1"><p>{{saving.sav_description}}</p></div>
+                <div class="test1"><p>{{setProperSavingsNameLength(saving.sav_description)}}</p></div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
                     <div class="rectangle"><p>Pregled štednje</p></div>
                     <div class="data">
@@ -202,6 +202,13 @@ export default {
             }else{
                 return 'meseci'
             }
+        },
+        setProperSavingsNameLength(s){
+            if(s.length>17){
+                return s.substring(17, 0) + "...";
+            }else{
+                return s;
+            } 
         }
     },
     mounted(){
@@ -230,7 +237,7 @@ p{
     display:flex;
     justify-content: center;
     align-items: center;
-    word-wrap: break-word;
+    word-break: break-all;
     /* overflow: auto; */
 }
 .test1{
@@ -388,12 +395,12 @@ button:hover{
 }
 .aside .add-saving{
     width:80%;
-    height: 10%;
+    height: 50px;
     margin: 0 auto;
 }
 .add-saving button{
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
 }
 .main{
     width:80%;

@@ -1,15 +1,15 @@
 <template>
     <div class="add-savings-form">
-        <h2>Dodaj novu stednju</h2>
-        <label for="new-sav-desc">Dodaj naziv/opis stednje</label>
+        <h2>Dodaj novu štednju</h2>
+        <label for="new-sav-desc">Dodaj naziv/opis štednje</label>
             <input id = "new-sav-desc" type="text" v-model = "newSavDesc">
-        <label for="new-sav-amount">Zeljena kolicina novca</label>
+        <label for="new-sav-amount">Željena količina novca</label>
             <input id = "new-sav-amount" type="number" v-model = "newSavAmount">
-        <label for="new-sav-period">Period za koji zelite da ustedite (u mesecima)</label>
+        <label for="new-sav-period">Period za koji želite da uštedite (u mesecima)</label>
             <input id = "new-sav-period" type="number" v-model = "newSavPeriod">
 
         <select class="add-accounts" v-model = "type">
-            <option disabled value="">Izaberite tip stednje:</option>
+            <option disabled value="">Izaberite tip štednje:</option>
             <option v-for = "eachType in accounts" 
             :value = "eachType.acc_type_id" 
             :key="eachType.acc_type_id">
@@ -18,7 +18,7 @@
 
         <button @click = "addSaving">Kreiraj</button>
 
-        <p>{{error}}</p>
+        <p class = "message">{{error}}</p>
     </div>
 </template>
 
@@ -45,13 +45,13 @@ export default {
         addSaving(){
             this.error = "";
             if(this.newSavDesc == ""){
-                this.error = "Izaberite naziv/opis stednje.";
+                this.error = "Izaberite naziv/opis štednje.";
             }else if(this.newSavPeriod == ""){
-                this.error = "Unesite period stednje.";
+                this.error = "Unesite period štednje.";
             }else if(isNaN(Number(this.newSavPeriod))){
                 this.error = "Period mora biti broj.";
             }else if(this.newSavAmount == ""){
-                this.error = "Unesite zeljenu kolicinu.";
+                this.error = "Unesite željenu količinu.";
             }else{
                 axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/addSavings', {
                     sid: localStorage.getItem('sid'),
@@ -116,5 +116,8 @@ export default {
     }
     button::-moz-focus-inner {
         border: 0;
+    }
+    .message{
+        color: #e80000;
     }
 </style>

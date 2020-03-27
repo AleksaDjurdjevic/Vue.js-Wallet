@@ -4,8 +4,8 @@
     <div class="bla">
       <div v-if="!$store.state.isLoggedIn">
         <h1>Prijava</h1>
-        <input type="text" placeholder="Unesite email.." v-model="email" />
-        <input type="password" placeholder="Unesite sifru.." v-model="password" />
+        <input type="text" placeholder="Unesite e-mail adresu.." v-model="email" />
+        <input type="password" placeholder="Unesite šifru.." v-model="password" />
         <button @click="login">Prijavite se</button>
         <p class = "msg">{{msg}}</p>
         <p>Niste se registrovali? <router-link to="/registartion">Registruj se</router-link></p>

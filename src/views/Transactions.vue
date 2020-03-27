@@ -120,20 +120,6 @@ export default {
       ...mapState(['isLoggedIn'])
   },
   methods: {
-    placeholderTra(){
-      for(let i=0; i<20; i++){
-        let obj = {
-          tra_date: '2020-03-20',
-          acc_name: 'Primer 1',
-          acc_type_name: 'RSD',
-          tra_type_name: 'Rashod',
-          tra_amount: 100*(i+1),
-          cat_name: 'Ostalo',
-          tra_description: 'Primer Opisa'
-        }
-        this.transactions.push(obj);
-      }
-    },
     getTransactions(){
       axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
         sid: localStorage.getItem('sid'),

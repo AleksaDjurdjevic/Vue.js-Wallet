@@ -1,8 +1,8 @@
 <template>
   <div class="delete-saving">
       <div class="">
-          <p>Da li ste sigurni da zelite da obrisete stednju?</p>
-          <p>Novac uplacen na stednju ce vam biti refundiran na racun ili racune sa kojih ste uplacivali.</p>
+          <p>Da li ste sigurni da želite da obrišete štednju?</p>
+          <p>Novac uplaćen na štednju će vam biti refundiran na račun ili račune sa kojih ste uplaćivali.</p>
           <div class="buttons">
             <button @click = "deleteSavings">Da</button>
             <button @click = "$emit('deleting-saving')">Ne</button>
@@ -82,5 +82,8 @@ export default {
     }
     button::-moz-focus-inner {
         border: 0;
+    }
+    p{
+        margin: 2%;
     }
 </style>

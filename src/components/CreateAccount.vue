@@ -1,7 +1,7 @@
 <template>
   <div  class="createAccDiv">
      <div class="forma">
-        <label>Izaberi tip računa</label>
+        <label>Izaberite tip računa</label>
         <br />
         <select v-model="createSelected">
           <option
@@ -23,7 +23,7 @@
         <br />
         <p class= "msg" v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
       </div>
-  </div> <!-- end createAccDiv -->
+  </div>
 </template>
 
 <script>

@@ -3,7 +3,7 @@
     <header id="page-header">
       <div class="container">
         <div class="nav cart" >    
-          <router-link to="/"><img src="./assets/logo.jpg"  alt id="logo" /></router-link>
+          <router-link to="/"><img src="./assets/logo1.png"  alt id="logo" /></router-link>
           <router-link to="/">Početna</router-link>
           <router-link to="/transactions" v-if="isLoggedIn">Transakcije</router-link>
           <router-link to="/savings" v-if="isLoggedIn">Štednja</router-link>
@@ -325,13 +325,12 @@ article p {
 
 .cart img {
   border-radius: 50%;
-  width: 40px !important;
-  height: 40px !important;
+  width: 50px !important;
+  height: 50px !important;
 }
 #profile{
   margin-right: 0;
 }
-
 /*item--------------------------------*/
 .item {
   padding: 20px;
@@ -425,7 +424,8 @@ h6 {
 
 .dropdown {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
 }
 
 .dropdown-content {

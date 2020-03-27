@@ -660,7 +660,6 @@ export default {
             this.messageAdd="Transakcija je uspešna"
             let d=new Date();
             d=d.getDate()+'/'+d.getMonth()+1+'/'+d.getFullYear();
-            console.log(this.addSum);
             this.createSum = parseFloat(this.createSum) + parseFloat(this.addSum);
             this.arrTryTransaction.push({tip:"prihod",iznos:this.addSum,opis:this.addDesc,datum:d});
             this.addDesc = null;

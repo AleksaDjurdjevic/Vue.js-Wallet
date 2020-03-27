@@ -310,6 +310,7 @@ article p {
 #cart {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 /*shopping cart--------------------------------*/

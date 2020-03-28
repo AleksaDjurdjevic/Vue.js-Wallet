@@ -1,9 +1,9 @@
 <template>
-  <div class="dashboard" @dblclick="resetMessage">
+  <div class="dashboard" @dblclick="resetMessage();">
 
 
    <!-- DIV CREATE ACCOUNT -->
-      <div v-if="createAccDiv" class="createAccDiv"></div>
+      <div v-if="createAccDiv" class="createAccDiv" @click="showCreateAccDiv(false)"></div>
     <div v-if="createAccDiv" class="createAccDiv2">
       <form >
          <p class="exit" @click="showCreateAccDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
@@ -41,7 +41,7 @@
 
 
     <!-- start DELETE ACCOUNT CLASS=createAccDiv is just for style -->
-    <div v-if="deleteAccDiv" class="createAccDiv"></div>
+    <div v-if="deleteAccDiv" class="createAccDiv" @click="showDeleteAccountDiv(false)" ></div>
     <div v-if="deleteAccDiv" class="createAccDiv2">
       
       <p class="exit" @click="showDeleteAccountDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
@@ -63,7 +63,7 @@
 
 
     <!-- start DELETE TRANSACTION CLASS=createAccDiv is just for style -->
-    <div v-if="deleteTransactionDiv" class="createAccDiv"></div>
+    <div v-if="deleteTransactionDiv" class="createAccDiv"  @click="showDeleteTransactionDiv(false)"></div>
     <div v-if="deleteTransactionDiv" class="createAccDiv2">
       
       <p class="exit" @click="showDeleteTransactionDiv(false)"><i class="fas fa-times" style="font-size:25px, text-align:right"></i></p>
@@ -119,9 +119,9 @@
 
 
     
-    <div class="main">
+    <div class="main" >
 
-<div class="transaction allTrans">
+<div class="transaction allTrans" >
       <div class="transaction2">
         <callendar
           v-if="showCallendar"
@@ -363,6 +363,7 @@ export default {
     },
     // set Default bill in vuex
     setDefAcc(acc) {
+      this.resetMessage();
       this.$store.dispatch("changeDefAcc", acc);
     },
     setParamsForChart(params){ 
@@ -457,6 +458,7 @@ export default {
       }
     },
     checkFormCreateAcc() {
+      this.resetMessage();
       this.createErrors = [];
       if (this.createName && this.createSum) {
         if (!isNaN(this.createSum) && this.createSum !== null && this.createSum >= 0 ) {
@@ -544,6 +546,7 @@ export default {
       }
     },
     checkFormBuy() {
+      this.resetMessage();
       this.buyErrors = [];
       if (this.buySum && this.buyDesc && this.buySum > 0) {
         if (!isNaN(this.buySum) && this.buySum !== null) {
@@ -753,6 +756,9 @@ export default {
       this.messageTran= null;
       this.errTran= null;
       this.errCreate=null;
+      this.createErrors = [];
+      this.buyErrors = [];
+      this.addErrors = [];
 
     },
     refreshChart(newValue){
@@ -1024,6 +1030,7 @@ select.inputWrite {
 input:focus {
    background-color: rgb(234, 236, 236);
   border-color: transparent;
+  border: solid 2px rgb(8, 8, 8);
 }
 
 input[type="button"] {

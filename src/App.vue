@@ -290,9 +290,7 @@ article p {
   display: flex;
   justify-content: center;
   flex-direction: row;
-
-
-  /* margin-left: 30px; */
+  /* margin-right: 30px; */
 }
 
 .nav a {
@@ -306,7 +304,9 @@ article p {
 .nav a:first-child{
   border: none;
 }
-
+#nav{
+  min-width: 25%;
+}
 #cart {
   display: flex;
   flex-direction: row;
@@ -433,6 +433,7 @@ h6 {
   display: none;
   position: absolute;
   top: 100%;
+  /* left: -30%; */
   background-color:#17a2b8;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);

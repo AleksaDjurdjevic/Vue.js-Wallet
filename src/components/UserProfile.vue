@@ -6,7 +6,7 @@
     </div>
     <div class="picEdit">
       <label for="myfile">Izaberite novu profilnu sliku:</label>
-      <input type="file" @change="photoData($event)" />
+      <input type="file" @change="photoData($event)" ref="fileInput"/>
     </div>
     <div>
       Ime:
@@ -117,7 +117,11 @@ export default {
    photoData(e) {
       this.img = e.target.files[0];
     },
-    
+    resetFile() {
+      let input = this.$refs.fileInput;
+      input.type = 'text'
+      input.type = 'file'
+    },
     update() {
       let formData = new FormData();
 
@@ -147,6 +151,10 @@ export default {
         updateParams.usr_img = this.img;
         formData.append("usr_img", updateParams.usr_img);
       }
+      if(!['jpg', 'jpeg', 'gif', 'png'].includes(this.img.name.substring(this.img.name.length - 3))){
+        this.err = 'Slika mora da bude u png, jpg ili gif formatu.';
+        this.resetFile();
+      }else{
       axios
         .patch(
           "http://053n122.mars-e1.mars-hosting.com/api/wallet/updateUser",
@@ -165,6 +173,7 @@ export default {
         }).catch(e=>{
            this.err=e.response.data.err;
         })
+      }
     },
     
     readPic() {

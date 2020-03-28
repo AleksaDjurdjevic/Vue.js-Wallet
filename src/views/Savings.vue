@@ -4,7 +4,7 @@
         <!-- Left side -->
         <div class="aside">
             <div class="add-saving">
-                <button @click = "addingSaving = true">Dodaj Štednju</button>
+                <button @click = "addingSaving = true">Dodaj štednju</button>
             </div>
             <!-- Sort -->
             <div class="sorting">
@@ -59,7 +59,7 @@
                     <div class="buttons">
                         <button @click = "preparePayment(saving.sav_id)">Uplati na štednju</button>
                         <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
-                        <button @click = "deleteSavings(saving.sav_id)">Obriši Štednju</button>
+                        <button @click = "deleteSavings(saving.sav_id)">Obriši štednju</button>
                     </div>
                 </div>
             </div>

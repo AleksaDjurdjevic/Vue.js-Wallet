@@ -4,6 +4,7 @@
     <div class="each-payment" v-for = "(payment, index) in payments" :key='index'>
         <div class = "each-info"><span>{{"Iznos uplate: " + payment.sav_pay_amount + " " + payment.acc_type_name}}</span></div>
         <div class = "each-info"><span>{{"Datum uplate: " + payment.sav_pay_date}}</span></div>
+        <div class = "each-info"><span>{{"Račun sa kog je uplaćeno: " + payment.acc_name}}</span></div>
         <div class = "each-info"><span
             @click = "deleteSinglePayment(payment.sav_pay_id, payment.acc_id, payment.sav_pay_amount)" 
         > 
@@ -90,7 +91,7 @@ export default {
 
 <style scoped>
     .view-payments{
-        width: 30%;
+        width: 55%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -102,7 +103,7 @@ export default {
         display: flex;
         justify-content: space-evenly;
     }
-    .each-info:nth-of-type(3):hover{
+    .each-info:nth-of-type(4):hover{
         cursor: pointer;
         color: #17a2b8;
     }

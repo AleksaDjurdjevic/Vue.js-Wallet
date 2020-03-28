@@ -1,8 +1,8 @@
 <template>
   <div class="delete-saving">
       <div class="">
-          <p>Da li ste sigurni da želite da obrišete štednju?</p>
           <p>Novac uplaćen na štednju će vam biti refundiran na račun ili račune sa kojih ste uplaćivali.</p>
+            <p>Da li ste sigurni da želite da obrišete štednju?</p>
           <div class="buttons">
             <button @click = "deleteSavings">Da</button>
             <button @click = "$emit('deleting-saving')">Ne</button>
@@ -60,6 +60,7 @@ export default {
     }
     .delete-saving{
         width: 30%;
+        font-size: 1.5em;
     }
     .buttons{
         display:flex;

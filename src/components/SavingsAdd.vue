@@ -1,7 +1,7 @@
 <template>
     <div class="add-savings-form">
         <h2>Dodaj novu štednju</h2>
-        <label for="new-sav-desc">Dodaj naziv/opis štednje</label>
+        <label for="new-sav-desc">Dodaj naziv/kratak opis štednje</label>
             <input id = "new-sav-desc" type="text" v-model = "newSavDesc">
         <label for="new-sav-amount">Željena količina novca</label>
             <input id = "new-sav-amount" type="number" v-model = "newSavAmount">
@@ -46,12 +46,26 @@ export default {
             this.error = "";
             if(this.newSavDesc == ""){
                 this.error = "Izaberite naziv/opis štednje.";
+
+            }else if(this.newSavDesc.length > 55){
+                this.error = "Naziv/opis štednje je predugačak.";
+                this.newSavDesc = "";
+
             }else if(this.newSavPeriod == ""){
                 this.error = "Unesite period štednje.";
+
+            }else if(this.newSavPeriod <= 0){
+                this.error = "Period štednje mora biti pozitivan broj i veći od 0.";
+
             }else if(isNaN(Number(this.newSavPeriod))){
                 this.error = "Period mora biti broj.";
+
             }else if(this.newSavAmount == ""){
                 this.error = "Unesite željenu količinu.";
+                
+            }else if(this.newSavAmount <= 0){
+                this.error = "Željena količina mora biti pozitivan broj i veći od 0.";
+
             }else{
                 axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/addSavings', {
                     sid: localStorage.getItem('sid'),
@@ -119,5 +133,6 @@ export default {
     }
     .message{
         color: #e80000;
+        text-align: center;
     }
 </style>

@@ -80,9 +80,9 @@ export default {
             }else if(isNaN(Number(this.paymentValue))){
                 this.error = "";
                 this.error = "Količina uplate mora biti broj.";
-            }else if(parseInt(this.paymentValue)===0){
+            }else if(this.paymentValue <= 0){
                 this.error = "";
-                this.error = "Iznos mora biti veći od 0.";
+                this.error = "Količina uplate mora biti pozitivan broj i veći od 0.";
             }else if(this.paymentValue === ""){
                 this.error = "";
                 this.error = "Unesite količinu.";

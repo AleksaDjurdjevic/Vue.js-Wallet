@@ -8,40 +8,45 @@
             </div>
             <!-- Sort -->
             <div class="sorting">
-                <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort" @click = "savingSort">
+                <input type="radio" id="sort0" value = 'sav_start' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                <label for="sort0">Po datumu kreiranja</label>
+                <br>
+                <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
                 <label for="sort1">Po cilju</label>
                 <br>
-                <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort" @click = "savingSort">
+                <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
                 <label for="sort2">Po uplaćenom iznosu</label>
                 <br>
-                <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort" @click = "savingSort">
+                <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
                 <label for="sort3">Po periodu</label>
                 <br>
-                <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort" @click = "savingSort">
+                <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
                 <label for="sort4">Po preostalom iznosu</label>
                 <br>
-                <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort" @click = "savingSort">
+                <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
                 <label for="sort5">Po uplatama</label>
                 <br>
-                <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort" @click = "savingSort">
+                <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
                 <label for="sort6">Po mesečnoj rati</label>
 
                 <div class="sort-order">
-                    <input type="radio" id="asc" value = "asc" v-model="sortOrder" @change = "sortOrder = 'asc'">
-                    <label for="asc">Od najnižeg ka najvećem</label>
+                    <input type="radio" id="asc" value = "asc" v-model="sortOrder" @change = "savingSort('asc')">
+                    <label for="asc">Rastuće</label>
                     <br>
-                    <input type="radio" id="desc" value = "desc" v-model="sortOrder" @change = "sortOrder = 'desc'">
-                    <label for="desc">Od najvećeg ka najnižem</label>
+                    <input type="radio" id="desc" value = "desc" v-model="sortOrder" @change = "savingSort('desc')">
+                    <label for="desc">Padajuće</label>
                 </div>
             </div>
         </div>
         <!-- Right side -->
-        <div class="main">
+        <div class="main" :key="keyChange">
             <!-- Wrapper for all savings -->
-            <div class="test"  v-for = "(saving, index) in savings" :key = 'index'>
-                <div class="test1"><p>{{setProperSavingsNameLength(saving.sav_description)}}</p></div>
+            <div class="all-savings"  v-for = "(saving, index) in savings" :key = 'saving.sav_description'>
+                <div class="each-saving-white">
+                    <p :class = "{hover: saving.hover}" @mouseover="displaySavingFullName(index, true)" @mouseleave="displaySavingFullName(index, false)">{{setProperSavingsNameLength(saving.sav_description, saving.hover)}}</p>
+                </div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
-                    <div class="rectangle"><p>Pregled štednje</p></div>
+                    <div class="saving-status"><p>Pregled štednje</p></div>
                     <div class="data">
                         <div class="data-row">
                             <span class='span-details'>Cilj: {{saving.sav_amount + " " + saving.acc_type_name}}</span>
@@ -122,8 +127,9 @@ export default {
             viewingPayments: false,
             sav_id: '',
             error: '',
-            property: null,
-            sortOrder: 'asc'
+            property: 'sav_start',
+            sortOrder: 'asc',
+            keyChange: 0
         }
     },
     components: {
@@ -136,21 +142,27 @@ export default {
         ...mapState(['isLoggedIn'])
     },
     methods: {
-        savingSort(){
+        savingSort(sort){
+            this.sortOrder = sort;
+            
             if (this.savings !== []) {
                 if(this.sortOrder === 'asc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? 1 : -1);
                 }else if(this.sortOrder === 'desc'){
                     this.savings.sort((a, b) => (a[this.property] > b[this.property]) ? -1 : 1);
                 }
-            } 
+            }    
         },
         getSavings(){
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/get/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{
                 if(r.data.all_savings !== undefined){
                     this.savings = r.data.all_savings;
+                    for(let i=0; i<this.savings.length; i++){
+                        this.savings[i].hover = false;
+                    }
                 }
+                
             });
         },
         calculateRate(leftover_amount, start, period){
@@ -203,12 +215,31 @@ export default {
                 return 'meseci'
             }
         },
-        setProperSavingsNameLength(s){
-            if(s.length>17){
-                return s.substring(17, 0) + "...";
-            }else{
-                return s;
+        setProperSavingsNameLength(s, bool){
+            if(bool){
+                return s
+            }else {
+                if(s.length>17){
+                    return s.substring(17, 0) + " ...";
+                }else{
+                    return s;
+                }
             } 
+        },
+        displaySavingFullName(index, applying){
+            if(this.savings[index].sav_description.length>17){
+                if(applying) {
+                    if(this.savings[index].hover !== true){
+                        this.savings[index].hover = true;
+                        this.keyChange++;
+                    }
+                }else if (!applying){
+                    if(this.savings[index].hover !== false){
+                        this.savings[index].hover = false;
+                        this.keyChange++;
+                    }
+                }
+            }
         }
     },
     mounted(){
@@ -221,13 +252,13 @@ export default {
 p{
     margin: 0;
 }
-.test{
+.all-savings{
     width: 95%;
     height: 190px;
     position: relative;
     margin-bottom: 1%;
 }
-.test1 p{
+.each-saving-white p{
     font-size: 1.8em;
     width: 20%;
     position: relative;
@@ -240,7 +271,39 @@ p{
     word-break: break-all;
     /* overflow: auto; */
 }
-.test1{
+.each-saving-white .hover{
+    font-size: 1.8em;
+    width: 40%;
+    position: relative;
+    top: 10%;
+    left: 2%;
+    height: 80%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 60;
+    background-color:white;
+    border-radius: 20px;
+    -webkit-box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
+    box-sizing: border-box;
+    padding: 1%;
+}
+.each-saving-white .saving-fullname{
+    font-size: 1.8em;
+    width: 20%;
+    position: relative;
+    top: 10%;
+    left: 2%;
+    height: 80%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    word-break: break-all;
+    /* overflow: auto; */
+}
+.each-saving-white{
     width: 80%;
     height: 80%;
     position: absolute;
@@ -305,7 +368,7 @@ p{
     -moz-box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
 }
-.rectangle{
+.saving-status{
     width: 25%;
     height: 25%;
     background-color: white;
@@ -315,7 +378,7 @@ p{
     display:flex;
     justify-content: center;
 }
-.rectangle p{
+.saving-status p{
     font-size: 1.2em;
     width: 80%;
     height: 80%;
@@ -396,7 +459,8 @@ button:hover{
 .aside .add-saving{
     width:80%;
     height: 50px;
-    margin: 0 auto;
+    top: 14%;
+    position: sticky;
 }
 .add-saving button{
     width: 100%;

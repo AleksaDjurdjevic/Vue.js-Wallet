@@ -23,10 +23,12 @@
             <div class="links right" @click="setSelected(5)"><router-link :to="links[5].url" :class = "{selected: links[5].selected}" v-if="!isLoggedIn">Prijavite se</router-link></div>
             <!-- Ovo se prikazuje kad je user ulogovan -->
             <div class="dropdown" v-if="isLoggedIn">    
-              <div class="links" @click="setSelected('all')"><router-link :to="links[4].url" class="dropbtn cart">{{name + " " + surname}}</router-link></div>
+              <div class="links" @click="setSelected('all')"><router-link :to="links[4].url" class="special">
+                <div>{{name}}</div><div>{{surname}}</div>  
+              </router-link></div>
               <div class="dropdown-content">
                 <div class="links" @click="setSelected('all')"><router-link :to="links[4].url">Profil</router-link></div>
-                <a @click = "logout">Odjavite se</a>
+                <div class="links"><a @click = "logout">Odjavite se</a></div>
               </div>
             </div>
 
@@ -288,9 +290,20 @@ main {
 #nav.nav{
   justify-content: end;
 }
+.links a div{
+  display: inline-block;
+  margin-left: 0%;
+}
+.dropdown .links a.special{
+  display:flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
 #cart.cart{
   margin: 0;
-  margin-right: 5%;
+  width:100%;
+  display: flex;
+  justify-content: center;
 }
 #page-header img {
   display: inline-block;
@@ -367,6 +380,9 @@ article p {
   /* margin: 0 10px; */
   font-family: "Teko", sans-serif;
 }
+.nav a:active, .nav a:focus {
+  outline: none;
+}
 .nav a:first-child{
   border: none;
 }
@@ -396,7 +412,7 @@ article p {
   height: 50px !important;
 }
 #profile{
-  margin-right: 0;
+  margin-right: 0px;
 }
 /*item--------------------------------*/
 .item {
@@ -493,8 +509,17 @@ h6 {
   position: relative;
   display: flex;
   align-items: center;
+  width:45%;
 }
-
+.dropdown .links {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+.dropdown .links a.special{
+  margin:0;
+  padding: 0;
+}
 .dropdown-content {
   display: none;
   position: absolute;
@@ -509,12 +534,17 @@ h6 {
 
 .dropdown-content a {
   color: #f8feff;
-  padding: 12px 16px;
   text-decoration: none;
   display: block;
-  text-align: start;
 }
-
+.dropdown-content .links{
+  display:flex;
+  justify-content: start;
+}
+.dropdown-content .links a{
+  display: flex;
+  width: 100%;
+}
 .dropdown-content a:hover {
   background-color:  #56afbd;
 }

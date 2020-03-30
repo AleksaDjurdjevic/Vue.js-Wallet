@@ -3,11 +3,11 @@
         <!-- div of whole component -->
         <!-- Left side -->
         <div class="aside">
-            <div class="add-saving">
-                <button @click = "addingSaving = true">Dodaj štednju</button>
-            </div>
+            
             <!-- Sort -->
             <div class="sorting">
+                <button @click = "addingSaving = true">Dodaj štednju</button>
+
                 <input type="radio" id="sort0" value = 'sav_start' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
                 <label for="sort0">Po datumu kreiranja</label>
                 <br>
@@ -449,7 +449,7 @@ button:hover{
     background: radial-gradient(36% 51% at 36% 50%, #eaecec 0%, #CACACA 100%) repeat 50% 50% / 100% 100%;
     min-height: 92vh;
     box-sizing: border-box;
-    padding-bottom: 10%;
+    padding-bottom: 3%;
     font-size: 0.82em;
 }
 .aside{
@@ -458,13 +458,8 @@ button:hover{
 }
 .aside .add-saving{
     width:80%;
-    height: 50px;
     top: 14%;
     position: sticky;
-}
-.add-saving button{
-    width: 100%;
-    height: 100%;
 }
 .main{
     width:80%;
@@ -507,7 +502,14 @@ button:hover{
 }
 .sorting{
     position: sticky;
-    top: 25%;
+    top: 15%;
+}
+.sorting button{
+    display: block;
+    position: relative;
+    margin-bottom: 18%;
+    height: 45px;
+    width: 80%;
 }
 .reg-notice{
     position:fixed;

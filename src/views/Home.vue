@@ -29,6 +29,8 @@
         <br />
         <input type="button" class="inputWrite" value="Kreiraj Račun" @click="checkFormCreateAcc" />
         <br />
+         <input type="button" class="inputWrite" value="Otkaži" @click="showCreateAccDiv(false)" />
+        <br />
         <p class="err" v-if="errCreate">{{ errCreate }}</p>
         <p class="err" v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
       </form>
@@ -52,6 +54,9 @@
       <br />
 
       <input type="button" class="inputWrite" value="Izbriši Račun" @click="deleteAccount" />
+      <br />
+      
+      <input type="button" class="inputWrite" value="Otkaži brisanje" @click="showDeleteAccountDiv(false)" />
       <br />
 
       <!-- -->
@@ -80,6 +85,13 @@
         class="inputWrite"
         value="OPOZOVI TRANSAKCIJU"
         @click="cancelTransaction(transactionForDelete)"
+      />
+      <br />
+       <input
+        type="button"
+        class="inputWrite"
+        value="OTKAŽI OPOZIVANJE"
+        @click="showDeleteTransactionDiv(false)"
       />
       <br />
 
@@ -493,17 +505,31 @@ export default {
     checkFormCreateAcc() {
       this.resetMessage();
       this.createErrors = [];
-      if (this.createName && this.createSum) {
+      this.createName=this.createName.trim();
+      this.createSum=this.createSum.trim();
+      
+    if( this.createName.length > 12){
+       this.createErrors.push("Naziv računa ne sme biti duži od 12 karaktera");
+       return;
+    }
+    if(this.createSum.length > 30)
+    {
+       this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
+       return;
+    }
+
+      if (this.createName && this.createSum ) {
         if (
           !isNaN(this.createSum) &&
           this.createSum !== null &&
-          this.createSum >= 0
+          this.createSum >= 0 
+         
         ) {
           this.createNewAccount();
           return;
-        }
+        }else{this.createErrors.push("Iznos mora biti brojna vrednost.");}
 
-        this.createErrors.push("Iznos mora biti brojna vrednost.");
+        
       }
       if (!this.createSum) {
         this.createErrors.push("Iznos mora biti unešen.");
@@ -586,6 +612,21 @@ export default {
     checkFormBuy() {
       this.resetMessage();
       this.buyErrors = [];
+      
+      this.buyDesc=this.buyDesc.trim();
+      this.buySum=this.buySum.trim();
+      
+    if( this.buyDesc.length > 25){
+       this.createErrors.push("Opis transakcije ne sme biti duži od 25 karaktera");
+       return;
+    }
+    if(this.buySum.length > 30)
+    {
+       this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
+       return;
+    }
+
+
       if (this.buySum && this.buyDesc && this.buySum > 0) {
         if (!isNaN(this.buySum) && this.buySum !== null) {
           this.createBuy();
@@ -662,8 +703,22 @@ export default {
       this.resetMessage();
       this.addErrors = [];
 
+     this.addDesc=this.addDesc.trim();
+      this.addSum=this.addSum.trim();
+      
+    if( this.addDesc.length > 25){
+       this.createErrors.push("Opis transakcije ne sme biti duži od 25 karaktera");
+       return;
+    }
+    if(this.addSum.length > 30)
+    {
+       this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
+       return;
+    }
+
+
       if (this.addSum && this.addDesc && this.addSum > 0) {
-        if (!isNaN(this.addSum) && this.addSum !== null) {
+        if (!isNaN(this.addSum) && this.addSum !== null ) {
           this.createAddMoney();
           return;
         }

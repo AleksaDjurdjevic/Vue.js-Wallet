@@ -210,6 +210,8 @@ export default {
         this.currentPage = 1;
         this.getTransactions();
         //apply selected
+        console.log('cao');
+        
         for(let i = 0; i<this.accounts.length; i++){
           if(this.accounts[i].acc_name === acc_name){
             this.accounts[i].selected = true;

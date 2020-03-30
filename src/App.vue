@@ -3,35 +3,34 @@
     <header id="page-header">
       <div class="container">
         <div class="nav cart" >    
-          <router-link to="/"><img src="./assets/logo1.png"  alt id="logo" /></router-link>
-          <router-link to="/">Početna</router-link>
-          <router-link to="/transactions" v-if="isLoggedIn">Transakcije</router-link>
-          <router-link to="/savings" v-if="isLoggedIn">Štednja</router-link>
-          <router-link to="/statistics" v-if="isLoggedIn">Statistika</router-link>
+          <div id="logo" @click="setSelected(0)"><router-link to="/"><img src="./assets/logo1.png" alt=""></router-link></div>
+          <div class="links" @click="setSelected(0)"> <router-link :to="links[0].url" :class = "{selected: links[0].selected}">Početna</router-link></div>
+          <div class="links" @click="setSelected(1)"> <router-link :to="links[1].url" :class = "{selected: links[1].selected}" v-if="isLoggedIn">Transakcije</router-link></div>
+          <div class="links" @click="setSelected(2)"> <router-link :to="links[2].url" :class = "{selected: links[2].selected}" v-if="isLoggedIn">Štednja</router-link></div>
+          <div class="links" @click="setSelected(3)"> <router-link :to="links[3].url" :class = "{selected: links[3].selected}" v-if="isLoggedIn">Statistika</router-link></div>
         </div>
 
         <div class="nav" id="nav">
           <div class="cart" id="cart">
-            <!-- <img src="./assets/basket.png" alt="Shopping basket"> -->
             <!-- ako nije ulogovan -->
-            <router-link to="/profile" id="profile" v-if="!$store.state.isLoggedIn">
-            <img src="./assets/placeholder-img.jpg" alt=""></router-link>
+            <div class="links" @click="setSelected(0)"><router-link :to="links[4].url" id="profile" v-if="!isLoggedIn">
+            <img src="./assets/placeholder-img.jpg" alt=""></router-link></div>
             <!-- u trenutku kad se uloguje-->
-            <router-link to="/profile" id="profile" v-if="$store.state.isLoggedIn">
+            <div class="links" @click="setSelected('all')"><router-link :to="links[4].url" id="profile" v-if="isLoggedIn">
               <img v-if= "url === './assets/placeholder-img.jpg'" src="./assets/placeholder-img.jpg" alt="">
               <img v-else :src="url" alt="">
-            </router-link>
-            <router-link to="/login" v-if="!$store.state.isLoggedIn">Prijavite se</router-link>
+            </router-link></div>
+            <div class="links right" @click="setSelected(5)"><router-link :to="links[5].url" :class = "{selected: links[5].selected}" v-if="!isLoggedIn">Prijavite se</router-link></div>
             <!-- Ovo se prikazuje kad je user ulogovan -->
-            <div class="dropdown" v-if="$store.state.isLoggedIn">    
-              <router-link to="/profile" class="dropbtn cart">{{name + " " + surname}}</router-link>
+            <div class="dropdown" v-if="isLoggedIn">    
+              <div class="links" @click="setSelected('all')"><router-link :to="links[4].url" class="dropbtn cart">{{name + " " + surname}}</router-link></div>
               <div class="dropdown-content">
-                <router-link to="/profile">Profil</router-link>
+                <div class="links" @click="setSelected('all')"><router-link :to="links[4].url">Profil</router-link></div>
                 <a @click = "logout">Odjavite se</a>
               </div>
             </div>
 
-            <router-link to="/registartion" v-if="!$store.state.isLoggedIn">Registracija</router-link>
+            <div class="links right" @click="setSelected(6)"><router-link  :to="links[6].url" :class = "{selected: links[6].selected}" v-if="!isLoggedIn">Registracija</router-link></div>
           </div>
         </div>
       </div>
@@ -61,7 +60,17 @@ export default {
       url: '',
       name: '',
       surname: '',
-      asd: 0
+      asd: 0,
+      links: [
+        {url: '/', selected: true},
+        {url: '/transactions', selected: false},
+        {url: '/savings', selected: false},
+        {url: '/statistics', selected: false},
+        {url: '/profile', selected: false},
+        {url: '/login', selected: false},
+        {url: '/registartion', selected: false}
+      ]
+
     }
   },
   mounted() {
@@ -78,19 +87,37 @@ export default {
     this.$root.$on('change-usr-data', () => {
         this.checkSession();
     });
+    this.$root.$on('set-selected', () => {
+        this.setSelected(0);
+    });
   },
   computed: {
     ...mapState(['isLoggedIn'])
   },
   methods: {
-    ...mapActions(['paramsForChartAct']),
+    ...mapActions(['paramsForChartAct', 'changeIsLoggedIn']),
+    setSelected(index){
+      if(index === 'all'){
+        for (let i=0; i<this.links.length; i++){
+          this.links[i].selected = false;
+        }
+      }else{
+        for (let i=0; i<this.links.length; i++){
+          if (i===index){
+            this.links[i].selected = true;
+          }else{
+            this.links[i].selected = false;
+          }
+        }
+      }
+    },
     checkSid() {
       let sid = localStorage.getItem("sid");
       if (sid === null || sid === undefined) {
-        this.$store.state.isLoggedIn = false;
+        this.changeIsLoggedIn(false);
         return false; //ako nema sid
       }
-      this.$store.state.isLoggedIn = true;
+      this.changeIsLoggedIn(true);
       return true; //ako ima sid
     },
     checkSession() {
@@ -132,11 +159,12 @@ export default {
           sid: localStorage.getItem("sid")
         })
         .then(() => {
-          this.$store.state.isLoggedIn = false;
+          this.changeIsLoggedIn(false);
           this.paramsForChartAct([]);
           localStorage.clear();
           this.asd += 1;
           this.$store.state.isRegistrated = false;
+          this.setSelected(0);
           this.$router.push("/");
         })
         .catch(() => {
@@ -214,20 +242,44 @@ main {
   top: 0;
   z-index: 6000;
 }
-@keyframes hover{
-  0% {border-bottom: 0.1em solid rgba(255, 255, 255, 0);}
-  100% {border-bottom: 0.1em solid rgba(255, 255, 255, 0.8)}
+.links{
+  display: inline-block;
+  text-align: end;
 }
-.nav.cart a:hover {
-  animation-name: hover;
-  animation-duration: 0.4s;
-  animation-fill-mode: forwards;
+.nav.cart .links a{
+  border-bottom: 0.1em solid rgba(255, 255, 255, 0);
+  transition:border-bottom 0.3s;
+  padding-bottom: 4%;
+}
+#nav.nav .links.right a{
+  border-bottom: 0.1em solid rgba(255, 255, 255, 0);
+  transition:border-bottom 0.3s;
+  padding-bottom: 4%;
+}
+#nav.nav .links.right a:hover{
+  border-bottom: 0.1em solid rgba(255, 255, 255, 0.8);
+}
+.nav.cart .links a:hover{
+  border-bottom: 0.1em solid rgba(255, 255, 255, 0.8);
+}
+.nav.cart .links a.selected{
+  border-bottom: 0.1em solid rgba(255, 255, 255, 0.8);
+}
+#nav.nav .links.right a.selected{
+  border-bottom: 0.1em solid rgba(255, 255, 255, 0.8);
 }
 .nav.cart a:nth-child(1):hover {
   animation: none;
 }
-.nav.cart a:focus, .nav.cart a:active {
+.nav.cart a:focus, .nav.cart .a:active,  #nav.nav .links.right a:focus,  #nav.nav .links.right a:active{
   outline: none;
+}
+#nav.nav{
+  justify-content: end;
+}
+#cart.cart{
+  margin: 0;
+  margin-right: 5%;
 }
 #page-header img {
   display: inline-block;
@@ -238,6 +290,9 @@ main {
 
 #menu {
   padding: 40px 0 0 0;
+}
+#logo{
+  display: inline-block;
 }
 #logo-itb {
   position: relative;
@@ -433,6 +488,7 @@ h6 {
   display: none;
   position: absolute;
   top: 100%;
+  right: 0;
   /* left: -30%; */
   background-color:#17a2b8;
   min-width: 160px;

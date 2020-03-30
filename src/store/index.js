@@ -36,7 +36,6 @@ export default new Vuex.Store({
     paramsForChartAct(store, payload) {
       store.commit('PARAMS_FOR_CHART_MUT', payload)
     },
-   
     allTransactionVuexAct(store, payload){
       store.commit('ALL_TRANSACTION_VUEX', payload)
     }

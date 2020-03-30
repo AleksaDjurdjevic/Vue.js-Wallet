@@ -534,4 +534,23 @@ button:hover{
     justify-content: center;
     align-content: center;
 }
+/* button {
+  box-shadow: 0 3px 0 0 #367f14, 0 4px 4px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  background-color: #52C11F;
+  background-image: linear-gradient(-45deg, #52C11F, #7ccc14);
+  color: #E6EAEF;
+  transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+    transition-property: box-shadow, transform, color;
+    transition-duration: 0.2s, 0.2s, 0.2s;
+    transition-timing-function: ease, ease, ease;
+    transition-delay: 0s, 0s, 0s;
+}
+button:hover {
+  box-shadow: 0 3px 0 0 #367f14, 0 6px 4px -1px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset, 0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+}
+button:active {
+  box-shadow: 0 0px 0 0 #2d6911, 0 3px 0 0 rgba(0, 0, 0, 0), 0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset, 0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  color: #367f14;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+} */
 </style>

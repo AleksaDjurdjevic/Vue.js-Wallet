@@ -6,16 +6,16 @@
       <div>
         
         <label for="fname">Ime</label>
-        <input type="text" placeholder="Unesite svoje ime" v-model="name" />
+        <input type="text" ref="fname" placeholder="Unesite svoje ime" v-model="name" />
         
         <label for="lname">Prezime</label>
-        <input type="text" placeholder="Unesite svoje prezime" v-model="surname" />
+        <input type="text" ref="lname" placeholder="Unesite svoje prezime" v-model="surname" />
         
         <label for="email">E-mail</label>
-        <input type="text" placeholder="Unesite e-mail adresu" v-model="email" />
+        <input type="text" ref="email" placeholder="Unesite e-mail adresu" v-model="email" />
         
         <label for="password">Šifra</label>
-        <input type="password" placeholder="Unesite šifru" v-model="password" />
+        <input type="password" ref="pass" placeholder="Unesite šifru" v-model="password" />
       </div>
       <button @click="registration">Registrujte se</button>
       <p class = "msg">{{msg}}</p>
@@ -50,7 +50,27 @@ export default {
   methods: {
     registration() {
       if(this.name === '' || this.password === '' || this.email === '' || this.surname === ''){
-        this.msg = 'Unesite sva polja.'
+        this.msg = 'Unesite sva polja.';
+      }else if(this.name.length>55){
+        this.msg = 'Predugačko ime.';
+        this.name = '';
+        this.$refs.fname.focus();
+
+      }else if(this.surname.length>55){
+        this.msg = 'Predugačko prezime.';
+        this.surname = '';
+        this.$refs.lname.focus();
+
+      }else if(this.password.length>255){
+        this.msg = 'Predugačka šifra.';
+        this.password = '';
+        this.$refs.pass.focus();
+
+      }else if(this.surname.length>55){
+        this.msg = 'Predugačka e-mail adresa.';
+        this.email = '';
+        this.$refs.email.focus();
+
       }else{
         axios
         .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/registration", {
@@ -66,6 +86,7 @@ export default {
         .catch((err) => {
           localStorage.clear();
           this.msg = err.response.data.err;
+          this.$refs.email.focus();
         }); 
       }
              

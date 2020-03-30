@@ -52,9 +52,15 @@ export default {
         this.createErrors.push("Potrebno je da unesete sumu.");
       }else if (this.createName === "") {
         this.createErrors.push("Potrebno je da unesete ime za račun.");
+      }else if (this.createName.length>50) {
+        this.createErrors.push("Predugačko ime za račun.");
       }else{
         if (isNaN(this.createSum)) {
           this.createErrors.push("Unešena suma mora da bude broj.");
+        }else if (this.createSum <= 0){
+          this.createErrors.push("Unešena suma mora da bude pozitivan broj i veći od 0.");
+        }else if (this.createSum.length > 65){
+          this.createErrors.push("Unešena suma je previsoka.");
         }else{
           this.createNewAccount();
         }

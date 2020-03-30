@@ -44,6 +44,7 @@ export default {
           this.$root.$emit('change-id');
           this.$root.$emit('change-usr-data');
           this.$root.$emit('change-pic');
+          this.$root.$emit('set-selected');
 
           this.$router.push({
             name: 'Home'

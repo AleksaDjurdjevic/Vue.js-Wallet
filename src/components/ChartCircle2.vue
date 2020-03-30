@@ -35,8 +35,8 @@ export default {
       this.chart.data = dataForChart;
 
       this.chart.radius = am4core.percent(70);
-      this.chart.innerRadius = am4core.percent(40);
-      this.chart.startAngle = 0;
+      this.chart.innerRadius = am4core.percent(0);
+      this.chart.startAngle = 180;
       this.chart.endAngle = 360;
 
       var series = this.chart.series.push(new am4charts.PieSeries());
@@ -61,13 +61,17 @@ export default {
   mounted() {
    this.crearteChart(this.paramsForChart);
   },
-  watch:{
-      paramsForChart(setNewValue){
-        if(setNewValue)
-          this.crearteChart(this.paramsForChart);
-      }
-  },
+ watch:{
+      paramsForChart:{
 
+          deep:true,
+          handler(setNewValue){
+          this.crearteChart(setNewValue);
+          }
+      }
+      
+      
+  },
   beforeDestroy() {
     if (this.chart) {
       this.chart.dispose();
@@ -79,7 +83,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .chartVue {
+  text-align: right;
+  font-size: 0.85em;
   width: 100%;
-  height: 250px;
+  height: 500px;
 }
 </style>

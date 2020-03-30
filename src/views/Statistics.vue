@@ -4,7 +4,7 @@
       <MonthYear v-bind:accounts="accounts" v-on:selectMonthYear="changeParamsForChart($event)" />
     </div>
     <h1 v-if="message">{{message}}</h1>
-    <h1 v-else-if="selectAcc">Statistika transakcija za račun "{{selectAcc}}"</h1>
+    <h1 v-else-if="selectAcc">Statistika transakcija za račun: {{selectAcc}}</h1>
     <div class="statisticsRow">
       <ChartXY class="chart" />
       <ChartCircle class="chart" />
@@ -14,7 +14,7 @@
 
 <script>
 import ChartXY from "@/components/ChartXY.vue";
-import ChartCircle from "@/components/ChartCircle.vue";
+import ChartCircle from "@/components/ChartCircle2.vue";
 import MonthYear from "@/components/MonthYear.vue";
 import axios from "axios";
 import { mapState } from "vuex";

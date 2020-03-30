@@ -148,9 +148,11 @@ export default {
 </script>
  
 <style >
+
 .app{
    font-family: 'Teko', sans-serif;
    font-size:1.2em;
+   
 }
 body {
   padding: 0;
@@ -165,6 +167,15 @@ body {
 main {
   display: block;
   text-align: center;
+}
+::-moz-selection { /* Code for Firefox */
+    color: rgba(238, 238, 238, 0.966) !important;
+    background: rgba(119, 118, 117, 0.6) !important;
+}
+
+::selection {
+    color: rgba(238, 238, 238, 0.966);
+    background: rgba(119, 118, 117, 0.6) !important;
 }
 
 #banner {

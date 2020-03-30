@@ -20,7 +20,7 @@ export default {
      chart:null,
      
       defParamsForChart:[{
-                      "tip_transakcije": "Ime Računa",
+                      "tip_transakcije": "Raspoloživo",
                       "iznos": 195550
                   }, {
                       "tip_transakcije": "Rashod",
@@ -128,6 +128,6 @@ export default {
 <style scoped>
 .chartVue {
   width: 100%;
-  height: 400px;
+  height: 350px;
 }
 </style>

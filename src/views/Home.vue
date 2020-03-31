@@ -21,7 +21,7 @@
         <br />
         <label>Suma</label>
         <br />
-        <input type="text" class="inputWrite" v-model="createSum" />
+        <input type="number" class="inputWrite" v-model="createSum" />
         <br />
         <label>Naziv računa</label>
         <br />
@@ -29,7 +29,7 @@
         <br />
         <input type="button" class="inputWrite" value="Kreiraj Račun" @click="checkFormCreateAcc" />
         <br />
-         <input type="button" class="inputWrite" value="Otkaži" @click="showCreateAccDiv(false)" />
+        <input type="button" class="inputWrite" value="Otkaži" @click="showCreateAccDiv(false)" />
         <br />
         <p class="err" v-if="errCreate">{{ errCreate }}</p>
         <p class="err" v-for=" crErr in createErrors" :key="crErr">{{crErr}}</p>
@@ -55,8 +55,13 @@
 
       <input type="button" class="inputWrite" value="Izbriši Račun" @click="deleteAccount" />
       <br />
-      
-      <input type="button" class="inputWrite" value="Otkaži brisanje" @click="showDeleteAccountDiv(false)" />
+
+      <input
+        type="button"
+        class="inputWrite"
+        value="Otkaži brisanje"
+        @click="showDeleteAccountDiv(false)"
+      />
       <br />
 
       <!-- -->
@@ -87,7 +92,7 @@
         @click="cancelTransaction(transactionForDelete)"
       />
       <br />
-       <input
+      <input
         type="button"
         class="inputWrite"
         value="OTKAŽI OPOZIVANJE"
@@ -296,7 +301,7 @@
           <p v-if="messageAdd" class="mess">{{ messageAdd}}</p>
           <p v-if="errAdd" class="err">{{errAdd}}</p>
 
-          <p v-for="err in addErrors" :key="err">{{err}}</p>
+          <p class="err" v-for="err in addErrors" :key="err">{{err}}</p>
         </div>
         <!-- end tranType -->
       </div>
@@ -505,31 +510,32 @@ export default {
     checkFormCreateAcc() {
       this.resetMessage();
       this.createErrors = [];
-      this.createName=this.createName.trim();
-      this.createSum=this.createSum.trim();
-      
-    if( this.createName.length > 12){
-       this.createErrors.push("Naziv računa ne sme biti duži od 12 karaktera");
-       return;
-    }
-    if(this.createSum.length > 30)
-    {
-       this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
-       return;
-    }
 
-      if (this.createName && this.createSum ) {
+      if (this.createName && this.createSum) {
+        this.createName = this.createName.trim();
+        this.createSum = this.createSum.trim();
+
+        if (this.createName.length === 0 || this.createName.length > 12) {
+          this.createErrors.push(
+            "Naziv računa treba da bude od min 1 do max 12 karaktera."
+          );
+          return;
+        }
+        if (this.createSum.length > 30) {
+          this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
+          return;
+        }
+
         if (
           !isNaN(this.createSum) &&
           this.createSum !== null &&
-          this.createSum >= 0 
-         
+          this.createSum >= 0
         ) {
           this.createNewAccount();
           return;
-        }else{this.createErrors.push("Iznos mora biti brojna vrednost.");}
-
-        
+        } else {
+          this.createErrors.push("Iznos mora biti brojna vrednost.");
+        }
       }
       if (!this.createSum) {
         this.createErrors.push("Iznos mora biti unešen.");
@@ -612,27 +618,30 @@ export default {
     checkFormBuy() {
       this.resetMessage();
       this.buyErrors = [];
-      
-      this.buyDesc=this.buyDesc.trim();
-      this.buySum=this.buySum.trim();
-      
-    if( this.buyDesc.length > 25){
-       this.createErrors.push("Opis transakcije ne sme biti duži od 25 karaktera");
-       return;
-    }
-    if(this.buySum.length > 30)
-    {
-       this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
-       return;
-    }
-
 
       if (this.buySum && this.buyDesc && this.buySum > 0) {
+        this.buyDesc = this.buyDesc.trim();
+        this.buySum = this.buySum.trim();
+        //    console.log( typeof  this.buyDesc +'----------');
+        //    console.log(  this.buyDesc.length +'----------');
+
+        if (this.buyDesc.length < 1  || this.buyDesc.length > 25) {
+          console.log(this.buyDesc.length + "----------");
+          this.buyErrors.push(
+            "Opis transakcije treba da bude od min 1 do max 25 karaktera."
+          );
+          return;
+        }
+        if (this.buySum.length > 30) {
+          this.buyErrors.push("Iznos ne sme biti duži od 30 cifre");
+          return;
+        }
+
         if (!isNaN(this.buySum) && this.buySum !== null) {
           this.createBuy();
           return;
         }
-        this.buyErrors.push("Iznos mora biti upisan numeričkim vrednostima");
+        this.buyErrors.push("Unos mora postojati");
       }
       if (!this.buySum) {
         this.buyErrors.push("Iznos mora biti upisan");
@@ -703,22 +712,22 @@ export default {
       this.resetMessage();
       this.addErrors = [];
 
-     this.addDesc=this.addDesc.trim();
-      this.addSum=this.addSum.trim();
-      
-    if( this.addDesc.length > 25){
-       this.createErrors.push("Opis transakcije ne sme biti duži od 25 karaktera");
-       return;
-    }
-    if(this.addSum.length > 30)
-    {
-       this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
-       return;
-    }
-
-
       if (this.addSum && this.addDesc && this.addSum > 0) {
-        if (!isNaN(this.addSum) && this.addSum !== null ) {
+        this.addDesc = this.addDesc.trim();
+        this.addSum = this.addSum.trim();
+
+        if (this.addDesc.length === 0  || this.addDesc.length > 25) {
+          this.addErrors.push(
+            "Opis transakcije treba da bude od min 1 do max 25 karaktera."
+          );
+          return;
+        }
+        if (this.addSum.length > 30) {
+          this.addErrors.push("Iznos ne sme biti duži od 30 cifre");
+          return;
+        }
+
+        if (!isNaN(this.addSum) && this.addSum !== null) {
           this.createAddMoney();
           return;
         }
@@ -988,7 +997,11 @@ export default {
     0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
     0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
-  background-image: linear-gradient(-45deg, rgb(131, 131, 131), rgb(34, 34, 34));
+  background-image: linear-gradient(
+    -45deg,
+    rgb(131, 131, 131),
+    rgb(34, 34, 34)
+  );
   color: #e6eaef;
 }
 .bill p {
@@ -1014,9 +1027,8 @@ export default {
     0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
   background-image: linear-gradient(
-    -45deg
-    rgb(78, 75, 75),
-    rgba(36, 35, 35, 0.5),
+    -45deg rgb(78, 75, 75),
+    rgba(36, 35, 35, 0.5)
   );
   color: #e6eaef;
 }
@@ -1031,7 +1043,7 @@ export default {
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
 }
 .create:hover {
-   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
   text-shadow: 2.9px 2.95px 2.95px #000000;
@@ -1059,7 +1071,6 @@ export default {
 .active {
   background: #117a8a !important;
   text-shadow: 2.9px 2.95px 2.95px #000000;
-
 }
 
 .main {
@@ -1191,9 +1202,9 @@ input[type="button"] {
   font-size: 1.3em;
   /*  width: 42.5%; */
   width: 62.5% !important;
- /* border: inset 2px rgb(77, 74, 74) !important; */ 
-  border:none;
-   outline: none;
+  /* border: inset 2px rgb(77, 74, 74) !important; */
+  border: none;
+  outline: none;
   cursor: pointer;
   padding: initial;
 
@@ -1209,8 +1220,7 @@ input[type="button"] {
   color: #e6eaef;
 }
 input[type="button"]:focus {
-  
-  border:none !important;
+  border: none !important;
 }
 input[type="button"]:hover {
   text-shadow: 0.8px 0.8px 0.8px #000000;

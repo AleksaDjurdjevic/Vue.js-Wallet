@@ -14,14 +14,15 @@
           <div class="cart" id="cart">
             <!-- ako nije ulogovan -->
             <div class="links" @click="setSelected(0)"><router-link :to="links[4].url" id="profile" v-if="!isLoggedIn">
-            <img src="./assets/placeholder-img.jpg" alt=""></router-link></div>
+              <img src="./assets/placeholder-img.jpg" alt="">
+            </router-link></div>
+            <div class="links right" @click="setSelected(5)"><router-link :to="links[5].url" :class = "{selected: links[5].selected}" v-if="!isLoggedIn">Prijavite se</router-link></div>
+            <div class="links right" @click="setSelected(6)"><router-link  :to="links[6].url" :class = "{selected: links[6].selected}" v-if="!isLoggedIn">Registracija</router-link></div>
             <!-- u trenutku kad se uloguje-->
             <div class="links" @click="setSelected('all')"><router-link :to="links[4].url" id="profile" v-if="isLoggedIn">
               <img v-if= "url === './assets/placeholder-img.jpg'" src="./assets/placeholder-img.jpg" alt="">
               <img v-else :src="url" alt="">
             </router-link></div>
-            <div class="links right" @click="setSelected(5)"><router-link :to="links[5].url" :class = "{selected: links[5].selected}" v-if="!isLoggedIn">Prijavite se</router-link></div>
-            <!-- Ovo se prikazuje kad je user ulogovan -->
             <div class="dropdown" v-if="isLoggedIn">    
               <div class="links" @click="setSelected('all')"><router-link :to="links[4].url" class="special">
                 <div>{{name}}</div><div>{{surname}}</div>  
@@ -31,8 +32,6 @@
                 <div class="links"><a @click = "logout">Odjavite se</a></div>
               </div>
             </div>
-
-            <div class="links right" @click="setSelected(6)"><router-link  :to="links[6].url" :class = "{selected: links[6].selected}" v-if="!isLoggedIn">Registracija</router-link></div>
           </div>
         </div>
       </div>
@@ -75,10 +74,12 @@ export default {
 
     }
   },
-  mounted() {
-    setInterval(this.checkSession, 1000*60*15);
+  created(){
     this.checkSession();
     this.checkSid();
+  },
+  mounted() {
+    setInterval(this.checkSession, 1000*60*15);
     this.readPic();
     this.$root.$on('change-id', () => {
         this.id = localStorage.getItem('user');
@@ -91,6 +92,12 @@ export default {
     });
     this.$root.$on('set-selected', () => {
         this.setSelected(0);
+    });
+    this.$root.$on('change-name', (name) => {
+        this.name = name;
+    });
+    this.$root.$on('change-surname', (surname) => {
+        this.surname = surname;
     });
   },
   computed: {
@@ -288,7 +295,7 @@ main {
   outline: none;
 }
 #nav.nav{
-  justify-content: end;
+  width:30%;
 }
 .links a div{
   display: inline-block;
@@ -303,7 +310,9 @@ main {
   margin: 0;
   width:100%;
   display: flex;
-  justify-content: center;
+  justify-content: end;
+  box-sizing: border-box;
+  padding-right: 5%;
 }
 #page-header img {
   display: inline-block;

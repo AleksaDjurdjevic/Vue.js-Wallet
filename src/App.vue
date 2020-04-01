@@ -76,11 +76,10 @@ export default {
   },
   created(){
     this.checkSession();
-    this.checkSid();
-  },
-  mounted() {
     setInterval(this.checkSession, 1000*60*15);
     this.readPic();
+  },
+  mounted() {
     this.$root.$on('change-id', () => {
         this.id = localStorage.getItem('user');
     });
@@ -120,15 +119,6 @@ export default {
         }
       }
     },
-    checkSid() {
-      let sid = localStorage.getItem("sid");
-      if (sid === null || sid === undefined) {
-        this.changeIsLoggedIn(false);
-        return false; //ako nema sid
-      }
-      this.changeIsLoggedIn(true);
-      return true; //ako ima sid
-    },
     checkSession() {
       axios
         .get(
@@ -140,8 +130,10 @@ export default {
         .then(r => {
           this.name = r.data.usr_data.usr_name;
           this.surname = r.data.usr_data.usr_surname;
+          this.changeIsLoggedIn(true);
         }).catch(()=>{
           localStorage.clear();
+          this.changeIsLoggedIn(false);
         });
     },
     readPic() {
@@ -159,6 +151,7 @@ export default {
             }
           });
       }).catch(()=>{
+        console.log("iz readPic catch");
           localStorage.clear();
       });
     },
@@ -174,7 +167,6 @@ export default {
           this.asd += 1;
           this.$store.state.isRegistrated = false;
           this.setSelected(0);
-          this.$router.push("/");
         })
         .catch(() => {
           localStorage.clear();

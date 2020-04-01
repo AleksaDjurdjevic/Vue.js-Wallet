@@ -13,11 +13,11 @@ am4core.useTheme(am4themes_animated);
 
 export default {
   name: "ChartCircle",
-  props:['setParamsForChartTrue'],
+  props: ["setParamsForChartTrue"],
 
   data() {
     return {
-     chart:null
+      chart: null
     };
   },
   computed: {
@@ -25,11 +25,14 @@ export default {
     // ...mapGetters(['getDeffAcc'])
   },
   methods: {
-   
     crearteChart(dataForChart) {
-       this.chart = am4core.create(this.$refs.chartdiv, am4charts.PieChart);
+            if (this.chart) {
+              this.chart.dispose();
+            }
 
-     this.chart.paddingRight = 20;
+      this.chart = am4core.create(this.$refs.chartdiv, am4charts.PieChart);
+
+      this.chart.paddingRight = 20;
       this.chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
       this.chart.data = dataForChart;
@@ -50,7 +53,7 @@ export default {
       series.alignLabels = false;
 
       // series.slices.template.fill = am4core.getCurrentThemes()
-     // series.slices.template.fill = am4core.color("rgba(8, 8, 8, 0.404)")
+      // series.slices.template.fill = am4core.color("rgba(8, 8, 8, 0.404)")
 
       series.hiddenState.properties.startAngle = 90;
       series.hiddenState.properties.endAngle = 90;
@@ -59,18 +62,15 @@ export default {
     }
   },
   mounted() {
-   this.crearteChart(this.paramsForChart);
+    this.crearteChart(this.paramsForChart);
   },
- watch:{
-      paramsForChart:{
-
-          deep:true,
-          handler(setNewValue){
-          this.crearteChart(setNewValue);
-          }
+  watch: {
+    paramsForChart: {
+      deep: true,
+      handler(setNewValue) {
+        this.crearteChart(setNewValue);
       }
-      
-      
+    }
   },
   beforeDestroy() {
     if (this.chart) {

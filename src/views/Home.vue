@@ -578,11 +578,10 @@ export default {
         //pravljenje probnog racuna
         this.showCreateAccDiv2();
         this.showTryAcc = true;
-        this.tryParamsForChart.push(
-          { tip_transakcije: "Raspoloživo", iznos: this.createSum },
-          { tip_transakcije: "Rashod", iznos: 0 },
-          { tip_transakcije: "Prihod", iznos: 0 }
-        );
+        this.tryParamsForChart.push({
+          tip_transakcije: "Dostupno",
+          iznos: this.createSum
+        });
         this.tryParams = true;
         this.showOptionsForTransaction = true;
         this.setParamsForChart(this.tryParamsForChart);
@@ -625,7 +624,7 @@ export default {
         //    console.log( typeof  this.buyDesc +'----------');
         //    console.log(  this.buyDesc.length +'----------');
 
-        if (this.buyDesc.length < 1  || this.buyDesc.length > 25) {
+        if (this.buyDesc.length < 1 || this.buyDesc.length > 25) {
           console.log(this.buyDesc.length + "----------");
           this.buyErrors.push(
             "Opis transakcije treba da bude od min 1 do max 25 karaktera."
@@ -716,7 +715,7 @@ export default {
         this.addDesc = this.addDesc.trim();
         this.addSum = this.addSum.trim();
 
-        if (this.addDesc.length === 0  || this.addDesc.length > 25) {
+        if (this.addDesc.length === 0 || this.addDesc.length > 25) {
           this.addErrors.push(
             "Opis transakcije treba da bude od min 1 do max 25 karaktera."
           );
@@ -886,14 +885,27 @@ export default {
       }
     },
     arrTryTransaction(newValue) {
+      this.tryParamsForChart = [];
+      if (this.arrTryTransaction.length === 0) {
+        this.tryParamsForChart.push(
+          { tip_transakcije: "Dostupno", iznos: this.createSum}
+          );
+      } else {
+        this.tryParamsForChart.push(
+          { tip_transakcije: "Dostupno", iznos: this.createSum },
+          { tip_transakcije: "Rashod", iznos: 0 },
+          { tip_transakcije: "Prihod", iznos: 0 }
+        );
+      }
+
       if (this.createName === null) {
         return;
       }
 
-      this.tryParamsForChart[0].iznos = this.createSum;
+      /*  this.tryParamsForChart[0].iznos = this.createSum;
       this.tryParamsForChart[1].iznos = 0;
       this.tryParamsForChart[2].iznos = 0;
-
+*/
       for (let i = 0; i < this.arrTryTransaction.length; i++) {
         if (this.arrTryTransaction[i].tip === "rashod") {
           this.tryParamsForChart[1].iznos += parseFloat(newValue[i].iznos);
@@ -901,6 +913,7 @@ export default {
           this.tryParamsForChart[2].iznos += parseFloat(newValue[i].iznos);
         }
       }
+
       this.setParamsForChart(this.tryParamsForChart);
     }
   },
@@ -977,7 +990,7 @@ export default {
 }
 .bill {
   transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
-  transition-property: box-shadow, transform, color;
+  transition: box-shadow, transform, color;
   transition-duration: 0.2s, 0.2s, 0.2s;
   transition-timing-function: ease, ease, ease;
   transition-delay: 0s, 0s, 0s;
@@ -1012,31 +1025,32 @@ export default {
 }
 .create {
   transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
-  transition-property: box-shadow, transform, color;
+  transition: box-shadow, transform, color;
   transition-duration: 0.2s, 0.2s, 0.2s;
   transition-timing-function: ease, ease, ease;
   transition-delay: 0s, 0s, 0s;
 
   cursor: pointer;
   box-shadow: 0px 1px 1px 1px #888888;
-  text-shadow: 1.5px 1.5px 1.5px #000000;
+ 
   background-color: rgba(0, 0, 0, 0.5);
-
+  background: #117a8a ;
   box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
     0 5px 5px -1px rgba(0, 0, 0, 0.644), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
     0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
-  background-image: linear-gradient(
-    -45deg rgb(78, 75, 75),
-    rgba(36, 35, 35, 0.5)
-  );
+    background-image: linear-gradient(
+    -45deg  #117a8a,
+     #f8f8f8
+  )!important; 
+  
   color: #e6eaef;
 }
 
 .bill:hover {
   /*  box-shadow: 0px 2px 8px 2px #888888; */
   font-size: 1.2em;
-  text-shadow: 2.9px 2.95px 2.95px #000000;
+ /* text-shadow: 2.9px 2.95px 2.95px #000000;*/
 
   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
@@ -1046,7 +1060,7 @@ export default {
   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
-  text-shadow: 2.9px 2.95px 2.95px #000000;
+ /* text-shadow: 2.9px 2.95px 2.95px #000000; */
 }
 .bill:active {
   box-shadow: 0px 1px 3px 1px #888888;
@@ -1068,9 +1082,26 @@ export default {
     0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
     0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
 }
-.active {
-  background: #117a8a !important;
-  text-shadow: 2.9px 2.95px 2.95px #000000;
+.active,
+.active:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+   background-image: linear-gradient(
+    -45deg rgb(78, 75, 75),
+    rgba(36, 35, 35, 0.5)
+  )!important;
+  
+  box-shadow: 0px 1px 3px 1px #888888;
+  font-size: 1.2em;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(15, 201, 230, 0.911);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+
 }
 
 .main {
@@ -1085,7 +1116,7 @@ export default {
   position: absolute;
   min-width: 100%;
   min-height: 100%;
-  background: #000000cb;
+  background: #00000085;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1095,6 +1126,7 @@ export default {
 .main2 h2 {
   font-weight: normal;
   color: rgb(255, 255, 255);
+  text-shadow: 4px 4px 4px #000000;
 }
 .transaction {
   box-sizing: border-box;
@@ -1177,6 +1209,7 @@ i:hover,
   border-color: rgb(196, 188, 188);
   font-family: "Teko", sans-serif !important;
   font-size: initial;
+  box-shadow: 0px 1px 1px 1px #888888;
 }
 select.inputWrite {
   width: 62.5% !important;
@@ -1194,14 +1227,15 @@ input:focus {
 
 input[type="button"] {
   transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
-  transition-property: box-shadow, transform, color;
+  transition: box-shadow, transform, color;
   transition-duration: 0.2s, 0.2s, 0.2s;
   transition-timing-function: ease, ease, ease;
   transition-delay: 0s, 0s, 0s;
 
   font-size: 1.3em;
   /*  width: 42.5%; */
-  width: 62.5% !important;
+  /* width: 62.5% !important; */
+  width: 63% !important;
   /* border: inset 2px rgb(77, 74, 74) !important; */
   border: none;
   outline: none;

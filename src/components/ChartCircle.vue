@@ -13,64 +13,62 @@ am4core.useTheme(am4themes_animated);
 
 export default {
   name: "ChartCircle",
-  props:['setParamsForChartTrue' ,  'tryParams'],
+  props: ["setParamsForChartTrue", "tryParams"],
 
   data() {
     return {
-     chart:null,
-     
-      defParamsForChart:[{
-                      "tip_transakcije": "Raspoloživo",
-                      "iznos": 195550
-                  }, {
-                      "tip_transakcije": "Rashod",
-                      "iznos": 135455
-                  }, {
-                      "tip_transakcije": "Prihod",
-                      "iznos": 148050
-                  }, {
-                      "tip_transakcije": "Štednja",
-                      "iznos": 130200
-                  }]
+      chart: null,
+
+      defParamsForChart: [
+        {
+          tip_transakcije: "Raspoloživo",
+          iznos: 195550
+        },
+        {
+          tip_transakcije: "Rashod",
+          iznos: 135455
+        },
+        {
+          tip_transakcije: "Prihod",
+          iznos: 148050
+        },
+        {
+          tip_transakcije: "Štednja",
+          iznos: 130200
+        }
+      ]
     };
 
-      //    tryParamsForChart:[],
-     //     tryParams:false,
-      //   this.arrTryTransaction.push({tip:"rashod",iznos:this.buySum,opis:this.buyDesc,datum:d});
+    //    tryParamsForChart:[],
+    //     tryParams:false,
+    //   this.arrTryTransaction.push({tip:"rashod",iznos:this.buySum,opis:this.buyDesc,datum:d});
 
-      //this.tryParamsForChart.push({"tip_transakcije":this.createName ,"iznos":this.createSum},
-       //                               {"tip_transakcije":"Rashod" , "iznos" : 0},
-       //                               {"tip_transakcije":"Prihod" , "iznos" : 0});
-        
-
-
-
-
+    //this.tryParamsForChart.push({"tip_transakcije":this.createName ,"iznos":this.createSum},
+    //                               {"tip_transakcije":"Rashod" , "iznos" : 0},
+    //                               {"tip_transakcije":"Prihod" , "iznos" : 0});
   },
   computed: {
     ...mapState(["paramsForChart"])
     // ...mapGetters(['getDeffAcc'])
   },
   methods: {
-   
     crearteChart(dataForChart) {
-       this.chart = am4core.create(this.$refs.chartdiv, am4charts.PieChart);
+            if (this.chart) {
+              this.chart.dispose();
+            }
+      this.chart = am4core.create(this.$refs.chartdiv, am4charts.PieChart);
 
-     this.chart.paddingRight = 20;
+      this.chart.paddingRight = 20;
       this.chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
+      this.chart.data =
+        dataForChart != "" ? dataForChart : this.defParamsForChart;
 
-      
-        this.chart.data = (dataForChart != '' ) ? dataForChart : this.defParamsForChart;
-      
-      
-     // this.chart.radius = am4core.percent(70);
-    //  this.chart.innerRadius = am4core.percent(40);
+      // this.chart.radius = am4core.percent(70);
+      //  this.chart.innerRadius = am4core.percent(40);
 
- this.chart.radius = am4core.percent(74);
-   this.chart.innerRadius = am4core.percent(36);
-      
-
+      this.chart.radius = am4core.percent(74);
+      this.chart.innerRadius = am4core.percent(36);
 
       this.chart.startAngle = 0;
       this.chart.endAngle = 360;
@@ -81,19 +79,18 @@ export default {
 
       series.slices.template.cornerRadius = 6;
       series.slices.template.innerCornerRadius = 4;
-    
-     //series.slices.template.fillOpacity =0.5;
-    //series.slices.template.draggable = true;
+
+      //series.slices.template.fillOpacity =0.5;
+      //series.slices.template.draggable = true;
       series.slices.template.inert = true;
       series.alignLabels = false;
-    
+
       series.slices.template.stroke = am4core.color("#4a2abb");
       series.slices.template.strokeWidth = 4;
       series.slices.template.strokeOpacity = 0.09;
-      
 
-     // series.slices.template.fill = am4core.getCurrentThemes()
-     // series.slices.template.fill = am4core.color("rgba(8, 8, 8, 0.404)")
+      // series.slices.template.fill = am4core.getCurrentThemes()
+      // series.slices.template.fill = am4core.color("rgba(8, 8, 8, 0.404)")
 
       series.hiddenState.properties.startAngle = 90;
       series.hiddenState.properties.endAngle = 90;
@@ -102,18 +99,15 @@ export default {
     }
   },
   mounted() {
-   this.crearteChart(this.paramsForChart);
+    this.crearteChart(this.paramsForChart);
   },
-  watch:{
-      paramsForChart:{
-
-          deep:true,
-          handler(setNewValue){
-          this.crearteChart(setNewValue);
-          }
+  watch: {
+    paramsForChart: {
+      deep: true,
+      handler(setNewValue) {
+        this.crearteChart(setNewValue);
       }
-      
-      
+    }
   },
 
   beforeDestroy() {

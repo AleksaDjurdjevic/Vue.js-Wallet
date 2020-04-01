@@ -1,10 +1,16 @@
 <template>
   <div class="statistics">
+    <div class="statistics2" v-if="selectAcc === 'null' || selectAcc ===null">
+      <h2>
+          Nemate pristup statistici jer nemate ni jedan račun.
+          <br />Pravljenjem računa imaćete pristup statistici.
+        </h2>
+    </div>
     <div class="statisticsRow">
       <MonthYear v-bind:accounts="accounts" v-on:selectMonthYear="changeParamsForChart($event)" />
     </div>
     <h1 v-if="message">{{message}}</h1>
-    <h1 v-else-if="selectAcc">Statistika transakcija za račun: {{selectAcc}}</h1>
+    <h1 v-else-if=" selectAcc !== 'null' && selectAcc !== null "> Statistika transakcija za račun: {{ selectAcc }}</h1>
     <div class="statisticsRow">
       <ChartXY class="chart" />
       <ChartCircle class="chart" />
@@ -33,7 +39,7 @@ export default {
       accounts: [],
       paramsForChart:[],
       message:'',
-      selectAcc:null
+      selectAcc: null
     };
   },
    mounted() {
@@ -57,6 +63,7 @@ export default {
       }
     },
     getParamsForChartStatists(acc_name) {
+      if(acc_name==='null') return;
       axios
         .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/statistics", {
           sid: localStorage.getItem("sid"),
@@ -103,12 +110,33 @@ export default {
 
 <style  scoped>
 .statistics{
- 
+  padding: 0 0 0 0;
   background-color:#bebebe79;
  /*   background-color:aliceblue; */
-    background-image: linear-gradient(#bebebebb,#FFFFFF, #bebebebb);
-
+  background-image: linear-gradient(#bebebebb,#FFFFFF, #bebebebb);
+  position: relative;
 }
+.statistics2{
+  padding: 0 0 0 0;
+  box-sizing: border-box;
+  position: absolute;
+  min-width: 100%;
+  height: 100%;
+  background: #00000085;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  overflow: hidden;
+}
+.statistics2 p,
+.statistics2 h2 {
+  font-weight: normal;
+  color: rgb(255, 255, 255);
+  text-shadow: 4px 4px 4px #000000;
+}
+
+
 .statisticsRow {
   display: flex;
   flex-wrap: wrap;

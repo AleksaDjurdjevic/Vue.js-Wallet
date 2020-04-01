@@ -22,8 +22,8 @@ export default {
   },
   methods: {
     crearteChart(dataForChart) {
-      if (this.chart) {
-        this.chart.dispose();
+      if (chart) {
+        chart.dispose();
       }
 
       var chart = am4core.create(this.$refs.chartdiv, am4charts.XYChart3D);
@@ -54,7 +54,8 @@ export default {
 
       var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
       valueAxis.renderer.grid.template.disabled = true;
-
+ 
+ 
       // Create series
       var series = chart.series.push(new am4charts.ConeSeries());
       series.dataFields.valueY = "iznos";

@@ -151,7 +151,6 @@ export default {
             }
           });
       }).catch(()=>{
-        console.log("iz readPic catch");
           localStorage.clear();
       });
     },
@@ -167,6 +166,9 @@ export default {
           this.asd += 1;
           this.$store.state.isRegistrated = false;
           this.setSelected(0);
+          if(this.$route.path !== '/'){
+            this.$router.push('/');
+          }
         })
         .catch(() => {
           localStorage.clear();

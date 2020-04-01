@@ -6,7 +6,7 @@
       <p class = "heading">Kliknite na račun kako biste filtrirali transakcije po računu</p>
       <div class="accounts">
         <div class = "each-account-placeholder" :class = "{selected: showingAccPlaceholder}" @click = "accountPlaceholder"><p>Pregled sa svih računa</p></div>
-        <div v-for="account in accounts" class = "each-account"
+        <div  v-for="account in accounts" class = "each-account"
           :class = "{selected: account.selected}"
           :key = "account.acc_id"
           @click = "getTransactionsByAccount(account.acc_name)"
@@ -661,7 +661,8 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
   border: 1px solid gray;
   width: 90%;
   margin-right: 10%;
-  margin-top: 3%;
+  margin-top: 1.5%;
+  margin-bottom:1.5%;
   text-align: center;
 
  transition: box-shadow 0.2s, transform 0.2s, color 0.2s;

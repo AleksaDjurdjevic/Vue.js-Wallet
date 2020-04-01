@@ -580,19 +580,29 @@ button:hover{
   display:flex;
   flex-direction: column;
 }
+/*
 .each-account.selected{
-  background-color: #17A2B8;
+-ms-transform-origin:   background-color: #17A2B8;
   color: white;
   border: 1px solid gray;
   width: 90%;
   margin-right: 10%;
   margin-top: 1%;
-}
+  
+ 
+}  */
+
+/*
 .each-account.selected:hover{
   animation-name: color-change-blue-shade;
   animation-duration: 0.6s;
   animation-fill-mode: forwards;
-}
+ 
+   
+} */
+
+/*
+
 .each-account{
   height: 80px;
   display:flex;
@@ -601,17 +611,46 @@ button:hover{
   border: 1px solid gray;
   width: 90%;
   margin-right: 10%;
-  margin-top: 1%;
+  margin-top: 3%;
+  background-color: rgb(0, 0, 0);
+
+  transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+  transition: box-shadow, transform, color;
+  transition-duration: 0.2s, 0.2s, 0.2s;
+  transition-timing-function: ease, ease, ease;
+  transition-delay: 0s, 0s, 0s;
+
+  border-radius: 12px;
+
+box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+    0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+    0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  background-image: linear-gradient(
+    -45deg,
+    rgb(131, 131, 131),
+    rgb(34, 34, 34)
+  );
+  color: #e6eaef;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
 }
+*/
+
 .each-account p, .each-account-placeholder p {
   margin: 0;
 }
+/*:checked
 .each-account:hover{
   cursor: pointer;
   animation-name: color-change-white-gray;
   animation-duration: 0.6s;
   animation-fill-mode: forwards;
-}
+  
+  
+} */
+
+.each-account,
 .each-account-placeholder{
   height: 80px;
   display:flex;
@@ -620,28 +659,93 @@ button:hover{
   border: 1px solid gray;
   width: 90%;
   margin-right: 10%;
-  margin-top: 1%;
+  margin-top: 3%;
   text-align: center;
+
+ transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+  transition: box-shadow, transform, color;
+  transition-duration: 0.2s, 0.2s, 0.2s;
+  transition-timing-function: ease, ease, ease;
+  transition-delay: 0s, 0s, 0s;
+
+
+  border-radius: 12px;
+
+ background-color: rgb(0, 0, 0);
+ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+    0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+    0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  background-image: linear-gradient(
+    -45deg,
+    rgb(131, 131, 131),
+    rgb(34, 34, 34)
+  );
+  color: #e6eaef;
+text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+} 
+
+
+.each-account:hover,
+.each-account-placeholder:hover{
+  cursor: pointer;
+/*  animation-name: color-change-white-gray;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;
+*/
+  
+  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+    0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
 }
+/*
+.each-account-placeholder.selected:hover{
+  animation-name: color-change-blue-shade;
+  animation-duration: 0.6s;
+  animation-fill-mode: forwards;  
+}  */
+
+.each-account:active,
+.each-account-placeholder:active{
+ 
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(18, 104, 117, 0.616);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.each-account.selected,
+.each-account.selected:hover,
+.each-account-placeholder.selected:hover,
 .each-account-placeholder.selected{
-  background-color: #17A2B8;
+ /* background-color: #17A2B8;
   color: white;
   border: 1px solid gray;
   width: 90%;
   margin-right: 10%;
   margin-top: 1%;
+  */
+
+ background-color: rgba(0, 0, 0, 0.5);
+   background-image: linear-gradient(
+    -45deg rgb(78, 75, 75),
+    rgba(36, 35, 35, 0.5)
+  )!important;
+  
+  box-shadow: 0px 1px 3px 1px #888888;
+  box-shadow: 0 5px #666;
+
+
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(15, 201, 230, 0.911);
+
 }
-.each-account-placeholder:hover{
-  cursor: pointer;
-  animation-name: color-change-white-gray;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-}
-.each-account-placeholder.selected:hover{
-  animation-name: color-change-blue-shade;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-}
+
+
 .reg-notice{
     position:fixed;
     top: 30%;

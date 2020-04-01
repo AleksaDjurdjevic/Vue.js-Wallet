@@ -46,7 +46,7 @@ export default {
      this.getAccounts();
     this.selectAcc=localStorage.getItem('setDefAcc')
     this.getParamsForChartStatists((this.defAccV!==null)?this.defAccV.acc_name:localStorage.getItem('setDefAcc'));
-     
+     this.$root.$emit('set-selected', 3);
   },
   methods: {
     getAccounts() {

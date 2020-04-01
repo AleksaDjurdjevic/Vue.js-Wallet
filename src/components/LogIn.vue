@@ -48,7 +48,7 @@ export default {
           this.$root.$emit('change-id');
           this.$root.$emit('change-usr-data');
           this.$root.$emit('change-pic');
-          this.$root.$emit('set-selected');
+          this.$root.$emit('set-selected', 0);
 
           this.$router.push({
             name: 'Home'
@@ -58,6 +58,9 @@ export default {
         });
       }
     }
+  },
+  mounted(){
+    this.$root.$emit('set-selected', 5);
   }
 };
 </script>
@@ -68,7 +71,6 @@ h1 {
 }
 .msg{
   color: #e80000;
-  /* 1db802 */
 }
 .msg-invi{
   visibility:hidden;
@@ -153,10 +155,9 @@ button:active{
   height: 100vh;
 }
 .login{
-  border: 1px solid black;
   width: 25%;
   background-color: white;
-  margin: 8% auto 0 auto;
+  margin: 4% auto 0 auto;
 }
 .bla {
   border-radius: 5px;

@@ -46,7 +46,7 @@
                     <p :class = "{hover: saving.hover}" @mouseover="displaySavingFullName(index, true)" @mouseleave="displaySavingFullName(index, false)">{{setProperSavingsNameLength(saving.sav_description, saving.hover)}}</p>
                 </div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
-                    <div class="saving-status"><p>Pregled štednje</p></div>
+                    <div class="saving-status"><p>Status :</p></div>
                     <div class="data">
                         <div class="data-row">
                             <span class='span-details'>Cilj: {{saving.sav_amount + " " + saving.acc_type_name}}</span>
@@ -244,6 +244,7 @@ export default {
     },
     mounted(){
         this.getSavings();
+        this.$root.$emit('set-selected', 2);
     }
 }
 </script>
@@ -374,7 +375,7 @@ p{
     background-color: white;
     position: absolute;
     top:30%;
-    border-radius: 0 3px 3px 0;
+    border-radius: 0 13px 13px 0;
     display:flex;
     justify-content: center;
 }
@@ -401,6 +402,7 @@ p{
     display: flex;
     justify-content: space-around;
 }
+/* Buttons inside a saving */
 .buttons{
     position: absolute;
     top: 72%;
@@ -409,16 +411,48 @@ p{
     justify-content: space-evenly;
 }
 .buttons button{
-    border-radius: 13px;
-    background-color: white;
-    border: none;
-    font-family: "Teko";
+    transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+    transition-property: box-shadow, transform, color;
+    transition-duration: 0.2s, 0.2s, 0.2s;
+    transition-timing-function: ease, ease, ease;
+    transition-delay: 0s, 0s, 0s;
+    font-family: 'Teko', sans-serif;
+
+    cursor: pointer;
     font-size: 1em;
+    font-weight: 500;
+    background-color: rgb(0, 0, 0);
+    overflow: hidden;
+    border-radius: 10px;
+
+    box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+        0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+        0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+        0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+    background-image: linear-gradient(-45deg, rgb(131, 131, 131), rgb(34, 34, 34));
+    color: #e6eaef;
 }
-@keyframes button{
-    0% {background-color: white}
-    100%{background-color: rgb(234, 236, 236)}
+.buttons button:hover{
+  text-shadow: 2.9px 2.95px 2.95px #000000;
+
+  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+    0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
 }
+.buttons button:active{
+  box-shadow: 0px 1px 3px 1px #888888;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(18, 104, 117, 0.616);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+/* Universal button style */
 button:active, button:focus, button:hover{
     outline: none;
     cursor: pointer;
@@ -428,18 +462,52 @@ button::-moz-focus-inner {
 }
 button{
     border-radius: 13px;
-    background-color: white;
     border: none;
     font-family: "Teko";
     font-size: 1em;
-    animation-name: button-rev;
-    animation-duration: 0.6s;
-    animation-fill-mode: forwards;
 }
-button:hover{
-    animation-name: button;
-    animation-duration: 0.6s;
-    animation-fill-mode: forwards;
+/* aside button style */
+.sorting button{
+    transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+    transition-property: box-shadow, transform, color;
+    transition-duration: 0.2s, 0.2s, 0.2s;
+    transition-timing-function: ease, ease, ease;
+    transition-delay: 0s, 0s, 0s;
+    font-family: 'Teko', sans-serif;
+    font-size: 1.2em;
+    cursor: pointer;
+
+    font-weight: 500;
+    background-color: rgb(0, 0, 0);
+    overflow: hidden;
+    border-radius: 10px;
+
+    box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+        0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+        0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+        0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+    background-image: linear-gradient(-45deg, rgb(131, 131, 131), rgb(34, 34, 34));
+    color: #e6eaef;
+}
+.sorting button:hover{
+  text-shadow: 2.9px 2.95px 2.95px #000000;
+
+  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+    0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+}
+.sorting button:active{
+  box-shadow: 0px 1px 3px 1px #888888;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(18, 104, 117, 0.616);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  outline: none;
 }
 /* Old css */
 .savings-wrapper{

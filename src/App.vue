@@ -90,8 +90,8 @@ export default {
     this.$root.$on('change-usr-data', () => {
         this.checkSession();
     });
-    this.$root.$on('set-selected', () => {
-        this.setSelected(0);
+    this.$root.$on('set-selected', (n) => {
+        this.setSelected(n);
     });
     this.$root.$on('change-name', (name) => {
         this.name = name;

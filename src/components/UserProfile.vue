@@ -123,6 +123,7 @@ export default {
   mounted() {
     this.readPic();
     this.getUser();
+    this.$root.$emit('set-selected', 'all');
   },
   methods: {
     getUser(){

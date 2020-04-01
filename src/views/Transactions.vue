@@ -1,5 +1,5 @@
 <template>
-  <div class="transactions">
+  <div class="transactions" :key="key">
     <!-- Left side -->
     <div class="aside">
       <!-- Accounts -->
@@ -112,7 +112,8 @@ export default {
       orderBy: 'ASC',
       acc_name: null,
       showingTableShade: false,
-      error: ''
+      error: '',
+      key: 0
     }
   },
   components : {
@@ -146,7 +147,7 @@ export default {
           this.numOfPages = Math.ceil(r.data.pages / 20);
           this.allPagesArray = [];
           this.displayingPages = [];
-
+          
           //Get all pages
           for(let i = 1; i<=this.numOfPages; i++){
             //Page one will be selected
@@ -218,6 +219,7 @@ export default {
           }
         }
         this.showingAccPlaceholder = false;
+        this.key++;
       }
     },
     getAccounts(){

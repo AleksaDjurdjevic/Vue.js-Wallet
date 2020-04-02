@@ -4,7 +4,7 @@
         <div class="each-payment" v-for = "(payment, index) in payments" :key='index'>
             <div class = "each-info"><span>{{"Iznos uplate: " + payment.sav_pay_amount + " " + payment.acc_type_name}}</span></div>
             <div class = "each-info"><span>{{"Datum uplate: " + payment.sav_pay_date}}</span></div>
-            <div class = "each-info"><span>{{"Račun sa kog je uplaćeno: " + payment.acc_name}}</span></div>
+            <div class = "each-info"><span>{{"Račun: " + payment.acc_name}}</span></div>
             <div class = "each-info"><span
                 @click = "deleteSinglePayment(payment.sav_pay_id, payment.acc_id, payment.sav_pay_amount)" 
             > 
@@ -57,7 +57,7 @@ export default {
             }).then(r=>{
                 this.payments = r.data.payments;
                 this.allPayments = r.data.payments;
-            })
+            }) 
         },
         getPaymentsByDate(date){
             this.date = date;

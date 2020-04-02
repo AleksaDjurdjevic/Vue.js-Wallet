@@ -3,7 +3,12 @@
         <h2>{{singleSaving.sav_description}}</h2>
         <div class="data">
             <p>Cilj: {{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</p>
-            <p>Mesečna rata za preostali period: {{singleSaving.sav_month_rate}}{{" " + singleSaving.acc_type_name}}</p>
+            <p v-if = "singleSaving.sav_month_rate_payed>0" >Mesečna rata: {{singleSaving.sav_month_rate_payed}}{{" " + singleSaving.acc_type_name}}</p>
+            <div v-if = "singleSaving.sav_month_rate_payed<=0"> 
+                <p class = "msg">Uplatili ste mesečnu ratu!</p>
+                <p class = "msg" v-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>=0" >Sledeća mesečna rata: {{singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed}}{{" " + singleSaving.acc_type_name}}</p>
+                <p class = "msg" v-else>Sve sledeće uplate nakon naredne rate će vam biti manje od {{singleSaving.fixed_month_rate + " " + singleSaving.acc_type_name}}.</p>
+            </div>
         </div>
         <p>Odaberite račun sa kojeg uplaćujete:</p>
         
@@ -18,8 +23,8 @@
                 <p>{{account.acc_amount + " " + account.acc_type_name}}</p>
             </div>
         </div>
-        <div class="accounts" v-if = "accounts.length==1">
-            <div class="each-account">
+        <div class="accounts" v-if = "accounts.length===1">
+            <div class="each-account-selected">
                 <p>{{accounts[0].acc_name}}</p>
                 <p>{{accounts[0].acc_amount + " " + accounts[0].acc_type_name}}</p>
             </div>
@@ -28,6 +33,7 @@
     
         <input type="text" v-model = "paymentValue" placeholder="Iznos uplate">
         <button @click = "makePayment">Uplati</button>
+        <button @click = "$emit('making-payment')">Povratak na štednje</button>
 
         <p :class = "{'error': error, 'error-invi': !error}">{{error? error: 'fill'}}</p>
     </div>
@@ -44,7 +50,8 @@ export default {
             acc_name: '',
             acc_amount: '',
             error: '',
-            paymentValue: ''
+            paymentValue: '',
+            nextPayments: []
         }
     },
     props: {
@@ -67,7 +74,7 @@ export default {
                 if (this.accounts.length == 1){
                     this.acc_id = this.accounts[0].acc_id;
                     this.acc_name = this.accounts[0].acc_name;
-                    this.accounts[0].selected = true;
+                    this.acc_amount = this.accounts[0].acc_amount;
                 }else{
                     for (let i in this.accounts){
                         this.accounts[i].selected = false;
@@ -170,8 +177,8 @@ export default {
         cursor: pointer;
         font-size: 1.2em;
         font-weight: 500;
-        margin: 0.6%;
-        width: 18%;
+        margin: 2%;
+        width: 50%;
         background-color: rgb(0, 0, 0);
         border-radius: 10px;
         border: 0;
@@ -262,9 +269,10 @@ export default {
             -45deg rgb(78, 75, 75),
             rgba(36, 35, 35, 0.5)
         )!important;
-        
-        box-shadow: 0px 1px 3px 1px #888888;
-        box-shadow: 0 5px #666;
+        border-radius: 20px;
+        padding: 1%;
+        /* box-shadow: 0px 1px 3px 1px #888888; */
+        /* box-shadow: 0 5px #666; */
         transform: translateY(4px);
 
         box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
@@ -313,5 +321,8 @@ export default {
     }
     span{
         font-size:1.2em;
+    }
+    .msg{
+      color: #1db802;  
     }
 </style>

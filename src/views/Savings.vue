@@ -8,26 +8,27 @@
             <div class="sorting">
                 <button @click = "addingSaving = true">Dodaj štednju</button>
 
+                <p>Sortiraj po:</p>
                 <input type="radio" id="sort0" value = 'sav_start' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort0">Po datumu kreiranja</label>
+                <label for="sort0">Datumu kreiranja</label>
                 <br>
                 <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort1">Po cilju</label>
+                <label for="sort1">Cilju</label>
                 <br>
                 <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort2">Po uplaćenom iznosu</label>
+                <label for="sort2">Uplaćenom iznosu</label>
                 <br>
                 <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort3">Po periodu</label>
+                <label for="sort3">Periodu</label>
                 <br>
                 <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort4">Po preostalom iznosu</label>
+                <label for="sort4">Preostalom iznosu</label>
                 <br>
                 <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort5">Po uplatama</label>
+                <label for="sort5">Uplatama</label>
                 <br>
                 <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort6">Po mesečnoj rati</label>
+                <label for="sort6">Mesečnoj rati</label>
 
                 <div class="sort-order">
                     <input type="radio" id="asc" value = "asc" v-model="sortOrder" @change = "savingSort('asc')">
@@ -49,16 +50,17 @@
                     <div class="saving-status"><p>Status : {{saving.sav_end ? 'Kompletirano' : 'U toku'}}</p></div>
                     <div class="data">
                         <div class="data-row">
-                            <span class='span-details'>Cilj: <span>{{saving.sav_amount + " " + saving.acc_type_name}}</span></span>
+                            <p class='p-details'>Cilj: <span>{{saving.sav_amount + " " + saving.acc_type_name}}</span></p>
                         </div>
                         <div class="data-row">
-                            <span class='span-details'>Mesečna rata: <span>{{saving.sav_month_rate_payed+ " " + saving.acc_type_name}}</span></span>
+                            <p v-if = "saving.sav_month_rate_payed>0" class='p-details'>Mesečna rata: <span>{{saving.sav_month_rate_payed+ " " + saving.acc_type_name}}</span></p>
+                            <p v-else class='p-done'>Uplaćeno! <span><i class="far fa-check-circle fa-2x" style = "color:#03a100;"></i></span></p>
                         </div>
                     </div>
                     <div class="buttons">
-                        <button @click = "preparePayment(saving.sav_id)">Uplati na štednju</button>
+                        <button @click = "viewDetails(saving.sav_id)">Detalji</button>
                         <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
-                        <button @click = "deleteSavings(saving.sav_id)">Detalji</button>
+                        <button @click = "preparePayment(saving.sav_id)">Uplati na štednju</button>
                         <button @click = "deleteSavings(saving.sav_id)">Obriši štednju</button>
                     </div>
                 </div>
@@ -67,11 +69,12 @@
         
         <!-- Conditional components -->
         <!-- Shade div -->
-        <div class="payment-processing" v-if ="makingPayment || addingSaving || deletingSaving || viewingPayments" 
+        <div class="payment-processing" v-if ="makingPayment || addingSaving || deletingSaving || viewingPayments || viewingDetails" 
             @click =    "makingPayment = false; 
                         addingSaving = false; 
                         deletingSaving = false;
                         viewingPayments = false;
+                        viewingDetails = false;
                         error = '';">
         </div>
         <!-- Div for making a payment -->
@@ -95,6 +98,12 @@
             @get-savings = "getSavings"
             @deleting-saving = "deletingSaving = false"
         />
+        <!-- Div for viewing saving details-->
+        <savings-view-details v-if ="viewingDetails"
+            :savings = "savings"
+            :sav_id = "sav_id"
+            @viewing-details = "viewingDetails = false"
+        />
 
         <!-- Div for viewing payments -->
         <savings-view-payments v-if ="viewingPayments"
@@ -112,6 +121,7 @@ import SavingsAdd from '../components/SavingsAdd.vue';
 import SavingsAddPayment from '../components/SavingsAddPayment.vue';
 import SavingsDelete from '../components/SavingsDelete.vue';
 import SavingsViewPayments from '../components/SavingsViewPayments.vue';
+import SavingsViewDetails from '../components/SavingsViewDetails.vue';
 export default {
     data () {
         return {
@@ -120,6 +130,7 @@ export default {
             deletingSaving: false,
             addingSaving: false,
             viewingPayments: false,
+            viewingDetails: false,
             sav_id: '',
             error: '',
             property: 'sav_start',
@@ -131,7 +142,8 @@ export default {
         "savings-add": SavingsAdd,
         "savings-add-payment": SavingsAddPayment,
         "savings-delete": SavingsDelete,
-        "savings-view-payments": SavingsViewPayments
+        "savings-view-payments": SavingsViewPayments,
+        "savings-view-details": SavingsViewDetails
     },
     computed: {
         ...mapState(['isLoggedIn'])
@@ -156,9 +168,9 @@ export default {
                     for(let i=0; i<this.savings.length; i++){
                         this.savings[i].sav_month_rate = this.calculateRate(this.savings[i].leftover_amount, this.savings[i].sav_start, this.savings[i].sav_period);
                         this.savings[i].hover = false;
-                        this.savings[i].original_month_rate = Math.ceil(this.savings[i].sav_amount / this.savings[i].sav_period);
+                        this.savings[i].fixed_month_rate = Math.ceil(this.savings[i].sav_amount / this.savings[i].sav_period);
                         this.savings[i].sav_months_in = this.getMonthsIn(this.savings[i].sav_start, this.savings[i].sav_period) + 1;
-                        this.savings[i].sav_month_rate_payed = this.savings[i].original_month_rate*this.savings[i].sav_months_in-this.savings[i].sav_amount_accumulated;
+                        this.savings[i].sav_month_rate_payed = this.savings[i].fixed_month_rate*this.savings[i].sav_months_in-this.savings[i].sav_amount_accumulated;
                     }
                 }
             });
@@ -173,14 +185,16 @@ export default {
             let startParts = start.split('-');
             let currentDay = currentDate.getDate();
 
-            
             let startMonth = parseInt(startParts[1]);
+            
             let monthsIn = (currentDate.getMonth() + 1) - startMonth;
 
-            currentDay>parseInt(startParts[2]) ?  monthsIn = (currentDate.getMonth() + 1) - startMonth: monthsIn = (currentDate.getMonth() + 1) - startMonth - 1
             if (monthsIn<0){
                 monthsIn += 12 * Math.ceil(period/12);
             }
+
+            currentDay<parseInt(startParts[2]) ?  monthsIn-- : monthsIn;
+            
             return monthsIn;
         },
         preparePayment(sav_id){
@@ -195,26 +209,13 @@ export default {
             this.sav_id = sav_id;
             this.viewingPayments = true;
         },
+        viewDetails(sav_id){
+            this.sav_id = sav_id;
+            this.viewingDetails = true;
+        },
         setClassForSavings(i){
             let devider = Math.floor(i/4);
             return i-4*devider+1;
-        },
-        setProperWord(p){
-            p = p.toString().split("");
-            if(    (p[p.length-1] === "1" && p[p.length-2] === "1")
-                || (p[p.length-1] === "2" && p[p.length-2] === "1") 
-                || (p[p.length-1] === "3" && p[p.length-2] === "1")
-                || (p[p.length-1] === "4" && p[p.length-2] === "1"))
-            {
-                return 'meseci';
-            }
-            else if(p[p.length-1] == '1'){
-                return 'mesec'
-            }else if(["2", "3", "4"].includes(p[p.length-1])){
-                return 'meseca';
-            }else{
-                return 'meseci'
-            }
         },
         setProperSavingsNameLength(s, bool){
             if(bool){
@@ -372,7 +373,7 @@ p{
 }
 .saving-status{
     width: 25%;
-    height: 25%;
+    min-height: 25%;
     background-color: white;
     position: absolute;
     top:30%;
@@ -392,11 +393,11 @@ p{
 }
 .data{
     position: absolute;
-    top: 12%;
+    top: 0;
     right: 0;
     color: white;
     width: 72%;
-    height: 50%;
+    height: 70%;
     line-height: 75%;
     display: flex;
     flex-direction: row;
@@ -405,9 +406,12 @@ p{
     display: flex;
     align-items: center;
     font-size: 2.2em;
+    justify-content: center;
 }
-.data-row span span{
-    font-size: 1.2em;
+.data-row p span{
+    font-size: 1.1em;
+    display: inline-block;
+    margin-left: 5px;
 }
 .data-row:nth-child(1){
     width: 40%
@@ -547,9 +551,18 @@ button{
     width:80%;
     margin-right: 3%;
 }
-.span-details{
-    display: inline-block;
-    margin: 5px;
+.p-details{
+    display: flex;
+    font-weight: 100;
+    height: 100%;
+    line-height: 1.1em;
+    align-items: center;
+}
+.p-done{
+    display: flex;
+    height: 100%;
+    line-height: 1.1em;
+    align-items: center;
 }
 @keyframes opacity{
     0% {opacity:0;}
@@ -571,7 +584,7 @@ button{
     justify-content: center;
     align-content: center;
 }
-.payment-form, .add-savings-form, .delete-saving, .view-payments {
+.payment-form, .add-savings-form, .delete-saving, .view-payments, .savings-view-details {
     background: radial-gradient(36% 51% at 36% 50%, #eaecec 0%, #CACACA 100%) repeat 50% 50% / 100% 100%;
     position: fixed;
     z-index: 10001;

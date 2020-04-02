@@ -1042,7 +1042,7 @@ export default {
     background-image: linear-gradient(
     -45deg  #117a8a,
      #f8f8f8
-  )!important; 
+  ); 
   
   color: #e6eaef;
 }

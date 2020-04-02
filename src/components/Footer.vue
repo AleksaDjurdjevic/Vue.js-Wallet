@@ -27,6 +27,7 @@ export default {};
   text-align:left;
   font-weight: normal !important;
 /*  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;*/
+  font-style: normal !important;
 
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="userProfile">
+  <div class="userProfile" v-on:keyup.enter="update" >
     <div class="profile-img">
       <img v-if="url === 'placeholder'" src="../assets/placeholder-img.jpg" alt="">
       <img v-else :src="url" alt="" />

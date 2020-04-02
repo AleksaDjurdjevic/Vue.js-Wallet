@@ -1072,7 +1072,7 @@ export default {
   transform: translateY(4px);
 
   box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
-    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 4px 16px rgba(0, 0, 0, 0), 0 2px 4px 2px rgba(0, 0, 0, 0.5) inset,
     0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
   transition: 0s;
   color: rgba(18, 104, 117, 0.616);
@@ -1082,7 +1082,7 @@ export default {
   box-shadow: 0px 1px 3px 1px #888888;
   font-size: 1.2em;
   box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
-    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 4px 16px rgba(0, 0, 0, 0), 0 2px 4px 2px rgba(0, 0, 0, 0.5) inset,
     0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
 }
 .active,
@@ -1099,7 +1099,7 @@ export default {
   transform: translateY(4px);
 
   box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
-    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 4px 16px rgba(0, 0, 0, 0), 0 2px 4px 2px rgba(0, 0, 0, 0.5) inset,
     0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
   transition: 0s;
   color: rgba(15, 201, 230, 0.911);

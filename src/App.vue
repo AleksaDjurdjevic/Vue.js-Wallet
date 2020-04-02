@@ -301,6 +301,10 @@ main {
   justify-content: space-evenly;
   width: 100%;
 }
+
+a:hover{
+  cursor: pointer;
+}
 #cart.cart{
   margin: 0;
   width:100%;

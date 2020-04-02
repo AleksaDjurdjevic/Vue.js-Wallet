@@ -29,16 +29,16 @@
       <p class="message">{{error}}</p>
       <div class="search-date">
         <div class="each-search-date">
-          <span>Od datuma</span>
+         <span>Od datuma  <i   @click="clearDate2('from')" class="fas fa-times" ></i></span> 
           <div class="input-calendar">
-            <input type="text" readonly v-model="fromDate" />
+            <input type="text" placeholder='klikom na kalendar odaberi' readonly v-model="fromDate" />
             <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('from')"></i>
           </div>
         </div>
         <div class="each-search-date">
-          <span>Do datuma</span>
+          <span>Do datuma  <i  @click="clearDate2('to')"  class="fas fa-times" ></i></span>
           <div class="input-calendar">
-            <input type="text" readonly v-model="toDate" />
+            <input type="text" placeholder='klikom na kalendar odaberi' readonly v-model="toDate" />
             <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('to')"></i>
           </div>
         </div>
@@ -80,7 +80,7 @@
         <!-- Data -->
         <div class="table-data">
           <div class="row-other" v-for="tr in transactions" :key="tr.tra_id">
-            <div class="cell">{{tr.tra_date}}</div>
+            <div class="cell">{{formateDate(tr.tra_date)}}</div>
             <div class="cell">{{tr.acc_name}}</div>
             <div class="cell">{{tr.tra_type_name}}</div>
             <div class="cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
@@ -93,11 +93,11 @@
         <!-- Pagination -->
         <div class="pagination-wrap" v-if="allPagesArray.length > 1">
           <div class="pages-dynamic">
-            <button class="page-btn" @click="setPage(allPagesArray[0])">Prva strana</button>
+            <button class="page-btn" @click="setPage(allPagesArray[0])"><i class="fas fa-angle-double-left"></i></button>
             <button
               class="page-btn"
               @click="setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))"
-            >Prethodna strana</button>
+            ><i class="fas fa-angle-left"></i></button>
           </div>
 
           <div class="pages-dynamic">
@@ -113,11 +113,11 @@
             <button
               class="page-btn"
               @click="setPage(validateDisplayingPages('next', allPagesArray[currentPage]))"
-            >Sledeća strana</button>
+            ><i class="fas fa-angle-right"></i></button>
             <button
               class="page-btn"
               @click="setPage(allPagesArray[allPagesArray.length-1])"
-            >Poslednja strana</button>
+            ><i class="fas fa-angle-double-right"></i></button>
           </div>
         </div>
       </div>
@@ -158,6 +158,12 @@ export default {
     ...mapState(["isLoggedIn"])
   },
   methods: {
+    formateDate(date) {
+      return date
+        .split("-")
+        .reverse()
+        .join("/");
+    },
     getTransactions() {
       axios
         .post(
@@ -347,6 +353,14 @@ export default {
       if ((this.fromDate === null) ^ (this.toDate === null)) {
         this.getTransactions();
       }
+    },clearDate2(x){
+      if (x === "from") {
+        this.fromDate = null;
+      } else if (x === "to") {
+        this.toDate = null;
+      }
+       this.showingCalendar = false;
+
     },
     accountPlaceholder() {
       //Applying classes
@@ -545,7 +559,7 @@ button::-moz-focus-inner {
   border: none;
   outline: none;
 
-  box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+  box-shadow: 1px 4px 0 0 rgba(24, 68, 75, 0.979),
     0 5px 5px -1px rgba(0, 0, 0, 0.644), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
     0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
@@ -558,7 +572,7 @@ button::-moz-focus-inner {
   color: #e6eaef;
 }
 .pages-dynamic button:hover {
-  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+  box-shadow: 1px 4px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
 }
@@ -599,6 +613,7 @@ button::-moz-focus-inner {
 }
 .each-search-date {
   margin: 5px 15px;
+   justify-content: space-between;
 }
 .each-search-date span {
   display: flex;
@@ -606,6 +621,18 @@ button::-moz-focus-inner {
   position: relative;
   right: 9%;
 }
+.each-search-date span i{
+    font-size: 1.1em;
+    padding-left:30px;
+    line-height: 1.5;
+}
+.each-search-date span i:hover{
+    font-size: 1.1em;
+    color:rgb(65, 70, 70);
+    cursor: pointer;
+   
+}
+
 .input-calendar {
   display: flex;
   align-content: center;
@@ -734,8 +761,9 @@ button::-moz-focus-inner {
   height:100%;
   display: flex;
 }
-.pages-dynamic:nth-of-type(2) button {
-  padding: 1px 5px 1px 5px;
+.pages-dynamic button {
+  padding: 2px 6px 2px 6px;
+  font-size:1.5em;
 }
 
 /* Calendar */

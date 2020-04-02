@@ -84,7 +84,8 @@ export default {
 <style scoped>
 .chartVue {
   text-align: right;
-  font-size: 0.85em;
+  font-size: 0.78em;
+  word-wrap: break-word;
   width: 100%;
   height: 500px;
 }

@@ -3,14 +3,13 @@
         <h2>{{singleSaving.sav_description}}</h2>
         <div class="data">
             <p>Cilj: {{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</p>
-            <p>Do sad uplaćeno: {{singleSaving.sav_amount_accumulated}}{{" " + singleSaving.acc_type_name}}</p>
-            <p>Preostala količina novca za uplatu: {{singleSaving.leftover_amount}}{{" " + singleSaving.acc_type_name}}</p>
             <p>Mesečna rata za preostali period: {{singleSaving.sav_month_rate}}{{" " + singleSaving.acc_type_name}}</p>
         </div>
         <p>Odaberite račun sa kojeg uplaćujete:</p>
         
         <div class="accounts" v-if = "accounts.length>1">
-            <div class="each-account" 
+            <div class = "each-account" 
+                :class="{'each-account-selected' : account.selected}" 
                 v-for = "account in accounts" 
                 :key="account.acc_id"
                 @click = "setAcc(account)"
@@ -25,12 +24,12 @@
                 <p>{{accounts[0].acc_amount + " " + accounts[0].acc_type_name}}</p>
             </div>
         </div>
-        <p>Izvrši uplatu sa računa: <strong>{{acc_name}}</strong></p>
-            
+        <p :class = "{'amount': acc_id!=='', 'amount-invi': acc_id===''}">Raspoloživa sredstva: <span>{{acc_amount +" "+ singleSaving.acc_type_name}}</span></p>
+    
         <input type="text" v-model = "paymentValue" placeholder="Iznos uplate">
         <button @click = "makePayment">Uplati</button>
 
-        <p class = "error">{{error}}</p>
+        <p :class = "{'error': error, 'error-invi': !error}">{{error? error: 'fill'}}</p>
     </div>
 </template>
 
@@ -43,6 +42,7 @@ export default {
             accounts: [],
             acc_id: '',
             acc_name: '',
+            acc_amount: '',
             error: '',
             paymentValue: ''
         }
@@ -63,9 +63,15 @@ export default {
             axios.post(`http://053n122.mars-e1.mars-hosting.com/api/get/getAccounts/${this.singleSaving.acc_type_name.toLowerCase()}`, {sid: localStorage.getItem('sid')})
             .then(r=>{
                 this.accounts = r.data.data;
+
                 if (this.accounts.length == 1){
                     this.acc_id = this.accounts[0].acc_id;
                     this.acc_name = this.accounts[0].acc_name;
+                    this.accounts[0].selected = true;
+                }else{
+                    for (let i in this.accounts){
+                        this.accounts[i].selected = false;
+                    }
                 }
             }) 
         },
@@ -73,13 +79,21 @@ export default {
             this.acc_id = account.acc_id;
             this.acc_name = account.acc_name;
             this.error = '';
+            this.acc_amount = account.acc_amount;
+            for (let i in this.accounts){
+                if(this.accounts[i].acc_id === account.acc_id){
+                    this.accounts[i].selected = true;
+                }else{
+                   this.accounts[i].selected = false; 
+                }
+            }
         },
         makePayment(){
             if(this.acc_id == ""){
                 this.error = "Izaberite račun s kojeg ćete da uplatite na štednju.";
             }else if(isNaN(Number(this.paymentValue))){
                 this.error = "";
-                this.error = "Količina uplate mora biti broj.";
+                this.error = "Količina uplate mora biti broj i bez razmaka u zapisu.";
             }else if(this.paymentValue <= 0){
                 this.error = "";
                 this.error = "Količina uplate mora biti pozitivan broj i veći od 0.";
@@ -146,49 +160,158 @@ export default {
         100%{background-color: rgb(234, 236, 236)}
     }
     button{
-        border-radius: 13px;
-        background-color: white;
-        border: none;
-        font-family: "Teko";
-        font-size: 1em;
-        width: 30%;
-        margin-top: 5%;
-        animation-name: button-rev;
-        animation-duration: 0.6s;
-        animation-fill-mode: forwards;
+        transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+        transition: box-shadow, transform, color;
+        transition-duration: 0.2s, 0.2s, 0.2s;
+        transition-timing-function: ease, ease, ease;
+        transition-delay: 0s, 0s, 0s;
+
+        font-family: 'Teko', sans-serif;
+        cursor: pointer;
+        font-size: 1.2em;
+        font-weight: 500;
+        margin: 0.6%;
+        width: 18%;
+        background-color: rgb(0, 0, 0);
+        border-radius: 10px;
+        border: 0;
+        box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+            0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+            0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+            0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+        background-image: linear-gradient(
+            -45deg,
+            rgb(131, 131, 131),
+            rgb(34, 34, 34)
+        );
+        color: #e6eaef;
     }
     button:hover, button:focus{
-        cursor: pointer;
-        outline: none;
-        animation-name: button;
-        animation-duration: 0.6s;
-        animation-fill-mode: forwards;
+        /*  box-shadow: 0px 2px 8px 2px #888888; */
+        font-size: 1.2em;
+        /* text-shadow: 2.9px 2.95px 2.95px #000000;*/
+
+        box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+            0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+            0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
     }
     button::-moz-focus-inner {
         border: 0;
     }
+    button:active {
+        box-shadow: 0px 1px 3px 1px #888888;
+        font-size: 1.2em;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+
+        box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+            0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+            0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+        transition: 0s;
+        color: rgba(18, 104, 117, 0.616);
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
     .accounts{
         width: 90%;
         display: flex;
-        justify-content: space-around;
+        flex-wrap: wrap;
+        justify-content: center;
     }
     .each-account{
-        background-color: #17a2b8;
-        color: white;
-        font-size: 0.8em;
-        width: 20%;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        justify-content: space-between;
+        transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+        transition: box-shadow, transform, color;
+        transition-duration: 0.2s, 0.2s, 0.2s;
+        transition-timing-function: ease, ease, ease;
+        transition-delay: 0s, 0s, 0s;
+
+        cursor: pointer;
+        box-shadow: 0px 1px 1px 1px #888888;
+        
+        border-radius: 20px;
+
+        background-color: rgba(0, 0, 0, 0.5);
+        background: #117a8a ;
+        box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+            0 5px 5px -1px rgba(0, 0, 0, 0.644), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+            0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+            0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+            background-image: linear-gradient(
+            -45deg  #117a8a,
+            #f8f8f8
+        ); 
+        box-sizing: border-box;
+        padding: 1%;
+        color: #e6eaef;
+        margin: 1%;
     }
     .each-account:hover{
-        cursor: pointer;
+        box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+            0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+            0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+        text-shadow: 2.9px 2.95px 2.95px black;
+    }
+    .each-account:active{
+        box-shadow: 0px 1px 3px 1px #888888;
+        box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+            0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+            0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+    }
+    .each-account-selected{
+        background-color: rgba(0, 0, 0, 0.5);
+        background-image: linear-gradient(
+            -45deg rgb(78, 75, 75),
+            rgba(36, 35, 35, 0.5)
+        )!important;
+        
+        box-shadow: 0px 1px 3px 1px #888888;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+
+        box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+            0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+            0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+        transition: 0s;
+        color: rgba(15, 201, 230, 0.911);
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    .each-account-selected:hover{
+        background-color: rgba(0, 0, 0, 0.5);
+        background-image: linear-gradient(
+            -45deg rgb(78, 75, 75),
+            rgba(36, 35, 35, 0.5)
+        )!important;
+        
+        box-shadow: 0px 1px 3px 1px #888888;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+
+        box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+            0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+            0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+        transition: 0s;
+        color: rgba(15, 201, 230, 0.911);
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
     }
     .each-account p{
-        margin: 0;
+        text-align: center;
     }
     .error{
         color: #e80000;
+    }
+    .error-invi{
+        visibility: hidden;
+        color: #e80000;
+    }
+    .amount{
+        margin: 5% 0;
+        font-size: 1.3em;
+    }
+    .amount-invi{
+        margin: 5% 0;
+        font-size: 1.3em;
+        visibility: hidden;
+    }
+    span{
+        font-size:1.2em;
     }
 </style>

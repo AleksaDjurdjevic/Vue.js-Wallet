@@ -66,6 +66,9 @@ export default {
             }else if(this.newSavAmount <= 0){
                 this.error = "Željena količina mora biti pozitivan broj i veći od 0.";
 
+            }else if(this.type ===''){
+                this.error = "Unesite tip štednje.";
+
             }else{
                 axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/addSavings', {
                     sid: localStorage.getItem('sid'),

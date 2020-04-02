@@ -470,6 +470,7 @@ button:hover{
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 5px solid white;
+  margin-left: 2%;
 }
 .arrow-up{
   width: 0;
@@ -477,6 +478,7 @@ button:hover{
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-bottom: 5px solid white;
+  margin-left: 2%;
 }
 /* Table */
 .table-wrap{
@@ -490,7 +492,7 @@ button:hover{
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 78vh;
+  min-height: 79vh;
   background-color: rgb(234, 236, 236);
 }
 .row-other{
@@ -518,9 +520,16 @@ button:hover{
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   border-bottom:1px solid gray;
+}
+.row-first .cell-first:nth-child(1), .row-other .cell:nth-child(1),
+.row-first .cell-first:nth-child(3), .row-other .cell:nth-child(3){
+  width:50%;
+}
+.row-first .cell-first:nth-child(5), .row-other .cell:nth-child(5){
+  width: 70%;
 }
 .cell-first:hover{
   cursor: pointer;
@@ -533,7 +542,7 @@ button:hover{
 }
 .table-shade{
   width: 100%;
-  height: 700px;
+  height: 100%;
   z-index: 100;
   background-color: rgb(196, 188, 188);
   position: absolute;
@@ -561,6 +570,7 @@ button:hover{
 .pagination-wrap{
   width: 100%;
   min-height: 6vh;
+  padding-bottom: 1vh;
   display:flex;
   justify-content: space-evenly;
 }

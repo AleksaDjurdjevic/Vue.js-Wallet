@@ -18,71 +18,73 @@
 
     <!-- Right side -->
     <div class="main">
-      <p class= "message">{{error}}</p>
-      <div class="search-date">
-        <div class="each-search-date">
-          <span>Od datuma</span>
-          <div class="input-calendar">
-            <input type="text" readonly v-model = "fromDate">
-            <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('from')"></i>
-          </div>
-        </div>
-        <div class="each-search-date">
-          <span>Do datuma</span>
-          <div class="input-calendar">
-            <input type="text" readonly v-model = "toDate">
-            <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('to')"></i>
-          </div>
-        </div>
-      </div>
       <!-- Table -->
-      <div class="main-table">
-        <!-- Calendar -->
-        <div class="calendar-wrapper" v-if="showingCalendar">
-          <calendar
-            @selectDate = 'setDate'
-            @showCallEmit = "showingCalendar = false"
-          />
-          <button @click = "clearDate">Obrišite unet datum</button>
-        </div>
-        <!-- First row -->
-        <div class="row-first">
-          <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('ac.acc_name')"><div>Naziv Računa</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_type_name')"><div>Tip transakcije</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_amount')"><div>Iznos</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('cat_name')"><div>Kategorija</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_description')"><div>Opis</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-        </div>
-        <!-- Data -->
-        <div class="table-data">
-          <div class="row-other" v-for = "tr in transactions" :key = "tr.tra_id">
-            <div class= "cell">{{tr.tra_date}}</div>
-            <div class= "cell">{{tr.acc_name}}</div>
-            <div class= "cell">{{tr.tra_type_name}}</div>
-            <div class= "cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
-            <div class= "cell">{{tr.cat_name}}</div>
-            <div class= "cell">{{tr.tra_description}}</div>
+      <div class="table-wrap">
+        <p class= "message">{{error}}</p>
+        <div class="search-date">
+          <div class="each-search-date">
+            <span>Od datuma</span>
+            <div class="input-calendar">
+              <input type="text" readonly v-model = "fromDate">
+              <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('from')"></i>
+            </div>
+          </div>
+          <div class="each-search-date">
+            <span>Do datuma</span>
+            <div class="input-calendar">
+              <input type="text" readonly v-model = "toDate">
+              <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('to')"></i>
+            </div>
           </div>
         </div>
-        <div class = "table-shade" v-if = "showingTableShade"></div>
-        <p class = "table-shade-p" v-if = "showingTableShade">Nemate transakcije za prikaz</p>
-        <!-- Pagination -->
-        <div class="pagination-wrap" v-if = "allPagesArray.length > 1">
-          <div class="pages-dynamic">
-            <button class="page-btn" @click= "setPage(allPagesArray[0])">Prva strana</button>
-            <button class="page-btn" @click= "setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))">Prethodna strana</button>
+        <div class="main-table">
+          <!-- Calendar -->
+          <div class="calendar-wrapper" v-if="showingCalendar">
+            <calendar
+              @selectDate = 'setDate'
+              @showCallEmit = "showingCalendar = false"
+            />
+            <button @click = "clearDate">Obrišite unet datum</button>
           </div>
+          <!-- First row -->
+          <div class="row-first">
+            <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+            <div class= "cell-first" @click = "transactionSortBy('ac.acc_name')"><div>Naziv Računa</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+            <div class= "cell-first" @click = "transactionSortBy('tra_type_name')"><div>Tip transakcije</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+            <div class= "cell-first" @click = "transactionSortBy('tra_amount')"><div>Iznos</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+            <div class= "cell-first" @click = "transactionSortBy('cat_name')"><div>Kategorija</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+            <div class= "cell-first" @click = "transactionSortBy('tra_description')"><div>Opis</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          </div>
+          <!-- Data -->
+          <div class="table-data">
+            <div class="row-other" v-for = "tr in transactions" :key = "tr.tra_id">
+              <div class= "cell">{{tr.tra_date}}</div>
+              <div class= "cell">{{tr.acc_name}}</div>
+              <div class= "cell">{{tr.tra_type_name}}</div>
+              <div class= "cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
+              <div class= "cell">{{tr.cat_name}}</div>
+              <div class= "cell">{{tr.tra_description}}</div>
+            </div>
+          </div>
+          <div class = "table-shade" v-if = "showingTableShade"></div>
+          <p class = "table-shade-p" v-if = "showingTableShade">Nemate transakcije za prikaz</p>
+          <!-- Pagination -->
+          <div class="pagination-wrap" v-if = "allPagesArray.length > 1">
+            <div class="pages-dynamic">
+              <button class="page-btn" @click= "setPage(allPagesArray[0])">Prva strana</button>
+              <button class="page-btn" @click= "setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))">Prethodna strana</button>
+            </div>
 
-          <div class="pages-dynamic">
-            <button v-for = "page in displayingPages" :key="page.page" @click= "setPage(page)" :class = "{selected: page.selected}">
-              {{page.page}}
-            </button>
-          </div>
+            <div class="pages-dynamic">
+              <button v-for = "page in displayingPages" :key="page.page" @click= "setPage(page)" :class = "{selected: page.selected}">
+                {{page.page}}
+              </button>
+            </div>
 
-          <div class="pages-dynamic">
-            <button class="page-btn" @click= "setPage(validateDisplayingPages('next', allPagesArray[currentPage]))">Sledeća strana</button>
-            <button class="page-btn" @click= "setPage(allPagesArray[allPagesArray.length-1])">Poslednja strana</button>
+            <div class="pages-dynamic">
+              <button class="page-btn" @click= "setPage(validateDisplayingPages('next', allPagesArray[currentPage]))">Sledeća strana</button>
+              <button class="page-btn" @click= "setPage(allPagesArray[allPagesArray.length-1])">Poslednja strana</button>
+            </div>
           </div>
         </div>
       </div>
@@ -477,6 +479,10 @@ button:hover{
   border-bottom: 5px solid white;
 }
 /* Table */
+.table-wrap{
+  position: sticky;
+  top:10%;
+}
 .main-table {
   position: relative;
   overflow: hidden;
@@ -484,7 +490,7 @@ button:hover{
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 700px;
+  min-height: 78vh;
   background-color: rgb(234, 236, 236);
 }
 .row-other{
@@ -498,10 +504,10 @@ button:hover{
   flex-direction: row;
   width: 100%;
   background-color: #17a2b8 !important;
-  height: 7%;
+  min-height: 6vh;
 }
 .table-data{
-  height: 86%;
+  min-height: 66vh;
 }
 .row-other:hover{
   animation-name: color-change-row;
@@ -554,7 +560,7 @@ button:hover{
 /* Pagination */
 .pagination-wrap{
   width: 100%;
-  height: 7%;
+  min-height: 6vh;
   display:flex;
   justify-content: space-evenly;
 }

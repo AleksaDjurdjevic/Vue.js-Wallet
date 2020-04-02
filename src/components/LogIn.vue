@@ -1,5 +1,5 @@
 <template>
-<div class="wrapper" >
+<div class="wrapper" v-on:keyup.enter="login">
   <div class="login" >
     <div class="bla">
       <div v-if="!$store.state.isLoggedIn">

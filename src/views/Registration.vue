@@ -1,5 +1,5 @@
 <template>
-  <div class="registration">
+  <div class="registration" v-on:keyup.enter="registration" >
     <!-- v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )" TREBA U BLA DA SE UBACI -->
     <div class="bla" v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )">
       <h1>Registracija</h1> 

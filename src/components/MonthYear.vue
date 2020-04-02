@@ -182,11 +182,24 @@ export default {
     0 8px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
 }
-.chUP:first-of-type{
- box-shadow: 0px 1px 0 0 rgba(24, 68, 75, 0.377),
-     0 3px 1px -1px rgba(0, 0, 0, 0.514), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
-    0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+
+.chUP{
+  box-shadow: 0px 2px 0 0 rgba(24, 68, 75, 0.616),
+    0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px -10px rgba(0, 0, 0, 0.3),
+    2px 10px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+
+  background-image: linear-gradient(
+    -45deg,
+    rgba(0, 0, 0, 0.5),
+    rgb(78, 75, 75)
+  );
+}
+.chUP:first-of-type{
+ box-shadow: 0px 2px 0 0 rgba(24, 68, 75, 0.377),
+     0 0px 1px -1px rgba(0, 0, 0, 0.6), -1px 4px 4px -10px rgba(0, 0, 0, 0.3),
+     2px 10px 2px 1px rgba(0, 0, 0, 0) inset,
+    20px 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
   background-image: linear-gradient(
     -45deg,
     rgba(0, 0, 0, 0.5),
@@ -196,9 +209,9 @@ export default {
 .chUP:hover{
     
   text-shadow: 2px 2px 2px #000000;
-  box-shadow: 0px 1px 0 0 #126875, 0 7px 5px -1px rgba(0, 0, 0, 0.3),
-  3px  2px 2px 2px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
-    0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+  box-shadow: 0px 2px 0px 1px #126875, 1px 3px 2px -1px rgba(0, 0, 0, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px 2px rgba(255, 255, 255, 0.14) inset;
 
 }
 .ch:active {

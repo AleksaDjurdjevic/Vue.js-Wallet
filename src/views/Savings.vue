@@ -46,24 +46,19 @@
                     <p :class = "{hover: saving.hover}" @mouseover="displaySavingFullName(index, true)" @mouseleave="displaySavingFullName(index, false)">{{setProperSavingsNameLength(saving.sav_description, saving.hover)}}</p>
                 </div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
-                    <div class="saving-status"><p>Status :</p></div>
+                    <div class="saving-status"><p>Status : {{saving.status}}</p></div>
                     <div class="data">
                         <div class="data-row">
                             <span class='span-details'>Cilj: {{saving.sav_amount + " " + saving.acc_type_name}}</span>
-                            <span class='span-details'>Do sad uplaćeno: {{saving.sav_amount_accumulated}}{{" " + saving.acc_type_name}}</span>
                         </div>
                         <div class="data-row">
-                            <span class='span-details'>Period štednje: {{saving.sav_period +" "+ setProperWord(saving.sav_period)}} </span>
-                            <span class='span-details'>Preostala količina novca za uplatu: {{saving.leftover_amount + " " + saving.acc_type_name}}</span>
-                        </div>
-                        <div class="data-row">
-                            <span class='span-details'>Ukupan broj uplata: {{saving.number_of_payments}}</span>
-                            <span class='span-details'>Mesečni doprinos: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}}{{" " + saving.acc_type_name}}</span>
+                            <span class='span-details'>Mesečna rata: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}}{{" " + saving.acc_type_name}}</span>
                         </div>
                     </div>
                     <div class="buttons">
                         <button @click = "preparePayment(saving.sav_id)">Uplati na štednju</button>
                         <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
+                        <button @click = "deleteSavings(saving.sav_id)">Detalji</button>
                         <button @click = "deleteSavings(saving.sav_id)">Obriši štednju</button>
                     </div>
                 </div>
@@ -160,6 +155,7 @@ export default {
                     this.savings = r.data.all_savings;
                     for(let i=0; i<this.savings.length; i++){
                         this.savings[i].hover = false;
+                        this.savings[i].status = 'U toku';
                     }
                 }
                 
@@ -168,14 +164,20 @@ export default {
         calculateRate(leftover_amount, start, period){
             let currentDate = new Date();
             let startParts = start.split('-');
+            let currentDay = currentDate.getDate();
+
+            
             let startMonth = parseInt(startParts[1]);
             let monthsLeft = (currentDate.getMonth() + 1) - startMonth;
+
+            currentDay>parseInt(startParts[2]) ?  monthsLeft = (currentDate.getMonth() + 1) - startMonth: monthsLeft = (currentDate.getMonth() + 1) - startMonth - 1
             if (monthsLeft<0){
-                monthsLeft += 12;
+                monthsLeft += 12 * Math.ceil(period/12);
             }
-            let leftoverMonths = period - monthsLeft;
             
+            let leftoverMonths = period - monthsLeft;
             return Math.ceil(leftover_amount / leftoverMonths);
+            
 
         },
         preparePayment(sav_id){
@@ -191,12 +193,8 @@ export default {
             this.viewingPayments = true;
         },
         setClassForSavings(i){
-            if(i<5){
-                return i;
-            }else{
-                let devider = Math.floor(i/4);
-                return i-4*devider;
-            }
+            let devider = Math.floor(i/4);
+            return i-4*devider+1;
         },
         setProperWord(p){
             p = p.toString().split("");
@@ -391,16 +389,25 @@ p{
 }
 .data{
     position: absolute;
-    top: 5%;
+    top: 12%;
     right: 0;
     color: white;
-    width: 65%;
+    width: 72%;
     height: 50%;
     line-height: 75%;
-}
-.data div{
     display: flex;
-    justify-content: space-around;
+    flex-direction: row;
+}
+.data-row{
+    display: flex;
+    align-items: center;
+    font-size: 2.2em;
+}
+.data-row:nth-child(1){
+    width: 40%
+}
+.data-row:nth-child(2){
+    width: 60%
 }
 /* Buttons inside a saving */
 .buttons{
@@ -425,6 +432,7 @@ p{
     overflow: hidden;
     border-radius: 10px;
 
+    min-width: 12%;
     box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
         0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
         0 1px 2px 1px rgba(0, 0, 0, 0) inset,

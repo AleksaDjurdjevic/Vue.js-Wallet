@@ -240,7 +240,7 @@ h6 {
   margin: 0;
 }
 select {
-  font-family: "Teko", sans-serif !important;
+  font-family: "Oswald", sans-serif !important;
   font-size:1.1em;
   box-sizing: border-box;
   text-align:center;

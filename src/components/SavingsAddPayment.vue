@@ -166,7 +166,7 @@ export default {
         transition-timing-function: ease, ease, ease;
         transition-delay: 0s, 0s, 0s;
 
-        font-family: 'Teko', sans-serif;
+        font-family: 'Oswald', sans-serif;
         cursor: pointer;
         font-size: 1.2em;
         font-weight: 500;

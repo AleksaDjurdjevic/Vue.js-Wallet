@@ -116,7 +116,7 @@ export default {
         border-radius: 13px;
         background-color: white;
         border: none;
-        font-family: "Teko";
+        font-family: "Oswald";
         font-size: 1em;
         width: 30%;
         margin-top: 5%;

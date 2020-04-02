@@ -532,7 +532,7 @@ button::-moz-focus-inner {
   border-radius: 13px;
   background-color: white;
   border: none;
-  font-family: "Teko";
+  font-family: "Oswald"; 
   font-size: 1em;
   line-height: 1.2;
 

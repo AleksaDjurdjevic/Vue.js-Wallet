@@ -21,7 +21,7 @@ export default {
 
       defParamsForChart: [
         {
-          tip_transakcije: "Raspoloživo",
+          tip_transakcije: "Dostupno",
           iznos: 195550
         },
         {
@@ -123,5 +123,7 @@ export default {
 .chartVue {
   width: 100%;
   height: 350px;
+  font-size: 0.8em;
+  word-wrap: break-word;
 }
 </style>

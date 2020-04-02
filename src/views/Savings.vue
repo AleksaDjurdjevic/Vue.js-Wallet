@@ -429,7 +429,7 @@ p{
     transition-duration: 0.2s, 0.2s, 0.2s;
     transition-timing-function: ease, ease, ease;
     transition-delay: 0s, 0s, 0s;
-    font-family: 'Teko', sans-serif;
+    font-family: 'Oswald', sans-serif;
 
     cursor: pointer;
     font-size: 1em;
@@ -477,7 +477,7 @@ button::-moz-focus-inner {
 button{
     border-radius: 13px;
     border: none;
-    font-family: "Teko";
+    font-family: "Oswald";
     font-size: 1em;
 }
 /* aside button style */
@@ -487,7 +487,7 @@ button{
     transition-duration: 0.2s, 0.2s, 0.2s;
     transition-timing-function: ease, ease, ease;
     transition-delay: 0s, 0s, 0s;
-    font-family: 'Teko', sans-serif;
+    font-family: 'Oswald', sans-serif;
     font-size: 1.2em;
     cursor: pointer;
 

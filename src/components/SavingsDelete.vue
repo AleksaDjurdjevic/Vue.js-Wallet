@@ -70,7 +70,7 @@ export default {
         background-color: lightgray;
         border-radius: 10px;
         border: none;
-        font-family: "Teko";
+        font-family: "Oswald";
         font-size: 1em;
         width: 30%;
     }

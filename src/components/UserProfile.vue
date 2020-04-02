@@ -304,7 +304,7 @@ button{
   transition-duration: 0.2s, 0.2s, 0.2s;
   transition-timing-function: ease, ease, ease;
   transition-delay: 0s, 0s, 0s;
-  font-family: 'Teko', sans-serif;
+  font-family: 'Oswald', sans-serif;
 
   cursor: pointer;
   font-size: 1.2em;

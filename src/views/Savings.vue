@@ -46,13 +46,13 @@
                     <p :class = "{hover: saving.hover}" @mouseover="displaySavingFullName(index, true)" @mouseleave="displaySavingFullName(index, false)">{{setProperSavingsNameLength(saving.sav_description, saving.hover)}}</p>
                 </div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
-                    <div class="saving-status"><p>Status : {{saving.status}}</p></div>
+                    <div class="saving-status"><p>Status : {{saving.sav_end ? 'Kompletirano' : 'U toku'}}</p></div>
                     <div class="data">
                         <div class="data-row">
-                            <span class='span-details'>Cilj: {{saving.sav_amount + " " + saving.acc_type_name}}</span>
+                            <span class='span-details'>Cilj: <span>{{saving.sav_amount + " " + saving.acc_type_name}}</span></span>
                         </div>
                         <div class="data-row">
-                            <span class='span-details'>Mesečna rata: {{saving.sav_month_rate = calculateRate(saving.leftover_amount, saving.sav_start, saving.sav_period)}}{{" " + saving.acc_type_name}}</span>
+                            <span class='span-details'>Mesečna rata: <span>{{saving.sav_month_rate_payed+ " " + saving.acc_type_name}}</span></span>
                         </div>
                     </div>
                     <div class="buttons">
@@ -154,31 +154,34 @@ export default {
                 if(r.data.all_savings !== undefined){
                     this.savings = r.data.all_savings;
                     for(let i=0; i<this.savings.length; i++){
+                        this.savings[i].sav_month_rate = this.calculateRate(this.savings[i].leftover_amount, this.savings[i].sav_start, this.savings[i].sav_period);
                         this.savings[i].hover = false;
-                        this.savings[i].status = 'U toku';
+                        this.savings[i].original_month_rate = Math.ceil(this.savings[i].sav_amount / this.savings[i].sav_period);
+                        this.savings[i].sav_months_in = this.getMonthsIn(this.savings[i].sav_start, this.savings[i].sav_period) + 1;
+                        this.savings[i].sav_month_rate_payed = this.savings[i].original_month_rate*this.savings[i].sav_months_in-this.savings[i].sav_amount_accumulated;
                     }
                 }
-                
             });
         },
         calculateRate(leftover_amount, start, period){
+            let monthsIn = this.getMonthsIn(start, period);
+            let leftoverMonths = period - monthsIn;
+            return Math.ceil(leftover_amount / leftoverMonths);
+        },
+        getMonthsIn(start, period){
             let currentDate = new Date();
             let startParts = start.split('-');
             let currentDay = currentDate.getDate();
 
             
             let startMonth = parseInt(startParts[1]);
-            let monthsLeft = (currentDate.getMonth() + 1) - startMonth;
+            let monthsIn = (currentDate.getMonth() + 1) - startMonth;
 
-            currentDay>parseInt(startParts[2]) ?  monthsLeft = (currentDate.getMonth() + 1) - startMonth: monthsLeft = (currentDate.getMonth() + 1) - startMonth - 1
-            if (monthsLeft<0){
-                monthsLeft += 12 * Math.ceil(period/12);
+            currentDay>parseInt(startParts[2]) ?  monthsIn = (currentDate.getMonth() + 1) - startMonth: monthsIn = (currentDate.getMonth() + 1) - startMonth - 1
+            if (monthsIn<0){
+                monthsIn += 12 * Math.ceil(period/12);
             }
-            
-            let leftoverMonths = period - monthsLeft;
-            return Math.ceil(leftover_amount / leftoverMonths);
-            
-
+            return monthsIn;
         },
         preparePayment(sav_id){
             this.sav_id = sav_id;
@@ -402,6 +405,9 @@ p{
     display: flex;
     align-items: center;
     font-size: 2.2em;
+}
+.data-row span span{
+    font-size: 1.2em;
 }
 .data-row:nth-child(1){
     width: 40%

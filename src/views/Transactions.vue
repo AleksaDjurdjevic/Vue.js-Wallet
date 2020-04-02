@@ -557,7 +557,7 @@ button::-moz-focus-inner {
 
   color: #e6eaef;
 }
-.pages-dynamic button:active {
+.pages-dynamic button:hover {
   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;

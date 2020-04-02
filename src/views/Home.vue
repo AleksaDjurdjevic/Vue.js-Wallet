@@ -1005,6 +1005,9 @@ export default {
   background-color: rgb(0, 0, 0);
   overflow: hidden;
   border-radius: 10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 
   box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
     0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
@@ -1020,7 +1023,7 @@ export default {
 .bill p {
   margin: 0 auto;
   box-sizing: border-box;
-  line-height: 2.1;
+ /* line-height: 2.1; */
   font-weight: 500;
 }
 .create {
@@ -1148,7 +1151,7 @@ export default {
   background-color: #bebebe79;
 }
 .showGraf {
-  font-size: initial;
+  font-size: 0.9;
   box-sizing: border-box;
   width: 33.3%;
   display: flex;
@@ -1207,7 +1210,7 @@ i:hover,
   width: 60% !important;
   background-color: rgb(255, 255, 255);
   border-color: rgb(196, 188, 188);
-  font-family: "Teko", sans-serif !important;
+  font-family: "Oswald", sans-serif !important; 
   font-size: initial;
   box-shadow: 0px 1px 1px 1px #888888;
 }

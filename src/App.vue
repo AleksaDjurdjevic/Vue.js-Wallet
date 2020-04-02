@@ -181,17 +181,18 @@ export default {
 <style >
 
 .app{
-   font-family: 'Teko', sans-serif;
-   font-size:1.2em;
+  
+ /* font-size:1.2em; */
+   font-family: 'Oswald', sans-serif;
    
 }
 body {
   padding: 0;
   margin: 0;
  
-   font-family: 'Teko', sans-serif;
+  
   margin: 0; 
-  font-family: 'Teko', sans-serif;
+  font-family: 'Oswald', sans-serif; 
   font-size:1.2em;
 }
 
@@ -381,7 +382,7 @@ article p {
   text-decoration: none;
   text-transform: uppercase;
   /* margin: 0 10px; */
-  font-family: "Teko", sans-serif;
+  font-family: "Oswald", sans-serif; 
 }
 .nav a:active, .nav a:focus {
   outline: none;
@@ -491,7 +492,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Teko", sans-serif;
+  font-family: "Oswald", sans-serif; 
 }
 
 /********STILIZACIJA DROPDOWN BUTTON-A******/
@@ -505,7 +506,7 @@ h6 {
   text-decoration: none;
   text-transform: uppercase;
   margin: 0 10px;
-  font-family: "Teko", sans-serif;
+  font-family: "Oswald", sans-serif;
 }
 
 .dropdown {

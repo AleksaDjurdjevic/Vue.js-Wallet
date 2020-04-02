@@ -3,13 +3,21 @@
     <!-- Left side -->
     <div class="aside">
       <!-- Accounts -->
-      <p class = "heading">Kliknite na račun kako biste filtrirali transakcije po računu</p>
+      <p class="heading">Kliknite na račun kako biste filtrirali transakcije po računu</p>
       <div class="accounts">
-        <div class = "each-account-placeholder" :class = "{selected: showingAccPlaceholder}" @click = "accountPlaceholder"><p>Pregled sa svih računa</p></div>
-        <div  v-for="account in accounts" class = "each-account"
-          :class = "{selected: account.selected}"
-          :key = "account.acc_id"
-          @click = "getTransactionsByAccount(account.acc_name)"
+        <div
+          class="each-account-placeholder"
+          :class="{selected: showingAccPlaceholder}"
+          @click="accountPlaceholder"
+        >
+          <p>Pregled sa svih računa</p>
+        </div>
+        <div
+          v-for="account in accounts"
+          class="each-account"
+          :class="{selected: account.selected}"
+          :key="account.acc_id"
+          @click="getTransactionsByAccount(account.acc_name)"
         >
           <p>{{account.acc_name}}</p>
         </div>
@@ -18,20 +26,20 @@
 
     <!-- Right side -->
     <div class="main">
-      <p class= "message">{{error}}</p>
+      <p class="message">{{error}}</p>
       <div class="search-date">
         <div class="each-search-date">
           <span>Od datuma</span>
           <div class="input-calendar">
-            <input type="text" readonly v-model = "fromDate">
-            <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('from')"></i>
+            <input type="text" readonly v-model="fromDate" />
+            <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('from')"></i>
           </div>
         </div>
         <div class="each-search-date">
           <span>Do datuma</span>
           <div class="input-calendar">
-            <input type="text" readonly v-model = "toDate">
-            <i class="far fa-calendar-alt fa-2x" @click = "showCalendarFunc('to')"></i>
+            <input type="text" readonly v-model="toDate" />
+            <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('to')"></i>
           </div>
         </div>
       </div>
@@ -39,50 +47,77 @@
       <div class="main-table">
         <!-- Calendar -->
         <div class="calendar-wrapper" v-if="showingCalendar">
-          <calendar
-            @selectDate = 'setDate'
-            @showCallEmit = "showingCalendar = false"
-          />
-          <button @click = "clearDate">Obrišite unet datum</button>
+          <calendar @selectDate="setDate" @showCallEmit="showingCalendar = false" />
+          <button @click="clearDate">Obrišite unet datum</button>
         </div>
         <!-- First row -->
         <div class="row-first">
-          <div class= "cell-first" @click = "transactionSortBy('tra_date')"><div>Datum</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('ac.acc_name')"><div>Naziv Računa</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_type_name')"><div>Tip transakcije</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_amount')"><div>Iznos</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('cat_name')"><div>Kategorija</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
-          <div class= "cell-first" @click = "transactionSortBy('tra_description')"><div>Opis</div> <div :class = "orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div></div>
+          <div class="cell-first" @click="transactionSortBy('tra_date')">
+            <div>Datum</div>
+            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+          </div>
+          <div class="cell-first" @click="transactionSortBy('ac.acc_name')">
+            <div>Naziv Računa</div>
+            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+          </div>
+          <div class="cell-first" @click="transactionSortBy('tra_type_name')">
+            <div>Tip transakcije</div>
+            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+          </div>
+          <div class="cell-first" @click="transactionSortBy('tra_amount')">
+            <div>Iznos</div>
+            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+          </div>
+          <div class="cell-first" @click="transactionSortBy('cat_name')">
+            <div>Kategorija</div>
+            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+          </div>
+          <div class="cell-first" @click="transactionSortBy('tra_description')">
+            <div>Opis</div>
+            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+          </div>
         </div>
         <!-- Data -->
         <div class="table-data">
-          <div class="row-other" v-for = "tr in transactions" :key = "tr.tra_id">
-            <div class= "cell">{{tr.tra_date}}</div>
-            <div class= "cell">{{tr.acc_name}}</div>
-            <div class= "cell">{{tr.tra_type_name}}</div>
-            <div class= "cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
-            <div class= "cell">{{tr.cat_name}}</div>
-            <div class= "cell">{{tr.tra_description}}</div>
+          <div class="row-other" v-for="tr in transactions" :key="tr.tra_id">
+            <div class="cell">{{tr.tra_date}}</div>
+            <div class="cell">{{tr.acc_name}}</div>
+            <div class="cell">{{tr.tra_type_name}}</div>
+            <div class="cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
+            <div class="cell">{{tr.cat_name}}</div>
+            <div class="cell">{{tr.tra_description}}</div>
           </div>
         </div>
-        <div class = "table-shade" v-if = "showingTableShade"></div>
-        <p class = "table-shade-p" v-if = "showingTableShade">Nemate transakcije za prikaz</p>
+        <div class="table-shade" v-if="showingTableShade"></div>
+        <p class="table-shade-p" v-if="showingTableShade">Nemate transakcije za prikaz</p>
         <!-- Pagination -->
-        <div class="pagination-wrap" v-if = "allPagesArray.length > 1">
+        <div class="pagination-wrap" v-if="allPagesArray.length > 1">
           <div class="pages-dynamic">
-            <button class="page-btn" @click= "setPage(allPagesArray[0])">Prva strana</button>
-            <button class="page-btn" @click= "setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))">Prethodna strana</button>
+            <button class="page-btn" @click="setPage(allPagesArray[0])">Prva strana</button>
+            <button
+              class="page-btn"
+              @click="setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))"
+            >Prethodna strana</button>
           </div>
 
           <div class="pages-dynamic">
-            <button v-for = "page in displayingPages" :key="page.page" @click= "setPage(page)" :class = "{selected: page.selected}">
-              {{page.page}}
-            </button>
+            <button
+              v-for="page in displayingPages"
+              :key="page.page"
+              @click="setPage(page)"
+              :class="{selected: page.selected}"
+            >{{ page.page }}</button>
           </div>
 
           <div class="pages-dynamic">
-            <button class="page-btn" @click= "setPage(validateDisplayingPages('next', allPagesArray[currentPage]))">Sledeća strana</button>
-            <button class="page-btn" @click= "setPage(allPagesArray[allPagesArray.length-1])">Poslednja strana</button>
+            <button
+              class="page-btn"
+              @click="setPage(validateDisplayingPages('next', allPagesArray[currentPage]))"
+            >Sledeća strana</button>
+            <button
+              class="page-btn"
+              @click="setPage(allPagesArray[allPagesArray.length-1])"
+            >Poslednja strana</button>
           </div>
         </div>
       </div>
@@ -91,12 +126,12 @@
 </template>
 
 <script>
-import Callendar from '../components/Callendar.vue';
-import axios from 'axios';
-import {mapState} from 'vuex';
+import Callendar from "../components/Callendar.vue";
+import axios from "axios";
+import { mapState } from "vuex";
 export default {
-  data(){
-    return{
+  data() {
+    return {
       showingAccPlaceholder: true,
       showingCalendar: false,
       accounts: [],
@@ -108,113 +143,117 @@ export default {
       fromDate: null,
       toDate: null,
       targetInput: null,
-      sortBy: 'tra_date',
-      orderBy: 'ASC',
+      sortBy: "tra_date",
+      orderBy: "ASC",
       acc_name: null,
       showingTableShade: false,
-      error: '',
+      error: "",
       key: 0
-    }
+    };
   },
-  components : {
-    'calendar': Callendar
+  components: {
+    calendar: Callendar
   },
   computed: {
-      ...mapState(['isLoggedIn'])
+    ...mapState(["isLoggedIn"])
   },
   methods: {
-    getTransactions(){
-      axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
-        sid: localStorage.getItem('sid'),
-        page: this.currentPage,
-        sortBy: this.sortBy,
-        orderBy: this.orderBy,
-        accName: this.acc_name,
-        fromDate: this.fromDate,
-        toDate: this.toDate 
-      })
-      .then(r=>{
-        //Check for empty result set, if its empty - apply table shade
-        if (r.data.transaction.length === 0){
-          this.showingTableShade = true;
-        }else{
-          //If shade is previously applied, remove it
-          if(this.showingTableShade){
-            this.showingTableShade = false;
+    getTransactions() {
+      axios
+        .post(
+          "http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging",
+          {
+            sid: localStorage.getItem("sid"),
+            page: this.currentPage,
+            sortBy: this.sortBy,
+            orderBy: this.orderBy,
+            accName: this.acc_name,
+            fromDate: this.fromDate,
+            toDate: this.toDate
           }
+        )
+        .then(r => {
+          //Check for empty result set, if its empty - apply table shade
+          if (r.data.transaction.length === 0) {
+            this.showingTableShade = true;
+          } else {
+            //If shade is previously applied, remove it
+            if (this.showingTableShade) {
+              this.showingTableShade = false;
+            }
 
-          this.transactions = r.data.transaction;
-          this.numOfPages = Math.ceil(r.data.pages / 20);
-          this.allPagesArray = [];
-          this.displayingPages = [];
-          
-          //Get all pages
-          for(let i = 1; i<=this.numOfPages; i++){
-            //Page one will be selected
-              if(i === 1){
+            this.transactions = r.data.transaction;
+            this.numOfPages = Math.ceil(r.data.pages / 20);
+            this.allPagesArray = [];
+            this.displayingPages = [];
+
+            //Get all pages
+            for (let i = 1; i <= this.numOfPages; i++) {
+              //Page one will be selected
+              if (i === 1) {
                 let pageObj = {
                   page: i,
                   selected: true
                 };
-                 this.allPagesArray.push(pageObj);
-              }else{
+                this.allPagesArray.push(pageObj);
+              } else {
                 let pageObj = {
                   page: i,
                   selected: false
                 };
                 this.allPagesArray.push(pageObj);
               }
+            }
+
+            //Set pages to display
+            if (this.numOfPages > 5) {
+              for (let i = 1; i <= 5; i++) {
+                //Page one will be selected
+                if (i === 1) {
+                  let pageObj = {
+                    page: i,
+                    selected: true
+                  };
+                  this.displayingPages.push(pageObj);
+                } else {
+                  let pageObj = {
+                    page: i,
+                    selected: false
+                  };
+                  this.displayingPages.push(pageObj);
+                }
+              }
+            } else {
+              for (let i = 1; i <= this.numOfPages; i++) {
+                //Page one will be selected
+                if (i === 1) {
+                  let pageObj = {
+                    page: i,
+                    selected: true
+                  };
+                  this.displayingPages.push(pageObj);
+                } else {
+                  let pageObj = {
+                    page: i,
+                    selected: false
+                  };
+                  this.displayingPages.push(pageObj);
+                }
+              }
+            }
           }
-          
-          //Set pages to display
-          if (this.numOfPages > 5){
-            for(let i = 1; i<=5; i++){
-              //Page one will be selected
-              if(i === 1){
-                let pageObj = {
-                  page: i,
-                  selected: true
-                };
-                this.displayingPages.push(pageObj);
-              }else{
-                let pageObj = {
-                  page: i,
-                  selected: false
-                };
-                this.displayingPages.push(pageObj);
-              }  
-            }
-          }else{
-            for(let i = 1; i<=this.numOfPages; i++){
-              //Page one will be selected
-              if(i === 1){
-                let pageObj = {
-                  page: i,
-                  selected: true
-                };
-                this.displayingPages.push(pageObj);
-              }else{
-                let pageObj = {
-                  page: i,
-                  selected: false
-                };
-                this.displayingPages.push(pageObj);
-              }  
-            }
-          } 
-        }
-      });
+        });
     },
-    getTransactionsByAccount(acc_name){
-      if(this.acc_name !== acc_name){
+    getTransactionsByAccount(acc_name) {
+      if (this.acc_name !== acc_name) {
         this.acc_name = acc_name;
         this.currentPage = 1;
         this.getTransactions();
         //apply selected
-        for(let i = 0; i<this.accounts.length; i++){
-          if(this.accounts[i].acc_name === acc_name){
+        for (let i = 0; i < this.accounts.length; i++) {
+          if (this.accounts[i].acc_name === acc_name) {
             this.accounts[i].selected = true;
-          }else{
+          } else {
             this.accounts[i].selected = false;
           }
         }
@@ -222,65 +261,74 @@ export default {
         this.key++;
       }
     },
-    getAccounts(){
-      axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAccounts/all", {sid: localStorage.getItem('sid')})
-      .then(r=>{
-        if(r.data.data !== undefined){
-          this.accounts = r.data.data;
-          for(let i = 0; i<this.accounts.length; i++){
-            this.accounts[i].selected = false;
+    getAccounts() {
+      axios
+        .post(
+          "http://053n122.mars-e1.mars-hosting.com/api/get/getAccounts/all",
+          { sid: localStorage.getItem("sid") }
+        )
+        .then(r => {
+          if (r.data.data !== undefined) {
+            this.accounts = r.data.data;
+            for (let i = 0; i < this.accounts.length; i++) {
+              this.accounts[i].selected = false;
+            }
           }
-        }
-        if(r.data.message !== undefined){
-          this.error= r.data.message;
-          setTimeout(()=>{
-            this.error = '';
-          }, 5000);
-        }
-      });
+          if (r.data.message !== undefined) {
+            this.error = r.data.message;
+            setTimeout(() => {
+              this.error = "";
+            }, 5000);
+          }
+        });
     },
-    getTransactionsByDate(){
-      if (this.fromDate !== null && this.toDate !== null){
+    getTransactionsByDate() {
+      if (this.fromDate !== null && this.toDate !== null) {
         this.getTransactions();
       }
     },
-    transactionSortBy(property){
-      if(this.sortBy === property){
-        if(this.orderBy === 'ASC'){
-          this.orderBy = 'DESC'
-        }else{
-          this.orderBy = 'ASC'
+    transactionSortBy(property) {
+      if (this.sortBy === property) {
+        if (this.orderBy === "ASC") {
+          this.orderBy = "DESC";
+        } else {
+          this.orderBy = "ASC";
         }
-      }else{
+      } else {
         this.sortBy = property;
       }
 
-      axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
-        sid: localStorage.getItem('sid'),
-        page: this.currentPage,
-        sortBy: property,
-        orderBy: this.orderBy,
-        accName: this.acc_name,
-        fromDate: this.fromDate,
-        toDate: this.toDate 
-      }).then(r=>{
-        this.transactions = r.data.transaction;
-      });
+      axios
+        .post(
+          "http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging",
+          {
+            sid: localStorage.getItem("sid"),
+            page: this.currentPage,
+            sortBy: property,
+            orderBy: this.orderBy,
+            accName: this.acc_name,
+            fromDate: this.fromDate,
+            toDate: this.toDate
+          }
+        )
+        .then(r => {
+          this.transactions = r.data.transaction;
+        });
     },
-    showCalendarFunc(x){
+    showCalendarFunc(x) {
       this.showingCalendar = true;
       this.targetInput = x;
     },
-    setDate(date){
+    setDate(date) {
       let dateParts = date.split("-");
-        if (dateParts[2].length === 1){
-            dateParts[2] = "0" + dateParts[2];
-        }
-        date = dateParts.join("-");
+      if (dateParts[2].length === 1) {
+        dateParts[2] = "0" + dateParts[2];
+      }
+      date = dateParts.join("-");
 
-      if (this.targetInput === 'from'){
+      if (this.targetInput === "from") {
         this.fromDate = date;
-      }else if(this.targetInput === 'to'){
+      } else if (this.targetInput === "to") {
         this.toDate = date;
       }
 
@@ -288,188 +336,297 @@ export default {
 
       this.getTransactionsByDate();
     },
-    clearDate(){
-      if (this.targetInput === 'from'){
+    clearDate() {
+      if (this.targetInput === "from") {
         this.fromDate = null;
-      }else if(this.targetInput === 'to'){
+      } else if (this.targetInput === "to") {
         this.toDate = null;
       }
 
       this.showingCalendar = false;
-      if(this.fromDate === null ^ this.toDate === null){
+      if ((this.fromDate === null) ^ (this.toDate === null)) {
         this.getTransactions();
       }
     },
-    accountPlaceholder(){
+    accountPlaceholder() {
       //Applying classes
       this.showingAccPlaceholder = true;
-      for(let i = 0; i<this.accounts.length; i++){
+      for (let i = 0; i < this.accounts.length; i++) {
         this.accounts[i].selected = false;
       }
       //Validation to prevent displaying the same results
-      if(this.acc_name !== null){
+      if (this.acc_name !== null) {
         this.acc_name = null;
         this.currentPage = 1;
         this.getTransactions();
       }
     },
-    validateDisplayingPages(direction, obj){
-      if(obj === undefined){
-        if(direction === 'next'){
-          return this.allPagesArray[this.allPagesArray.length-1];
-        }else if (direction === 'previous'){
+    validateDisplayingPages(direction, obj) {
+      if (obj === undefined) {
+        if (direction === "next") {
+          return this.allPagesArray[this.allPagesArray.length - 1];
+        } else if (direction === "previous") {
           return this.allPagesArray[0];
         }
-      }else{
+      } else {
         return obj;
       }
     },
-    setPage(page){
+    setPage(page) {
       //Validation for "next" and "previous" page buttons
-      if(page.page<1){
-        page.page=1;
-      }else if (page.page>this.allPagesArray.length){
+      if (page.page < 1) {
+        page.page = 1;
+      } else if (page.page > this.allPagesArray.length) {
         page.page = this.allPagesArray.length;
       }
       //If page is changed
-      if(page.page !== this.currentPage){
+      if (page.page !== this.currentPage) {
         //Fetching data
-        axios.post("http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging", {
-          sid: localStorage.getItem('sid'),
-          page: page.page,
-          sortBy: this.sortBy,
-          orderBy: this.orderBy,
-          accName: this.acc_name 
-        }).then(r=>{
-          this.transactions = r.data.transaction;
-
-          //Apply "selected" to page number in pageNav bar, and remove selected from other
-          for(let i = 0; i < this.displayingPages.length; i++){
-            if(this.displayingPages[i].page === page.page){
-              this.displayingPages[i].selected = true;
-            }else{
-              this.displayingPages[i].selected = false;
+        axios
+          .post(
+            "http://053n122.mars-e1.mars-hosting.com/api/get/getAllTransactionsAndSortPaging",
+            {
+              sid: localStorage.getItem("sid"),
+              page: page.page,
+              sortBy: this.sortBy,
+              orderBy: this.orderBy,
+              accName: this.acc_name
             }
-          }
-        });
+          )
+          .then(r => {
+            this.transactions = r.data.transaction;
+
+            //Apply "selected" to page number in pageNav bar, and remove selected from other
+            for (let i = 0; i < this.displayingPages.length; i++) {
+              if (this.displayingPages[i].page === page.page) {
+                this.displayingPages[i].selected = true;
+              } else {
+                this.displayingPages[i].selected = false;
+              }
+            }
+          });
       }
 
       //This part is for rendering the pages navigation bar
       let localallPagesArray = this.allPagesArray; //keyword "this" in filter method doesnt refer to vue properties.
-      
-      this.displayingPages = this.allPagesArray.filter(function(oldPage){
+
+      this.displayingPages = this.allPagesArray.filter(function(oldPage) {
         //if the page clicked is the last page
-        if (page.page === localallPagesArray[localallPagesArray.length-1].page){
-          return oldPage.page == page.page-4 || oldPage.page == page.page-3 || oldPage.page == page.page-2|| oldPage.page == page.page-1 || oldPage.page == page.page;
-        //if the page clicked is one before the last
-        }else if (page.page === localallPagesArray[localallPagesArray.length-2].page){
-          return oldPage.page == page.page-3 || oldPage.page == page.page-2 || oldPage.page == page.page-1|| oldPage.page == page.page || oldPage.page == page.page+1;
-        //if its second page
-        }else if (page.page === localallPagesArray[1].page){
-          return oldPage.page == page.page-1 || oldPage.page == page.page || oldPage.page == page.page+1|| oldPage.page == page.page+2 || oldPage.page == page.page+3;
-        //If its first page
-        }else if (page.page === localallPagesArray[0].page){
-          return oldPage.page == page.page || oldPage.page == page.page+1 || oldPage.page == page.page+2|| oldPage.page == page.page+3 || oldPage.page == page.page+4;
-        //In any other case
-        }else{
-          return oldPage.page == page.page-2 || oldPage.page == page.page-1 || oldPage.page == page.page || oldPage.page == page.page+1 || oldPage.page == page.page+2
+        if (
+          page.page === localallPagesArray[localallPagesArray.length - 1].page
+        ) {
+          return (
+            oldPage.page == page.page - 4 ||
+            oldPage.page == page.page - 3 ||
+            oldPage.page == page.page - 2 ||
+            oldPage.page == page.page - 1 ||
+            oldPage.page == page.page
+          );
+          //if the page clicked is one before the last
+        } else if (
+          page.page === localallPagesArray[localallPagesArray.length - 2].page
+        ) {
+          return (
+            oldPage.page == page.page - 3 ||
+            oldPage.page == page.page - 2 ||
+            oldPage.page == page.page - 1 ||
+            oldPage.page == page.page ||
+            oldPage.page == page.page + 1
+          );
+          //if its second page
+        } else if (page.page === localallPagesArray[1].page) {
+          return (
+            oldPage.page == page.page - 1 ||
+            oldPage.page == page.page ||
+            oldPage.page == page.page + 1 ||
+            oldPage.page == page.page + 2 ||
+            oldPage.page == page.page + 3
+          );
+          //If its first page
+        } else if (page.page === localallPagesArray[0].page) {
+          return (
+            oldPage.page == page.page ||
+            oldPage.page == page.page + 1 ||
+            oldPage.page == page.page + 2 ||
+            oldPage.page == page.page + 3 ||
+            oldPage.page == page.page + 4
+          );
+          //In any other case
+        } else {
+          return (
+            oldPage.page == page.page - 2 ||
+            oldPage.page == page.page - 1 ||
+            oldPage.page == page.page ||
+            oldPage.page == page.page + 1 ||
+            oldPage.page == page.page + 2
+          );
         }
-      })
-      
+      });
+
       this.currentPage = page.page;
     }
   },
-  mounted(){
-      this.getAccounts();
-      this.getTransactions();
-      this.$root.$emit('set-selected', 1);
+  mounted() {
+    this.getAccounts();
+    this.getTransactions();
+    this.$root.$emit("set-selected", 1);
   }
-}
+};
 </script>
 
 <style scoped>
 @keyframes color-change-blue-shade {
-  0% {background-color: #17a2b8;}
-  100% {background-color: rgb(148, 222, 233);}
+  0% {
+    background-color: #17a2b8;
+  }
+  100% {
+    background-color: rgb(148, 222, 233);
+  }
 }
 @keyframes color-change-white-gray {
-  0% {background-color: white;}
-  100% {background-color: rgb(196, 188, 188);}
+  0% {
+    background-color: white;
+  }
+  100% {
+    background-color: rgb(196, 188, 188);
+  }
 }
 @keyframes color-change-row {
-  0% {background-color: rgb(234, 236, 236);}
-  100% {background-color: rgb(196, 188, 188);}
+  0% {
+    background-color: rgb(234, 236, 236);
+  }
+  100% {
+    background-color: rgb(196, 188, 188);
+  }
 }
 @keyframes opacity {
-  0% {opacity: 0;}
-  100% {opacity: 0.9}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.9;
+  }
 }
 /* Main parts */
-.transactions{
-  display:flex;
+.transactions {
+  display: flex;
   margin: 20px auto;
   min-height: 90vh;
   font-size: 0.87em;
 }
-.aside{
-  width:14%;
+.aside {
+  width: 14%;
   margin-left: 2%;
 }
-.main{
-  width:80%;
+.main {
+  width: 80%;
   margin-right: 3%;
-  display:flex;
+  display: flex;
   flex-direction: column;
 }
 button::-moz-focus-inner {
   border: 0;
 }
-button{
+.pages-dynamic button {
+  margin: 0 1%;
   border-radius: 13px;
   background-color: white;
   border: none;
   font-family: "Teko";
   font-size: 1em;
+  line-height: 1.2;
+
+
+  transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+  transition: box-shadow, transform, color;
+  transition-duration: 0.2s, 0.2s, 0.2s;
+  transition-timing-function: ease, ease, ease;
+  transition-delay: 0s, 0s, 0s;
+  border: none;
+  outline: none;
+
+  box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+    0 5px 5px -1px rgba(0, 0, 0, 0.644), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+    0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  background-image: linear-gradient(
+    -45deg,
+    rgb(172, 172, 172),
+    rgb(100, 100, 100)
+  );
+
+  color: #e6eaef;
 }
-button:hover{
+.pages-dynamic button:active {
+  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+    0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+}
+
+.pages-dynamic button:active {
   cursor: pointer;
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(15, 201, 230, 0.911);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.pages-dynamic button.selected,
+.pages-dynamic button.selected:hover {
+  background-color: #17a2b8;
+  color: white;
+  box-shadow: 0px 1px 3px 1px #888888;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(18, 104, 117, 0.616);
+  background-image: linear-gradient(
+    -45deg,
+    rgb(255, 255, 255),
+    rgb(19, 168, 179)
+  );
 }
 /* Inputs for date filter */
-.search-date{
+.search-date {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-.each-search-date{
+.each-search-date {
   margin: 5px 15px;
 }
-.each-search-date span{
+.each-search-date span {
   display: flex;
   justify-content: center;
   position: relative;
   right: 9%;
 }
-.input-calendar{
+.input-calendar {
   display: flex;
   align-content: center;
 }
 .input-calendar input {
   margin-right: 8px;
 }
-.far.fa-calendar-alt{
+.far.fa-calendar-alt {
   cursor: pointer;
   position: relative;
   bottom: 2px;
 }
 /* Arrows on table */
-.arrow-down{
+.arrow-down {
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 5px solid white;
 }
-.arrow-up{
+.arrow-up {
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
@@ -487,45 +644,46 @@ button:hover{
   height: 700px;
   background-color: rgb(234, 236, 236);
 }
-.row-other{
+.row-other {
   display: flex;
   flex-direction: row;
   width: 100%;
   background-color: rgb(234, 236, 236);
 }
-.row-first{
+.row-first {
   display: flex;
   flex-direction: row;
   width: 100%;
   background-color: #17a2b8 !important;
   height: 7%;
 }
-.table-data{
+.table-data {
   height: 86%;
 }
-.row-other:hover{
+.row-other:hover {
   animation-name: color-change-row;
   animation-duration: 0.6s;
   animation-fill-mode: forwards;
 }
-.cell, .cell-first{
+.cell,
+.cell-first {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  border-bottom:1px solid gray;
+  border-bottom: 1px solid gray;
 }
-.cell-first:hover{
+.cell-first:hover {
   cursor: pointer;
   animation-name: color-change-blue-shade;
   animation-duration: 0.6s;
   animation-fill-mode: forwards;
 }
-.row-first .cell:hover{
+.row-first .cell:hover {
   cursor: pointer;
 }
-.table-shade{
+.table-shade {
   width: 100%;
   height: 700px;
   z-index: 100;
@@ -552,36 +710,38 @@ button:hover{
   top: 200px;
 }
 /* Pagination */
-.pagination-wrap{
+.pagination-wrap {
   width: 100%;
   height: 7%;
-  display:flex;
+  display: flex;
   justify-content: space-evenly;
 }
-.pages-dynamic{
+.pages-dynamic {
+  height:100%;
   display: flex;
 }
-.pagination-wrap button.selected{
-  background-color:#17A2B8;
-  color: white;
+.pages-dynamic:nth-of-type(2) button {
+  padding: 1px 5px 1px 5px;
 }
+
 /* Calendar */
-.calendar-wrapper{
+.calendar-wrapper {
   position: absolute;
   top: 0%;
   left: 40%;
-  z-index:105;
+  z-index: 105;
 }
 /* Accounts */
-.aside .heading{
+.aside .heading {
   opacity: 0.6;
   margin: 0;
 }
-.accounts{
+.accounts {
   margin-top: 19px;
-  display:flex;
+  display: flex;
   flex-direction: column;
 }
+
 /*
 .each-account.selected{
 -ms-transform-origin:   background-color: #17A2B8;
@@ -639,7 +799,8 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
 }
 */
 
-.each-account p, .each-account-placeholder p {
+.each-account p,
+.each-account-placeholder p {
   margin: 0;
 }
 /*:checked
@@ -653,29 +814,30 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
 } */
 
 .each-account,
-.each-account-placeholder{
+.each-account-placeholder {
   height: 80px;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   border: 1px solid gray;
   width: 90%;
   margin-right: 10%;
   margin-top: 1.5%;
-  margin-bottom:1.5%;
+  margin-bottom: 1.5%;
   text-align: center;
 
- transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+  border: none;
+  outline: none;
+  transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
   transition: box-shadow, transform, color;
   transition-duration: 0.2s, 0.2s, 0.2s;
   transition-timing-function: ease, ease, ease;
   transition-delay: 0s, 0s, 0s;
 
-
   border-radius: 12px;
 
- background-color: rgb(0, 0, 0);
- box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+  background-color: rgb(0, 0, 0);
+  box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
     0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
     0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
@@ -685,18 +847,17 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
     rgb(34, 34, 34)
   );
   color: #e6eaef;
-text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-} 
-
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
 
 .each-account:hover,
-.each-account-placeholder:hover{
+.each-account-placeholder:hover {
   cursor: pointer;
-/*  animation-name: color-change-white-gray;
+  /*  animation-name: color-change-white-gray;
   animation-duration: 0.6s;
   animation-fill-mode: forwards;
 */
-  
+
   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
@@ -709,8 +870,7 @@ text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }  */
 
 .each-account:active,
-.each-account-placeholder:active{
- 
+.each-account-placeholder:active {
   box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
     0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
     0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
@@ -721,8 +881,8 @@ text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 .each-account.selected,
 .each-account.selected:hover,
 .each-account-placeholder.selected:hover,
-.each-account-placeholder.selected{
- /* background-color: #17A2B8;
+.each-account-placeholder.selected {
+  /* background-color: #17A2B8;
   color: white;
   border: 1px solid gray;
   width: 90%;
@@ -730,52 +890,49 @@ text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   margin-top: 1%;
   */
 
- background-color: rgba(0, 0, 0, 0.5);
-   background-image: linear-gradient(
+  background-color: rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(
     -45deg rgb(78, 75, 75),
     rgba(36, 35, 35, 0.5)
-  )!important;
-  
+  ) !important;
+
   box-shadow: 0px 1px 3px 1px #888888;
   box-shadow: 0 5px #666;
-
 
   box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
     0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
     0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
   transition: 0s;
   color: rgba(15, 201, 230, 0.911);
-
 }
 
-
-.reg-notice{
-    position:fixed;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    z-index: 102;
-    color: white;
-    font-size: 3em;
+.reg-notice {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 102;
+  color: white;
+  font-size: 3em;
 }
-.payment-processing-logged{
-    position: fixed;
-    top:0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    background-color: rgba(0, 0, 0, 0.685);
-    opacity: 0.9;
-    z-index: 10;
-    animation-name: opacity;
-    animation-duration: 0.6s;
-    display: flex;
-    justify-content: center;
-    align-content: center;
+.payment-processing-logged {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.685);
+  opacity: 0.9;
+  z-index: 10;
+  animation-name: opacity;
+  animation-duration: 0.6s;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
-.message{
-  color:#e80000;
+.message {
+  color: #e80000;
   margin: 0 auto;
   font-size: 1.5em;
 }

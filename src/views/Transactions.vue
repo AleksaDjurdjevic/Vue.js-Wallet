@@ -31,14 +31,14 @@
         <div class="each-search-date">
          <span>Od datuma  <i   @click="clearDate2('from')" class="fas fa-times" ></i></span> 
           <div class="input-calendar">
-            <input type="text" placeholder='klikom na kalendar odaberi' readonly v-model="fromDate" />
+            <input type="text" placeholder='Klikom na kalendar odaberi' readonly v-model="fromDate" />
             <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('from')"></i>
           </div>
         </div>
         <div class="each-search-date">
           <span>Do datuma  <i  @click="clearDate2('to')"  class="fas fa-times" ></i></span>
           <div class="input-calendar">
-            <input type="text" placeholder='klikom na kalendar odaberi' readonly v-model="toDate" />
+            <input type="text" placeholder='Klikom na kalendar odaberi' readonly v-model="toDate" />
             <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('to')"></i>
           </div>
         </div>
@@ -641,6 +641,7 @@ button::-moz-focus-inner {
 }
 .input-calendar input {
   margin-right: 8px;
+  width:180px;
 }
 .far.fa-calendar-alt {
   cursor: pointer;

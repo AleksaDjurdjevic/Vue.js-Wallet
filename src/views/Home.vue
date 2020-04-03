@@ -2,7 +2,7 @@
   <div class="dashboard" @dblclick="resetMessage();">
     <!-- DIV CREATE ACCOUNT -->
     <div v-if="createAccDiv" class="createAccDiv" @click="showCreateAccDiv(false)"></div>
-    <div v-if="createAccDiv" class="createAccDiv2">
+    <div v-if="createAccDiv" class="createAccDiv2" v-on:keyup.enter="checkFormCreateAcc">
       <form>
         <p class="exit" @click="showCreateAccDiv(false)">
           <i class="fas fa-times" style="font-size:25px, text-align:right"></i>
@@ -193,10 +193,8 @@
               <td class="scrollTD">{{acc.tra_amount}}</td>
               <td class="scrollTD">{{acc.tra_description}}</td>
               <td class="scrollTD">{{formateDate(acc.tra_date)}}</td>
-              <td
-                class="scrollTD cancelTransaction"
-                @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)"
-              >Opozovi</td>
+              <td v-if="acc.tra_type_name === 'Štednja'" class="scrollTD"></td>
+              <td v-else class="scrollTD cancelTransaction" @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)" >Opozovi</td>
             </tr>
           </table>
           <table v-else-if="arrTryTransaction.length>0 && showTryAcc">
@@ -229,7 +227,7 @@
             <tr class="tr">
               <td colspan="5">Nema podataka za prikazivanje</td>
             </tr>
-            <tr class="tr" v-for="a in 8" :key="a">
+            <tr class="tr" v-for="a in 9" :key="a">
               <td class="scrollTD">
                 <br />
               </td>
@@ -256,7 +254,7 @@
         <div class="pickOut" @click="selectTranM(false)">Prihod</div>
 
         <!-- buy transaction -->
-        <div v-if="selectTransaction" class="tranType">
+        <div v-if="selectTransaction" class="tranType" v-on:keyup.enter="checkFormBuy">
           <h2>
             <span class="orange">Rashod</span> - Potrošnja
           </h2>
@@ -274,7 +272,10 @@
           <br />
           <input v-model="buyDesc" type="text" class="inputWrite" />
           <br />
+          <br />
           <input type="button" value="Unesi" class="inputWrite" @click="checkFormBuy" />
+          <br />
+          <input type="button" value="Otkazi" class="inputWrite" @click="clearFormBuy" />
           <br />
           <p v-if="messageBuy" class="mess">{{ messageBuy}}</p>
           <p v-if="errBuy" class="err">{{errBuy}}</p>
@@ -284,7 +285,7 @@
         <!-- end tranType-->
 
         <!-- add mony to acount -->
-        <div v-else class="tranType">
+        <div v-else class="tranType" v-on:keyup.enter="checkFormAddToAccount">
           <h2>
             <span class="orange">Prihod</span> - Uplate
           </h2>
@@ -296,7 +297,11 @@
           <br />
           <input v-model="addDesc" type="text" class="inputWrite" />
           <br />
+          <br />
           <input type="button" value="Unesi" class="inputWrite" @click="checkFormAddToAccount" />
+          <br />
+          <input type="button" value="Otkazi" class="inputWrite" @click="clearFormAddToAccount" />
+
           <br />
           <p v-if="messageAdd" class="mess">{{ messageAdd}}</p>
           <p v-if="errAdd" class="err">{{errAdd}}</p>
@@ -874,6 +879,16 @@ export default {
     },
     changeMessage(x) {
       this.message = x;
+    },
+    clearFormBuy() {
+      this.buyDesc = null;
+      this.buySum = null;
+      this.resetMessage();
+    },
+    clearFormAddToAccount() {
+      this.addDesc = null;
+      this.addSum = null;
+      this.resetMessage();
     }
   },
   watch: {
@@ -887,9 +902,10 @@ export default {
     arrTryTransaction(newValue) {
       this.tryParamsForChart = [];
       if (this.arrTryTransaction.length === 0) {
-        this.tryParamsForChart.push(
-          { tip_transakcije: "Dostupno", iznos: this.createSum}
-          );
+        this.tryParamsForChart.push({
+          tip_transakcije: "Dostupno",
+          iznos: this.createSum
+        });
       } else {
         this.tryParamsForChart.push(
           { tip_transakcije: "Dostupno", iznos: this.createSum },
@@ -1005,7 +1021,7 @@ export default {
   background-color: rgb(0, 0, 0);
   overflow: hidden;
   border-radius: 10px;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 
@@ -1023,7 +1039,7 @@ export default {
 .bill p {
   margin: 0 auto;
   box-sizing: border-box;
- /* line-height: 2.1; */
+  /* line-height: 2.1; */
   font-weight: 500;
 }
 .create {
@@ -1035,25 +1051,22 @@ export default {
 
   cursor: pointer;
   box-shadow: 0px 1px 1px 1px #888888;
- 
+
   background-color: rgba(0, 0, 0, 0.5);
-  background: #117a8a ;
+  background: #117a8a;
   box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
     0 5px 5px -1px rgba(0, 0, 0, 0.644), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
     0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
-    background-image: linear-gradient(
-    -45deg  #117a8a,
-     #f8f8f8
-  ); 
-  
+  background-image: linear-gradient(-45deg #117a8a, #f8f8f8);
+
   color: #e6eaef;
 }
 
 .bill:hover {
   /*  box-shadow: 0px 2px 8px 2px #888888; */
   font-size: 1.2em;
- /* text-shadow: 2.9px 2.95px 2.95px #000000;*/
+  /* text-shadow: 2.9px 2.95px 2.95px #000000;*/
 
   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
@@ -1063,7 +1076,7 @@ export default {
   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
- /* text-shadow: 2.9px 2.95px 2.95px #000000; */
+  /* text-shadow: 2.9px 2.95px 2.95px #000000; */
 }
 .bill:active {
   box-shadow: 0px 1px 3px 1px #888888;
@@ -1088,11 +1101,11 @@ export default {
 .active,
 .active:hover {
   background-color: rgba(0, 0, 0, 0.5);
-   background-image: linear-gradient(
+  background-image: linear-gradient(
     -45deg rgb(78, 75, 75),
     rgba(36, 35, 35, 0.5)
-  )!important;
-  
+  ) !important;
+
   box-shadow: 0px 1px 3px 1px #888888;
   font-size: 1.2em;
   box-shadow: 0 5px #666;
@@ -1104,7 +1117,6 @@ export default {
   transition: 0s;
   color: rgba(15, 201, 230, 0.911);
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
-
 }
 
 .main {
@@ -1143,7 +1155,7 @@ export default {
   flex-wrap: flex;
   justify-content: center;
   min-width: 300px;
-  min-height: 580px;
+  min-height: 670px;
 }
 .allTrans,
 .showGraf {
@@ -1161,20 +1173,39 @@ export default {
   justify-content: center;
   padding-top: 2%;
 }
+.showGraf h2 {
+  font-weight: normal;
+}
 
 .pickOut {
+  color: rgb(85, 81, 81);
   box-sizing: border-box;
   font-size: 1.4em;
-  line-height: 1.23;
+  /* line-height: 1.23; */
+  justify-content: center;
+  align-items: center;
   width: 50%;
   padding: 10px;
-  height: 50px;
+  min-height: 50px;
   background: #cccccc;
   /* border:1px solid rgba(92, 86, 74, 0.527); */
 }
 .pickOut2 {
   background: rgb(234, 236, 236);
 }
+.pickOut3 {
+  box-sizing: border-box;
+  font-size: 1.3em;
+  /* line-height: 2.23; */
+  width: 50%;
+  padding-top: 10px;
+  z-index: 5;
+  min-height: 50px;
+  justify-content: center;
+  align-items: center;
+  color: rgb(85, 81, 81) !important;
+}
+
 i:hover,
 .pickOut:hover,
 .pickOut3:hover {
@@ -1210,7 +1241,7 @@ i:hover,
   width: 60% !important;
   background-color: rgb(255, 255, 255);
   border-color: rgb(196, 188, 188);
-  font-family: "Oswald", sans-serif !important; 
+  font-family: "Oswald", sans-serif !important;
   font-size: initial;
   box-shadow: 0px 1px 1px 1px #888888;
 }
@@ -1287,15 +1318,6 @@ input[type="button"]:active {
   flex-wrap: flex;
 }
 
-.pickOut3 {
-  box-sizing: border-box;
-  font-size: 1.5em;
-  line-height: 2.23;
-  width: 50%;
-  padding: 0;
-  z-index: 5;
-}
-
 .showTransaction {
   box-sizing: border-box;
   padding-bottom: 25px;
@@ -1305,7 +1327,8 @@ input[type="button"]:active {
 }
 table {
   box-sizing: border-box;
-  min-width: 100%;
+  padding: 2%;
+  width: 100%;
   border-collapse: collapse;
 }
 .tr {
@@ -1316,7 +1339,7 @@ table {
 td,
 th {
   padding: 6px;
-  max-width: 100px;
+  max-width: 140px;
   min-width: 60px;
   border-right: solid 1px rgba(113, 113, 116, 0.2);
   border-left: solid 1px rgba(113, 113, 116, 0.2);

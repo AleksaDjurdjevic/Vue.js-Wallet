@@ -115,6 +115,7 @@ export default {
  /*   background-color:aliceblue; */
   background-image: linear-gradient(#bebebebb,#FFFFFF, #bebebebb);
   position: relative;
+  color:rgb(85, 81, 81) !important;
 }
 .statistics2{
   padding: 0 0 0 0;

@@ -47,8 +47,10 @@
                     <p :class = "{hover: saving.hover}" @mouseover="displaySavingFullName(index, true)" @mouseleave="displaySavingFullName(index, false)">{{setProperSavingsNameLength(saving.sav_description, saving.hover)}}</p>
                 </div>
                 <div :class="'each-saving' + setClassForSavings(index+1)">
-                    <div class="saving-status"><p>Status : {{saving.sav_end ? 'Kompletirano' : 'U toku'}}</p></div>
-                    <div class="data">
+                    <div class="saving-status"><p>Status: <span :class="saving.sav_status">{{saving.sav_status}}</span></p></div>
+                    <!-- Dashboard -->
+                    <!-- V-if -->
+                    <div class="data" v-if = "saving.sav_status === 'U toku'">
                         <div class="data-row">
                             <p class='p-details'>Cilj: <span>{{saving.sav_amount + " " + saving.acc_type_name}}</span></p>
                         </div>
@@ -57,10 +59,34 @@
                             <p v-else class='p-done'>Uplaćeno! <span><i class="far fa-check-circle fa-2x" style = "color:#03a100;"></i></span></p>
                         </div>
                     </div>
-                    <div class="buttons">
+                    <!-- V-if -->
+                    <div v-if = "saving.sav_status === 'Kompletirana'" class="saving-done">
+                        <p>Čestitamo, štednja uspešna! <i class="fas fa-star fa-2x" style="color: yellow; margin-left: 10px;"></i></p>
+                    </div>
+                    <!-- V-if -->
+                    <div v-if = "saving.sav_status === 'Istekla'" class="saving-done">
+                        <p>Istekao je period za štednju<i class="fas fa-exclamation-triangle fa-2x" style = "color:#e80000;margin-left: 10px;"></i></p>
+                    </div>
+
+                    <!-- Buttons -->
+                    <!-- V-if -->
+                    <div class="buttons" v-if = "saving.sav_status === 'U toku'">
                         <button @click = "viewDetails(saving.sav_id)">Detalji</button>
                         <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
                         <button @click = "preparePayment(saving.sav_id)">Uplati na štednju</button>
+                        <button @click = "deleteSavings(saving.sav_id)">Obriši štednju</button>
+                    </div>
+                    <!-- V-if -->
+                    <div class="buttons" v-if = "saving.sav_status === 'Kompletirana'">
+                        <button @click = "viewDetails(saving.sav_id)">Detalji</button>
+                        <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
+                        <button @click = "doneSaving(saving.sav_id)">Završi štednju</button>
+                        <!-- <button @click = "endSaving(saving.sav_id)">Povuci sredstva</button> -->
+                    </div>
+                    <!-- V-if -->
+                    <div class="buttons" v-if = "saving.sav_status === 'Istekla'">
+                        <button @click = "viewDetails(saving.sav_id)">Detalji</button>
+                        <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
                         <button @click = "deleteSavings(saving.sav_id)">Obriši štednju</button>
                     </div>
                 </div>
@@ -69,12 +95,13 @@
         
         <!-- Conditional components -->
         <!-- Shade div -->
-        <div class="payment-processing" v-if ="makingPayment || addingSaving || deletingSaving || viewingPayments || viewingDetails" 
+        <div class="payment-processing" v-if ="makingPayment || addingSaving || deletingSaving || viewingPayments || viewingDetails || endingSaving" 
             @click =    "makingPayment = false; 
                         addingSaving = false; 
                         deletingSaving = false;
                         viewingPayments = false;
                         viewingDetails = false;
+                        endingSaving = false;
                         error = '';">
         </div>
         <!-- Div for making a payment -->
@@ -111,6 +138,14 @@
             @get-savings = "getSavings"
             @viewing-payments = "viewingPayments = false"
         />
+
+        <!-- Div for ending payments -->
+        <savings-end v-if ="endingSaving"
+            :sav_id = "sav_id"
+            :savings = "savings"
+            @get-savings = "getSavings"
+            @ending-saving = "endingSaving = false"
+        />
     </div>
 </template>
 
@@ -122,6 +157,8 @@ import SavingsAddPayment from '../components/SavingsAddPayment.vue';
 import SavingsDelete from '../components/SavingsDelete.vue';
 import SavingsViewPayments from '../components/SavingsViewPayments.vue';
 import SavingsViewDetails from '../components/SavingsViewDetails.vue';
+import SavingsEnd from '../components/SavingsEnd.vue';
+import moment from  'moment';
 export default {
     data () {
         return {
@@ -131,6 +168,7 @@ export default {
             addingSaving: false,
             viewingPayments: false,
             viewingDetails: false,
+            endingSaving: false,
             sav_id: '',
             error: '',
             property: 'sav_start',
@@ -143,7 +181,8 @@ export default {
         "savings-add-payment": SavingsAddPayment,
         "savings-delete": SavingsDelete,
         "savings-view-payments": SavingsViewPayments,
-        "savings-view-details": SavingsViewDetails
+        "savings-view-details": SavingsViewDetails,
+        "savings-end": SavingsEnd
     },
     computed: {
         ...mapState(['isLoggedIn'])
@@ -171,6 +210,17 @@ export default {
                         this.savings[i].fixed_month_rate = Math.ceil(this.savings[i].sav_amount / this.savings[i].sav_period);
                         this.savings[i].sav_months_in = this.getMonthsIn(this.savings[i].sav_start, this.savings[i].sav_period) + 1;
                         this.savings[i].sav_month_rate_payed = this.savings[i].fixed_month_rate*this.savings[i].sav_months_in-this.savings[i].sav_amount_accumulated;
+                        
+                        let currentDate = moment();
+                        let endDate = moment(this.savings[i].sav_start).add(this.savings[i].sav_period, 'months');
+                        
+                        if(this.savings[i].sav_end){
+                            this.savings[i].sav_status = 'Kompletirana'
+                        }else if(currentDate > endDate){
+                            this.savings[i].sav_status = 'Istekla';
+                        }else{
+                            this.savings[i].sav_status = 'U toku';  
+                        }
                     }
                 }
             });
@@ -213,6 +263,10 @@ export default {
             this.sav_id = sav_id;
             this.viewingDetails = true;
         },
+        // endSaving(sav_id){
+        //     this.sav_id = sav_id;
+        //     this.endingSaving = true;
+        // },
         setClassForSavings(i){
             let devider = Math.floor(i/4);
             return i-4*devider+1;
@@ -242,6 +296,14 @@ export default {
                     }
                 }
             }
+        },
+        doneSaving(sav_id){
+            axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/doneSaving', {
+                sav_id,
+                sid: localStorage.getItem('sid'),
+            }).then(()=>{
+                this.getSavings();
+            }); 
         }
     },
     mounted(){
@@ -383,13 +445,31 @@ p{
 }
 .saving-status p{
     font-size: 1.2em;
-    width: 80%;
+    width: 100%;
     height: 80%;
     word-break: break-all; 
     word-wrap: break-word;
     text-align: center;
     margin: 0;
-    margin-top: 2%;
+}
+/* Status */
+.saving-status span.Kompletirana{
+    display: inline-block;
+    font-size: 1.2em;
+    color: #03a100;
+    text-shadow: -0.2px 0 black, 0 0.2px black, 0.2px 0 black, 0 -0.2px black;
+}
+.saving-status span.U.toku{
+    display: inline-block;
+    font-size: 1.2em;
+    color: orange;
+    text-shadow: -0.2px 0 black, 0 0.2px black, 0.2px 0 black, 0 -0.2px black;
+}
+.saving-status span.Istekla{
+    display: inline-block;
+    font-size: 1.2em;
+    color: #e80000;
+    text-shadow: -0.2px 0 black, 0 0.2px black, 0.2px 0 black, 0 -0.2px black;
 }
 .data{
     position: absolute;
@@ -631,5 +711,23 @@ button{
     display: flex;
     justify-content: center;
     align-content: center;
+}
+/* Saving done */
+.saving-done{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    width: 72%;
+    height: 70%;
+    line-height: 150%;
+}
+.saving-done p {
+    font-size: 2em;
+    display:flex;
+    align-items: center;
 }
 </style>

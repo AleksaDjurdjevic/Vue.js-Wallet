@@ -54,10 +54,6 @@ export default {
 </script>
 
 <style scoped>
-    @keyframes button-blue{
-        0% {background-color: white}
-        100%{background-color: #17a2b8; color: white}
-    }
     .delete-saving{
         width: 30%;
         font-size: 1.5em;
@@ -66,25 +62,59 @@ export default {
         display:flex;
         justify-content: space-evenly;
     }
+    p{
+        margin: 2%;
+    }
     button{
-        background-color: lightgray;
+        transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
+        transition: box-shadow, transform, color;
+        transition-duration: 0.2s, 0.2s, 0.2s;
+        transition-timing-function: ease, ease, ease;
+        transition-delay: 0s, 0s, 0s;
+
+        font-family: 'Oswald', sans-serif;
+        cursor: pointer;
+        font-size: 1.2em;
+        font-weight: 500;
+        margin: 2%;
+        width: 50%;
+        background-color: rgb(0, 0, 0);
         border-radius: 10px;
-        border: none;
-        font-family: "Oswald";
-        font-size: 1em;
-        width: 30%;
+        border: 0;
+        box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
+            0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
+            0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+            0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+        background-image: linear-gradient(
+            -45deg,
+            rgb(131, 131, 131),
+            rgb(34, 34, 34)
+        );
+        color: #e6eaef;
     }
     button:hover, button:focus{
-        cursor: pointer;
-        outline: none;
-        animation-name: button-blue;
-        animation-duration: 0.4s;
-        animation-fill-mode: forwards;
+        /*  box-shadow: 0px 2px 8px 2px #888888; */
+        font-size: 1.2em;
+        /* text-shadow: 2.9px 2.95px 2.95px #000000;*/
+
+        box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+            0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+            0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
     }
     button::-moz-focus-inner {
         border: 0;
     }
-    p{
-        margin: 2%;
+    button:active {
+        box-shadow: 0px 1px 3px 1px #888888;
+        font-size: 1.2em;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+
+        box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+            0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+            0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+        transition: 0s;
+        color: rgba(18, 104, 117, 0.616);
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
     }
 </style>

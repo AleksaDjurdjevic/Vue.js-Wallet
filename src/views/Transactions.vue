@@ -333,9 +333,9 @@ export default {
       date = dateParts.join("-");
 
       if (this.targetInput === "from") {
-        this.fromDate = date;
+        this.fromDate = this.formateDate(date);
       } else if (this.targetInput === "to") {
-        this.toDate = date;
+        this.toDate = this.formateDate(date);
       }
 
       this.showingCalendar = false;
@@ -360,7 +360,9 @@ export default {
         this.toDate = null;
       }
        this.showingCalendar = false;
-
+      if ((this.fromDate === null) ^ (this.toDate === null)) {
+        this.getTransactions();
+      }
     },
     accountPlaceholder() {
       //Applying classes

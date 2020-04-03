@@ -1,65 +1,68 @@
 <template>
-    <div class="payment-form">
-        <h2>{{singleSaving.sav_description}}</h2>
-        <div class="data">
-            <p>Cilj: {{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</p>
-            <p v-if = "singleSaving.sav_month_rate_payed>0" >Mesečna rata: {{singleSaving.sav_month_rate_payed}}{{" " + singleSaving.acc_type_name}}</p>
-            <div v-if = "singleSaving.sav_month_rate_payed<=0"> 
-                <p class = "msg">Uplatili ste mesečnu ratu!</p>
-                <p class = "msg" v-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>=0" >Sledeća mesečna rata: {{singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed}}{{" " + singleSaving.acc_type_name}}</p>
-                <p class = "msg" v-else>Sve sledeće uplate nakon naredne rate će vam biti manje od {{singleSaving.fixed_month_rate + " " + singleSaving.acc_type_name}}.</p>
-            </div>
+<div class="delete-saving" :key="key">
+    <p>Izaberite račun na koji želite da podignete sredstva</p>
+    <div class="accounts" v-if = "accounts.length>1">
+        <div class = "each-account" 
+            :class="{'each-account-selected' : account.selected}" 
+            v-for = "account in accounts" 
+            :key="account.acc_id"
+            @click = "setAcc(account)"
+        >
+            <p>{{account.acc_name}}</p>
+            <p>{{account.acc_amount + " " + account.acc_type_name}}</p>
         </div>
-        <p>Odaberite račun sa kojeg uplaćujete:</p>
-        
-        <div class="accounts" v-if = "accounts.length>1">
-            <div class = "each-account" 
-                :class="{'each-account-selected' : account.selected}" 
-                v-for = "account in accounts" 
-                :key="account.acc_id"
-                @click = "setAcc(account)"
-            >
-                <p>{{account.acc_name}}</p>
-                <p>{{account.acc_amount + " " + account.acc_type_name}}</p>
-            </div>
-        </div>
-        <p class ="no-acc" v-if= "accounts.length === 0">Nemate računa ovog tipa</p>
-        <div class="accounts" v-if = "accounts.length===1">
-            <div class="each-account-selected">
-                <p>{{accounts[0].acc_name}}</p>
-                <p>{{accounts[0].acc_amount + " " + accounts[0].acc_type_name}}</p>
-            </div>
-        </div>
-        <p :class = "{'amount': acc_id!=='', 'amount-invi': acc_id===''}">Raspoloživa sredstva: <span>{{acc_amount +" "+ singleSaving.acc_type_name}}</span></p>
-    
-        <input type="text" v-model = "paymentValue" placeholder="Iznos uplate">
-        <button v-if = "accounts.length>0" @click = "makePayment">Uplati</button>
-        <button @click = "$emit('making-payment')">Povratak na štednje</button>
-
-        <p :class = "{'error': error, 'error-invi': !error}">{{error? error: 'fill'}}</p>
     </div>
+    <div class="accounts" v-if = "accounts.length===1">
+        <div class="each-account-selected">
+            <p>{{accounts[0].acc_name}}</p>
+            <p>{{accounts[0].acc_amount + " " + accounts[0].acc_type_name}}</p>
+        </div>acc_name
+    </div>
+    <div class="buttons">
+        <button @click = "endingSaving">Potvrdite</button>
+        <button @click = "$emit('ending-saving')">Povratak na štednje</button>
+    </div>
+    <p class="error">{{error}}</p>
+</div>
 </template>
 
 <script>
 import axios from 'axios';
 export default {
-    data(){
-        return{
+    data () {
+        return {
             singleSaving: [],
             accounts: [],
             acc_id: '',
-            acc_name: '',
-            acc_amount: '',
-            error: '',
-            paymentValue: '',
-            nextPayments: []
+            key: 0,
+            error: ''
         }
     },
     props: {
-        savings: Array,
-        sav_id: Number
+        sav_id: Number,
+        savings: Array
     },
-    methods:{
+    methods: {
+        endingSaving(){
+            if(this.acc_id === ''){
+                this.error = "Izaberite račun.";
+            }else{
+                axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/endSaving', {
+                    sav_id: this.sav_id,
+                    sav_amountPlus: this.singleSaving.sav_amount_accumulated,
+                    acc_id: this.acc_id,
+                    sid: localStorage.getItem('sid'),
+                }).then((r)=>{
+                    console.log(r.data);
+                    
+                    this.$emit("get-savings");
+                    this.$emit('ending-saving');
+                }).catch(()=>{
+                    this.error = "Izaberite račun.";
+                    this.$emit('ending-saving');
+                });
+            }  
+        },
         getSingleSaving(){
             for (let i in this.savings){
                 if(this.savings[i].sav_id == this.sav_id){
@@ -71,14 +74,8 @@ export default {
             axios.post(`http://053n122.mars-e1.mars-hosting.com/api/get/getAccounts/${this.singleSaving.acc_type_name.toLowerCase()}`, {sid: localStorage.getItem('sid')})
             .then(r=>{
                 this.accounts = r.data.data;
-
-                if(this.accounts === undefined){
-                    this.accounts = [];
-                }
-                else if (this.accounts.length == 1){
+                if (this.accounts.length == 1){
                     this.acc_id = this.accounts[0].acc_id;
-                    this.acc_name = this.accounts[0].acc_name;
-                    this.acc_amount = this.accounts[0].acc_amount;
                 }else{
                     for (let i in this.accounts){
                         this.accounts[i].selected = false;
@@ -88,9 +85,6 @@ export default {
         },
         setAcc(account){
             this.acc_id = account.acc_id;
-            this.acc_name = account.acc_name;
-            this.error = '';
-            this.acc_amount = account.acc_amount;
             for (let i in this.accounts){
                 if(this.accounts[i].acc_id === account.acc_id){
                     this.accounts[i].selected = true;
@@ -98,44 +92,7 @@ export default {
                    this.accounts[i].selected = false; 
                 }
             }
-        },
-        makePayment(){
-            if(this.acc_id == ""){
-                this.error = "Izaberite račun s kojeg ćete da uplatite na štednju.";
-            }else if(isNaN(Number(this.paymentValue))){
-                this.error = "";
-                this.error = "Količina uplate mora biti broj i bez razmaka u zapisu.";
-            }else if(this.paymentValue <= 0){
-                this.error = "";
-                this.error = "Količina uplate mora biti pozitivan broj i veći od 0.";
-            }else if(this.paymentValue === ""){
-                this.error = "";
-                this.error = "Unesite količinu.";
-            }else{
-                let currentDate = new Date();
-
-                let year = currentDate.getFullYear().toString();
-                let month = currentDate.getMonth().toString.length < 2 ? `0${currentDate.getMonth()+1}` : currentDate.getMonth()+1;
-                let day = currentDate.getDate().toString.length < 2 ? `0${currentDate.getDate()}` : currentDate.getDate();
-            
-                let currentDateString = `${year}-${month}-${day}`;
-
-                axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/paymentSavings', {
-                    sid: localStorage.getItem('sid'),
-                    accId: this.acc_id,
-                    savId: this.sav_id,
-                    savPayAmount: this.paymentValue,
-                    savEnd: currentDateString
-                }).then(r=>{
-                    this.error = r.data.msg;
-                    this.$emit('get-savings');
-                    this.paymentValue = '';
-                    this.error = '';
-                    this.$emit('making-payment');
-                }).catch(e=>{
-                    this.error = e.response.data.error; 
-                });
-            } 
+            this.key++;
         }
     },
     created(){
@@ -146,38 +103,24 @@ export default {
 </script>
 
 <style scoped>
-    .payment-form{
-        display: flex;
-        flex-direction: column;
-        width: 40%;
-        align-items: center;
-        font-size: 1.3em;
-    }
-    h2{
-        margin: 0;
-        margin-top: 2%;
-    }
-    .data{
-        width: 90%;
-        display: flex;
-        flex-direction: column;
-        max-height: 100vh;
-    }
-    .data p {
-        margin: 0;
-        margin-bottom: 5%;
-        text-align: center;
-    }
-    input{
+    .delete-saving{
         width: 50%;
+        font-size: 1.5em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
-    @keyframes button{
-        0% {background-color: rgb(234, 236, 236)}
-        100%{background-color: rgb(192, 190, 190)}
+    .delete-saving p:nth-child(1){
+        margin-bottom: 5%;
     }
-    @keyframes button-rev{
-        0% {background-color: rgb(192, 190, 190)}
-        100%{background-color: rgb(234, 236, 236)}
+    .buttons{
+        width: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 5%;
     }
     button{
         transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
@@ -318,28 +261,5 @@ export default {
     }
     .error{
         color: #e80000;
-    }
-    .error-invi{
-        visibility: hidden;
-        color: #e80000;
-    }
-    .amount{
-        margin: 5% 0;
-        font-size: 1.3em;
-    }
-    .amount-invi{
-        margin: 5% 0;
-        font-size: 1.3em;
-        visibility: hidden;
-    }
-    span{
-        font-size:1.2em;
-    }
-    .msg{
-      color: #1db802;  
-    }
-    .no-acc{
-        color: #e80000;
-        font-size: 1.3em;
     }
 </style>

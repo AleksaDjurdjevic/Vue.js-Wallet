@@ -6,25 +6,34 @@
           <div class="column">
               <div class="cell">Cilj</div>
               <div class="cell">Do sada uplaćeno</div>
-              <div class="cell">Preostalo za uplatu</div>
+              <div v-if = "singleSaving.leftover_amount >= 0" class="cell">Preostalo za uplatu</div>
               <div class="cell">Broj uplata</div>
               <div class="cell">Period štednje</div>
-              <div class="cell" v-if = "singleSaving.sav_month_rate_payed>0" >Mesečna rata</div>
-              <div class="cell" v-else-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>=0" >Sledeća mesečna rata</div>
-              <div class="cell" v-else >Sledeće rate ispod</div>
+              <!-- Dynamic data -->
+              <div v-if = "!singleSaving.sav_end">
+                <div class="cell" v-if = "singleSaving.sav_month_rate_payed>0" >Mesečna rata</div>
+                <div class="cell" v-else-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>0" >Sledeća mesečna rata</div>
+                <div class="cell" v-else >Sledeće rate ispod</div>
+              </div>
+              <!-- End of dynamic data -->
               <div class="cell">Rata se obnavlja</div>
+              <div class="cell">Datum početka</div>
           </div>
           <div class="column">
               <div class="cell">{{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</div>
               <div class="cell">{{singleSaving.sav_amount_accumulated + " " + singleSaving.acc_type_name}}</div>
-              <div class="cell">{{singleSaving.leftover_amount + " " + singleSaving.acc_type_name}}</div>
+              <div v-if = "singleSaving.leftover_amount >= 0" class="cell">{{singleSaving.leftover_amount + " " + singleSaving.acc_type_name}}</div>
               <div class="cell">{{singleSaving.number_of_payments}}</div>
-              <div class="cell">{{setProperWord(singleSaving.sav_period)}}</div>
+              <div class="cell">{{singleSaving.sav_period + setProperWord(singleSaving.sav_period)}}</div>
               <!-- Dynamic data -->
-              <div v-if = "singleSaving.sav_month_rate_payed>0" class="cell">{{singleSaving.sav_month_rate_payed + " " + singleSaving.acc_type_name}}</div>
-              <div class="cell" v-else-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>=0" >{{singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed}}{{" " + singleSaving.acc_type_name}}</div>
-              <div class="cell" v-else>{{singleSaving.fixed_month_rate + " " + singleSaving.acc_type_name}}</div>
+              <div v-if = "!singleSaving.sav_end">
+                <div v-if = "singleSaving.sav_month_rate_payed>0" class="cell">{{singleSaving.sav_month_rate_payed + " " + singleSaving.acc_type_name}}</div>
+                <div class="cell" v-else-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>=0" >{{singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed}}{{" " + singleSaving.acc_type_name}}</div>
+                <div class="cell" v-else>{{singleSaving.fixed_month_rate + " " + singleSaving.acc_type_name}}</div>
+              </div>
+              <!-- End of dynamic data -->
               <div class="cell">{{parseInt(singleSaving.sav_start.slice(-2))}}. dana u mesecu</div>
+              <div class="cell">{{formateDate(singleSaving.sav_start)}}</div>
           </div>
       </div>
 
@@ -58,15 +67,21 @@ export default {
                 || (p[p.length-1] === "3" && p[p.length-2] === "1")
                 || (p[p.length-1] === "4" && p[p.length-2] === "1"))
             {
-                return 'meseci';
+                return ' meseci';
             }
             else if(p[p.length-1] == '1'){
-                return 'mesec'
+                return ' mesec'
             }else if(["2", "3", "4"].includes(p[p.length-1])){
-                return 'meseca';
+                return ' meseca';
             }else{
-                return p + ' meseci';
+                return ' meseci';
             }
+        },
+        formateDate(date) {
+            return date
+            .split("-")
+            .reverse()
+            .join("/");
         }
     },
     created(){

@@ -3,16 +3,16 @@
     <div class="all-payments" v-if= "showingCalendar === false">
         <div class="each-payment" v-for = "(payment, index) in payments" :key='index'>
             <div class = "each-info"><span>{{"Iznos uplate: " + payment.sav_pay_amount + " " + payment.acc_type_name}}</span></div>
-            <div class = "each-info"><span>{{"Datum uplate: " + payment.sav_pay_date}}</span></div>
+            <div class = "each-info"><span>{{"Datum uplate: " + formateDate(payment.sav_pay_date)}}</span></div>
             <div class = "each-info"><span>{{"Račun: " + payment.acc_name}}</span></div>
-            <div class = "each-info"><span
+            <div v-if = "!payment.sav_end" class = "each-info"><span
                 @click = "deleteSinglePayment(payment.sav_pay_id, payment.acc_id, payment.sav_pay_amount)" 
             > 
                 Obriši 
             </span></div>
         </div>
     </div>
-    <p class = "no-payments" v-if= "payments.length === 0">{{date === '' ? placeholder : 'Nema uplata za: ' + date}}</p>
+    <p class = "no-payments" v-if= "payments.length === 0">{{date === '' ? placeholder : 'Nema uplata za: ' + formateDate(date)}}</p>
     <button class="visible-buttons" v-if = "showingCalendar === false" @click = "msg = ''; showingCalendar = true; date = ''; getPayments()">Klikni za prikaz uplata po datumu</button>
     <button v-if = "date !== ''" class="visible-buttons" @click = "getPayments(); showingCalendar = false; date = ''; msg = ''">Poništi pretragu po datumu</button>
     <div class = "show-calendar" v-if = "showingCalendar">
@@ -55,6 +55,8 @@ export default {
                 sid: localStorage.getItem('sid'),
                 savId: this.sav_id
             }).then(r=>{
+                console.log(r.data);
+                
                 this.payments = r.data.payments;
                 this.allPayments = r.data.payments;
             }) 
@@ -89,6 +91,12 @@ export default {
             }).catch(e=>{
                 this.msg = e.response.data.error; 
             });
+        },
+        formateDate(date) {
+            return date
+            .split("-")
+            .reverse()
+            .join("/");
         }
     },
     mounted(){
@@ -108,8 +116,8 @@ export default {
         min-height: 40vh;
     }
     .all-payments{
-        width: 100%;
-        margin-bottom: 5%;
+        width: 98%;
+        margin: 0 1% 5% 1%;
     }
     .each-payment{
         box-sizing: border-box;
@@ -117,6 +125,12 @@ export default {
         display: flex;
         justify-content: space-evenly;
         border-bottom: 1px solid #17a2b8;
+    }
+    .each-info{
+        width: 100%;
+    }
+    .each-info:nth-of-type(4){
+        width: 25%;
     }
     .each-info:nth-of-type(4):hover{
         cursor: pointer;

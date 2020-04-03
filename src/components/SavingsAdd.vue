@@ -124,8 +124,8 @@ export default {
         cursor: pointer;
         font-size: 1.2em;
         font-weight: 500;
-        margin: 2%;
-        width: 50%;
+        margin: 4%;
+        width: 72%;
         background-color: rgb(0, 0, 0);
         border-radius: 10px;
         border: 0;
@@ -168,5 +168,8 @@ export default {
     .message{
         color: #e80000;
         text-align: center;
+    }
+    .add-accounts{
+        font-family: 'Oswald', sans-serif;
     }
 </style>

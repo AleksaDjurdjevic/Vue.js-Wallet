@@ -55,8 +55,6 @@ export default {
                 sid: localStorage.getItem('sid'),
                 savId: this.sav_id
             }).then(r=>{
-                console.log(r.data);
-                
                 this.payments = r.data.payments;
                 this.allPayments = r.data.payments;
             }) 

@@ -52,9 +52,7 @@ export default {
                     sav_amountPlus: this.singleSaving.sav_amount_accumulated,
                     acc_id: this.acc_id,
                     sid: localStorage.getItem('sid'),
-                }).then((r)=>{
-                    console.log(r.data);
-                    
+                }).then(()=>{
                     this.$emit("get-savings");
                     this.$emit('ending-saving');
                 }).catch(()=>{

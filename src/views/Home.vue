@@ -626,11 +626,8 @@ export default {
       if (this.buySum && this.buyDesc && this.buySum > 0) {
         this.buyDesc = this.buyDesc.trim();
         this.buySum = this.buySum.trim();
-        //    console.log( typeof  this.buyDesc +'----------');
-        //    console.log(  this.buyDesc.length +'----------');
 
         if (this.buyDesc.length < 1 || this.buyDesc.length > 25) {
-          console.log(this.buyDesc.length + "----------");
           this.buyErrors.push(
             "Opis transakcije treba da bude od min 1 do max 25 karaktera."
           );

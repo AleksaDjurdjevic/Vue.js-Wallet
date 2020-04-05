@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard" @dblclick="resetMessage();">
     <!-- DIV CREATE ACCOUNT -->
+    <div v-if="showCallendar" class="createAccDiv" @click="showCallendar=false"></div>
     <div v-if="createAccDiv" class="createAccDiv" @click="showCreateAccDiv(false)"></div>
     <div v-if="createAccDiv" class="createAccDiv2" v-on:keyup.enter="checkFormCreateAcc">
       <form>
@@ -9,7 +10,7 @@
         </p>
 
         <h2>Kreiraj novi račun</h2>
-        <label>Izaberi tip računa</label>
+        <label>Izaberi valutu računa</label>
         <br />
         <select v-model="createSelected" class="inputWrite">
           <option
@@ -85,19 +86,9 @@
 
       <br />
 
-      <input
-        type="button"
-        class="inputWrite"
-        value="OPOZOVI TRANSAKCIJU"
-        @click="cancelTransaction(transactionForDelete)"
-      />
+      <input type="button"  class="inputWrite"  value="OPOZOVI TRANSAKCIJU"  @click="cancelTransaction(transactionForDelete)"  />
       <br />
-      <input
-        type="button"
-        class="inputWrite"
-        value="OTKAŽI OPOZIVANJE"
-        @click="showDeleteTransactionDiv(false)"
-      />
+      <input type="button" class="inputWrite"  value="OTKAŽI OPOZIVANJE"  @click="showDeleteTransactionDiv(false)"  />
       <br />
 
       <!-- -->
@@ -108,7 +99,7 @@
       <span v-if="!this.isLoggedIn">Try it!</span> Where the money goes???
     </h1>
     <p v-if="!this.isLoggedIn">
-      <span v-if="!showTryAcc">Napravite probni račun.</span> Sve transakcije koje budete izvršili nece biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.
+      <span v-if="!showTryAcc">Napravite probni račun.</span> Sve transakcije koje budete izvršili neće biti upamćene. Za pravljenje više od 1 računa za pamćenje transakcija i još puno dodatnih opcija molimo registrujte se.
     </p>
     <!-- show all bils -->
     <div class="bills">
@@ -165,7 +156,7 @@
       <div class="transaction allTrans">
         <div class="transaction2">
           <callendar
-            v-if="showCallendar"
+            v-if="showCallendar && isLoggedIn"
             class="callendar"
             v-on:showCallEmit="showCallendarMet($event)"
             v-on:selectDate="showTransactionByDate($event)"
@@ -193,7 +184,7 @@
               <td class="scrollTD">{{acc.tra_amount}}</td>
               <td class="scrollTD">{{acc.tra_description}}</td>
               <td class="scrollTD">{{formateDate(acc.tra_date)}}</td>
-              <td v-if="acc.tra_type_name === 'Štednja'" class="scrollTD"></td>
+              <td v-if="acc.tra_type_name === 'Štednja' || acc.tra_description === 'početno stanje računa' " class="scrollTD"></td>
               <td v-else class="scrollTD cancelTransaction" @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)" >Opozovi</td>
             </tr>
           </table>
@@ -985,9 +976,7 @@ export default {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(116, 113, 113, 0.774);
 }
-.scrollTD {
-  overflow: auto;
-}
+
 
 .dashboard {
   text-align: center;
@@ -1262,7 +1251,7 @@ input[type="button"] {
   transition-duration: 0.2s, 0.2s, 0.2s;
   transition-timing-function: ease, ease, ease;
   transition-delay: 0s, 0s, 0s;
-
+  font-family: "Oswald", sans-serif !important;
   font-size: 1.3em;
   /*  width: 42.5%; */
   /* width: 62.5% !important; */
@@ -1426,7 +1415,7 @@ h1 .orange {
   position: absolute;
   top: 70%;
   left: 55%;
-  z-index: 10;
+  z-index: 1000102;
 }
 .cancelTransaction:hover {
   cursor: pointer;

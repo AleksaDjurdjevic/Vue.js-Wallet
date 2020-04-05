@@ -1,7 +1,7 @@
 <template>
   <div  class="createAccDiv">
      <div class="forma">
-        <label>Izaberite tip računa</label>
+        <label>Izaberite valutu računa</label>
         <br />
         <select v-model="createSelected">
           <option

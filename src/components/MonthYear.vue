@@ -1,19 +1,13 @@
 <template>
   <div class="monthYear">
+    
     <div class="round">
-      <div class="divM ch" @click="selectMonthYear">
-        <h6>{{month}}</h6>
-      </div>
-      <div class="divM">
-        <div class="divI ch chUP " @click="addMonth">
-          <i class="fas fa-caret-up" style="font-size:20px;"></i>
-        </div>
-        <div class="divI ch chUP" @click="subtractMonth">
-          <i class="fas fa-caret-down" style="font-size:20px;"></i>
-        </div>
-      </div>
+      <select class="ch" v-if="accounts" v-model="selectAcc" required @change="selectBill">
+        <option class="ch"  v-for="acc in accounts" :key="acc.acc_id">{{acc.acc_name}}</option>
+      </select>
     </div>
-    <!-- round -->
+    <!--end round-->
+    
     <div class="round">
       <div class="divM ch" @click="selectYear">
         <h6>{{year}}</h6>
@@ -29,10 +23,21 @@
     </div>
     <!-- end round -->
     <div class="round">
-      <select class="ch" v-if="accounts" v-model="selectAcc" required @change="selectBill">
-        <option class="ch"  v-for="acc in accounts" :key="acc.acc_id">{{acc.acc_name}}</option>
-      </select>
+      <div class="divM ch" @click="selectMonthYear">
+        <h6>{{month}}</h6>
+      </div>
+      <div class="divM">
+        <div class="divI ch chUP " @click="addMonth">
+          <i class="fas fa-caret-up" style="font-size:20px;"></i>
+        </div>
+        <div class="divI ch chUP" @click="subtractMonth">
+          <i class="fas fa-caret-down" style="font-size:20px;"></i>
+        </div>
+      </div>
     </div>
+    <!-- round -->
+
+
     <!--         <div class="round ch"  @click="selectMonthYear">
                  prikazi statistiku parametara
           </div>

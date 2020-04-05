@@ -1,10 +1,11 @@
 <template>
   <div class="transactions" :key="key">
+     <div v-if="showingCalendar" class="createAccDiv" @click="showingCalendar=false"></div>
     <!-- Left side -->
     <div class="aside">
       <!-- Accounts -->
       <p class="heading">Kliknite na račun kako biste filtrirali transakcije po računu</p>
-      <div class="accounts">
+      <div class="accounts scrollTD">
         <div
           class="each-account-placeholder"
           :class="{selected: showingAccPlaceholder}"
@@ -57,7 +58,7 @@
             <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
           </div>
           <div class="cell-first" @click="transactionSortBy('ac.acc_name')">
-            <div>Naziv Računa</div>
+            <div>Naziv računa</div>
             <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
           </div>
           <div class="cell-first" @click="transactionSortBy('tra_type_name')">
@@ -774,7 +775,7 @@ button::-moz-focus-inner {
   position: absolute;
   top: 0%;
   left: 40%;
-  z-index: 105;
+  z-index:1000101;
 }
 /* Accounts */
 .aside .heading {
@@ -981,4 +982,67 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
   margin: 0 auto;
   font-size: 1.5em;
 }
+
+/*-----------------------------*/
+
+.createAccDiv {
+  animation-name: opacity;
+  animation-duration: 0.3s;
+  padding-top: 6%;
+  color: #fff;
+  width: 100%;
+  min-height: 100%;
+
+  background: #000000;
+  opacity: 0.6;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000100;
+}
+
+
+.scrollTD {
+  overflow: auto;
+  
+}
+
+/* width */
+::-moz-scrollbar {
+  height: 8px;
+  width: 3px;
+}
+::-webkit-scrollbar {
+  height: 8px;
+  width: 3px;
+}
+
+/* Track */
+::-moz-scrollbar-track {
+  box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671);
+  /* border-radius: 10px; */
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671);
+  /* border-radius: 10px; */
+}
+
+/* Handle */
+::-moz-scrollbar-thumb {
+  background: rgb(172, 168, 168);
+  /*  border-radius: 10px; */
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(172, 168, 168);
+  /*  border-radius: 10px; */
+}
+
+/* Handle on hover */
+::-moz-scrollbar-thumb:hover {
+  background: rgba(116, 113, 113, 0.774);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(116, 113, 113, 0.774);
+}
+
 </style>

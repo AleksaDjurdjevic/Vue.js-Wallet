@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="footer-column">
-      <h5 id="store-name">Enon Solutions d.o.o</h5>
+      <h3 id="store-name">Enon Solutions d.o.o</h3>
       <address id="store-adress">
-        <p>
-          Omladniskih Brigada 86
+        <h5>
+          Omladinskih Brigada 86
           <br />Beograd
-        </p>
+        </h5>
       </address>
       <div id="social"></div>
     </div>

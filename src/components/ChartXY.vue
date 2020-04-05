@@ -113,7 +113,7 @@ valueAxis.cursorTooltipEnabled = true;
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .ChartXY {
-  max-width: 35%; /* 50% */
+  max-width: 50%; /* 35% */
   height: 500px;
 
   padding: 20px;

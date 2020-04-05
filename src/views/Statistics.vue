@@ -65,7 +65,7 @@ export default {
     getParamsForChartStatists(acc_name) {
       if(acc_name==='null') return;
       axios
-        .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/statistics", {
+        .post("http://053n122.mars-e1.mars-hosting.com/api/get/variousStatisticsForChart", {
           sid: localStorage.getItem("sid"),
           account: acc_name
         })

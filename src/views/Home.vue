@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard" @dblclick="resetMessage();">
     <!-- DIV CREATE ACCOUNT -->
-    <div v-if="showCallendar" class="createAccDiv" @click="showCallendar=false"></div>
+    <div v-if="showCallendar" class="createAccDivCallendar" @click="showCallendar=false"></div>
     <div v-if="createAccDiv" class="createAccDiv" @click="showCreateAccDiv(false)"></div>
     <div v-if="createAccDiv" class="createAccDiv2" v-on:keyup.enter="checkFormCreateAcc">
       <form>
@@ -1374,6 +1374,21 @@ h1 .orange {
 
   background: #000000;
   opacity: 0.6;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000100;
+}
+.createAccDivCallendar {
+  animation-name: opacity;
+  animation-duration: 0.3s;
+  padding-top: 6%;
+  color: #fff;
+  width: 100%;
+  min-height: 100%;
+
+  background: #00000000;
+ 
   position: fixed;
   left: 0;
   top: 0;

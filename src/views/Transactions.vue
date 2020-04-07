@@ -1,6 +1,6 @@
 <template>
   <div class="transactions" :key="key">
-     <div v-if="showingCalendar" class="createAccDiv" @click="showingCalendar=false"></div>
+     <div v-if="showingCalendar" class="createAccDivCallendar" @click="showingCalendar=false"></div>
     <!-- Left side -->
     <div class="aside">
       <!-- Accounts -->
@@ -985,7 +985,7 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
 
 /*-----------------------------*/
 
-.createAccDiv {
+.createAccDivCallendar {
   animation-name: opacity;
   animation-duration: 0.3s;
   padding-top: 6%;
@@ -993,8 +993,8 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
   width: 100%;
   min-height: 100%;
 
-  background: #000000;
-  opacity: 0.6;
+  background: #00000000;
+ 
   position: fixed;
   left: 0;
   top: 0;

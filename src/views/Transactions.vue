@@ -27,100 +27,102 @@
 
     <!-- Right side -->
     <div class="main">
-      <p class="message">{{error}}</p>
-      <div class="search-date">
-        <div class="each-search-date">
-         <span>Od datuma  <i   @click="clearDate2('from')" class="fas fa-times" ></i></span> 
-          <div class="input-calendar">
-            <input type="text" placeholder='Klikom na kalendar odaberi' readonly v-model="fromDate" />
-            <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('from')"></i>
+      <div class="table-wrap">
+          <p class="message">{{error}}</p>
+          <div class="search-date">
+            <div class="each-search-date">
+            <span>Od datuma  <i   @click="clearDate2('from')" class="fas fa-times" ></i></span> 
+              <div class="input-calendar">
+                <input type="text" placeholder='Klikom na kalendar odaberi' readonly v-model="fromDate" />
+                <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('from')"></i>
+              </div>
+            </div>
+            <div class="each-search-date">
+              <span>Do datuma  <i  @click="clearDate2('to')"  class="fas fa-times" ></i></span>
+              <div class="input-calendar">
+                <input type="text" placeholder='Klikom na kalendar odaberi' readonly v-model="toDate" />
+                <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('to')"></i>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="each-search-date">
-          <span>Do datuma  <i  @click="clearDate2('to')"  class="fas fa-times" ></i></span>
-          <div class="input-calendar">
-            <input type="text" placeholder='Klikom na kalendar odaberi' readonly v-model="toDate" />
-            <i class="far fa-calendar-alt fa-2x" @click="showCalendarFunc('to')"></i>
-          </div>
-        </div>
-      </div>
-      <!-- Table -->
-      <div class="main-table">
-        <!-- Calendar -->
-        <div class="calendar-wrapper" v-if="showingCalendar">
-          <calendar @selectDate="setDate" @showCallEmit="showingCalendar = false" />
-          <button @click="clearDate">Obrišite unet datum</button>
-        </div>
-        <!-- First row -->
-        <div class="row-first">
-          <div class="cell-first" @click="transactionSortBy('tra_date')">
-            <div>Datum</div>
-            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
-          </div>
-          <div class="cell-first" @click="transactionSortBy('ac.acc_name')">
-            <div>Naziv računa</div>
-            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
-          </div>
-          <div class="cell-first" @click="transactionSortBy('tra_type_name')">
-            <div>Tip transakcije</div>
-            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
-          </div>
-          <div class="cell-first" @click="transactionSortBy('tra_amount')">
-            <div>Iznos</div>
-            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
-          </div>
-          <div class="cell-first" @click="transactionSortBy('cat_name')">
-            <div>Kategorija</div>
-            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
-          </div>
-          <div class="cell-first" @click="transactionSortBy('tra_description')">
-            <div>Opis</div>
-            <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
-          </div>
-        </div>
-        <!-- Data -->
-        <div class="table-data">
-          <div class="row-other" v-for="tr in transactions" :key="tr.tra_id">
-            <div class="cell">{{formateDate(tr.tra_date)}}</div>
-            <div class="cell">{{tr.acc_name}}</div>
-            <div class="cell">{{tr.tra_type_name}}</div>
-            <div class="cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
-            <div class="cell">{{tr.cat_name}}</div>
-            <div class="cell">{{tr.tra_description}}</div>
-          </div>
-        </div>
-        <div class="table-shade" v-if="showingTableShade"></div>
-        <p class="table-shade-p" v-if="showingTableShade">Nemate transakcije za prikaz</p>
-        <!-- Pagination -->
-        <div class="pagination-wrap" v-if="allPagesArray.length > 1">
-          <div class="pages-dynamic">
-            <button class="page-btn" @click="setPage(allPagesArray[0])"><i class="fas fa-angle-double-left"></i></button>
-            <button
-              class="page-btn"
-              @click="setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))"
-            ><i class="fas fa-angle-left"></i></button>
-          </div>
+          <!-- Table -->
+          <div class="main-table">
+            <!-- Calendar -->
+            <div class="calendar-wrapper" v-if="showingCalendar">
+              <calendar @selectDate="setDate" @showCallEmit="showingCalendar = false" />
+              <button @click="clearDate">Obrišite unet datum</button>
+            </div>
+            <!-- First row -->
+            <div class="row-first">
+              <div class="cell-first" @click="transactionSortBy('tra_date')">
+                <div>Datum</div>
+                <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+              </div>
+              <div class="cell-first" @click="transactionSortBy('ac.acc_name')">
+                <div>Naziv računa</div>
+                <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+              </div>
+              <div class="cell-first" @click="transactionSortBy('tra_type_name')">
+                <div>Tip transakcije</div>
+                <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+              </div>
+              <div class="cell-first" @click="transactionSortBy('tra_amount')">
+                <div>Iznos</div>
+                <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+              </div>
+              <div class="cell-first" @click="transactionSortBy('cat_name')">
+                <div>Kategorija</div>
+                <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+              </div>
+              <div class="cell-first" @click="transactionSortBy('tra_description')">
+                <div>Opis</div>
+                <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
+              </div>
+            </div>
+            <!-- Data -->
+            <div class="table-data">
+              <div class="row-other" v-for="tr in transactions" :key="tr.tra_id">
+                <div class="cell">{{formateDate(tr.tra_date)}}</div>
+                <div class="cell">{{tr.acc_name}}</div>
+                <div class="cell">{{tr.tra_type_name}}</div>
+                <div class="cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
+                <div class="cell">{{tr.cat_name}}</div>
+                <div class="cell">{{tr.tra_description}}</div>
+              </div>
+            </div>
+            <div class="table-shade" v-if="showingTableShade"></div>
+            <p class="table-shade-p" v-if="showingTableShade">Nemate transakcije za prikaz</p>
+            <!-- Pagination -->
+            <div class="pagination-wrap" v-if="allPagesArray.length > 1">
+              <div class="pages-dynamic">
+                <button class="page-btn" @click="setPage(allPagesArray[0])"><i class="fas fa-angle-double-left"></i></button>
+                <button
+                  class="page-btn"
+                  @click="setPage(validateDisplayingPages('previous', allPagesArray[currentPage-2]))"
+                ><i class="fas fa-angle-left"></i></button>
+              </div>
 
-          <div class="pages-dynamic">
-            <button
-              v-for="page in displayingPages"
-              :key="page.page"
-              @click="setPage(page)"
-              :class="{selected: page.selected}"
-            >{{ page.page }}</button>
-          </div>
+              <div class="pages-dynamic">
+                <button
+                  v-for="page in displayingPages"
+                  :key="page.page"
+                  @click="setPage(page)"
+                  :class="{selected: page.selected}"
+                >{{ page.page }}</button>
+              </div>
 
-          <div class="pages-dynamic">
-            <button
-              class="page-btn"
-              @click="setPage(validateDisplayingPages('next', allPagesArray[currentPage]))"
-            ><i class="fas fa-angle-right"></i></button>
-            <button
-              class="page-btn"
-              @click="setPage(allPagesArray[allPagesArray.length-1])"
-            ><i class="fas fa-angle-double-right"></i></button>
+              <div class="pages-dynamic">
+                <button
+                  class="page-btn"
+                  @click="setPage(validateDisplayingPages('next', allPagesArray[currentPage]))"
+                ><i class="fas fa-angle-right"></i></button>
+                <button
+                  class="page-btn"
+                  @click="setPage(allPagesArray[allPagesArray.length-1])"
+                ><i class="fas fa-angle-double-right"></i></button>
+              </div>
+            </div>
           </div>
-        </div>
       </div>
     </div>
   </div>

@@ -18,7 +18,11 @@
         <input type="password" ref="pass" placeholder="Unesite šifru" v-model="password" />
       </div>
       <p :class = "{'msg': msg, 'msg-invi': !msg }">{{msg? msg: 'fill'}}</p>
-      <button @click="registration">Registrujte se</button>
+
+      <vue-recaptcha sitekey="6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P">
+        <button @click="registration">Registrujte se</button>
+      </vue-recaptcha>
+
     </div> 
     
     <!-- Kada je user ulogovan -->
@@ -32,10 +36,12 @@
     
 <script>
 import axios from 'axios';
+import VueRecaptcha from 'vue-recaptcha';
 import CreateAccount from '@/components/CreateAccount.vue';
 export default {
   components:{
-    CreateAccount
+    CreateAccount,
+    VueRecaptcha
   },
   data() {
     return {

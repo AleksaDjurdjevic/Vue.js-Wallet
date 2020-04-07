@@ -11,7 +11,9 @@
         <input id= "pass" type="password" v-model="password" />
         
         <p :class = "{'msg': msg, 'msg-invi': !msg }">{{msg? msg: 'fill'}}</p>
-        <button @click="login">Prijavite se</button>
+        <vue-recaptcha sitekey="6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P">
+          <button @click="login">Prijavite se</button>
+        </vue-recaptcha>
         <p>Niste se registrovali? <router-link to="/registartion">Registruj se</router-link></p>
       </div>
     </div>
@@ -21,6 +23,7 @@
 
 <script>
 import axios from "axios";
+import VueRecaptcha from 'vue-recaptcha';
 export default {
   data() {
     return {
@@ -61,6 +64,9 @@ export default {
   },
   mounted(){
     this.$root.$emit('set-selected', 5);
+  },
+  components: {
+    VueRecaptcha
   }
 };
 </script>

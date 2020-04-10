@@ -174,5 +174,50 @@ button:active{
 .bla p{
   margin-top: 30px;
 } 
+@media screen and (min-width:410px) and (max-width:820px) {
+  .wrapper{
+    margin:0 auto;
+    width:100%;
+    min-height: 100vh;
+    height: auto;
+  
+  }
+  .login{
+    box-sizing:border-box;
+    width:100%;
+  }
+  .bla{
+    box-sizing:border-box;
+    width:60%;
+  }
+  .bla h1{
+  margin-bottom: 3%;
+} 
+}
+
+@media screen and (max-width:409px) {
+  .wrapper{
+    margin:0 auto;
+     font-size: 1em;
+    width:100%;
+    min-height: 100vh;
+    height: auto;
+  }
+  .login{
+    box-sizing:border-box;
+    width:100%;
+  }
+  .bla{
+    box-sizing:border-box;
+    width:80%;
+  }
+  .bla h1{
+   font-size: 1.15em;
+  margin-bottom: 5%;
+} 
+}
+
+
+
 </style>
 

@@ -12,8 +12,8 @@
     <h1 v-if="message">{{message}}</h1>
     <h1 v-else-if=" selectAcc !== 'null' && selectAcc !== null "> Statistika transakcija za račun: {{ selectAcc }}</h1>
     <div class="statisticsRow">
-      <ChartXY class="chart" />
-      <ChartCircle class="chart" />
+      <ChartXY class="chart scrollTD" />
+      <ChartCircle class="chart scrollTD" />
     </div>
   </div>
 </template>
@@ -146,11 +146,59 @@ export default {
 .chart {
   box-sizing: border-box;
   width: 50%;
-  min-width:300px;
+  min-width:450px;
 }
 h1{
   font-weight: normal;
   text-align: center;
   margin-top:1%;
+}
+.scrollTD {
+  overflow: auto;
+}
+
+/* width */
+::-moz-scrollbar {
+  height: 8px;
+  width: 3px;
+}
+::-webkit-scrollbar {
+  height: 8px;
+  width: 3px;
+}
+
+/* Track */
+::-moz-scrollbar-track {
+  box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671);
+  /* border-radius: 10px; */
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671);
+  /* border-radius: 10px; */
+}
+
+/* Handle */
+::-moz-scrollbar-thumb {
+  background: rgb(172, 168, 168);
+  /*  border-radius: 10px; */
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(172, 168, 168);
+  /*  border-radius: 10px; */
+}
+
+/* Handle on hover */
+::-moz-scrollbar-thumb:hover {
+  background: rgba(116, 113, 113, 0.774);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(116, 113, 113, 0.774);
+}
+@media screen and (max-width: 455px){
+  .chart{
+    box-sizing:border-box;
+    min-width:100%;
+    width:100%
+  }
 }
 </style>

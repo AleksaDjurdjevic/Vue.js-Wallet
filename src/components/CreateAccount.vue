@@ -13,7 +13,7 @@
         <br />
         <label>Suma</label>
         <br />
-        <input type="text" v-model="createSum" />
+        <input type="text" v-model="createSum" @keydown="rangefunction($event)" min="0"/>
         <br />
         <label>Naziv računa</label>
         <br />
@@ -46,6 +46,14 @@ export default {
       this.getTypeAccount();
   },
   methods: {
+    rangefunction(e) {
+     
+    if(!((e.keyCode > 95 && e.keyCode < 106)
+      || (e.keyCode > 47 && e.keyCode < 58) 
+      || e.keyCode == 8)) {
+        e.preventDefault();
+    }
+},
     checkFormCreateAcc() {
       this.createErrors = [];
       if (this.createSum === "") {

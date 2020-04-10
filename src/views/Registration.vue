@@ -210,5 +210,44 @@ h1 {
   color: #1db802;
 }
 
+@media screen and (min-width:410px) and (max-width:820px) {
+  .registration{
+    margin:0 auto;
+    width:100%;
+    min-height: 100vh;
+    height: auto;
+  
+  }
+  
+  .bla{
+    box-sizing:border-box;
+    width:60%;
+  }
+  .bla h1{
+  margin-bottom: 3%;
+} 
+}
+
+@media screen and (max-width:409px) {
+  .registration{
+    margin:0 auto;
+   font-size: 1em;
+    width:100%;
+    min-height: 100vh;
+    height: auto;
+  }
+ 
+ 
+  .bla{
+    box-sizing:border-box;
+    width:80%;
+  }
+  .bla h1{
+    font-size: 1.15em;
+     margin-bottom:5%; 
+} 
+}
+
+
 </style>
 

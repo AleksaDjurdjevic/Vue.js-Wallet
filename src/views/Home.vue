@@ -6,7 +6,7 @@
     <div v-if="createAccDiv" class="createAccDiv2" v-on:keyup.enter="checkFormCreateAcc">
       <form>
         <p class="exit" @click="showCreateAccDiv(false)">
-          <i class="fas fa-times" style="font-size:25px, text-align:right"></i>
+          <i class="fas fa-times" style=" text-align:right"></i>
         </p>
 
         <h2>Kreiraj novi račun</h2>
@@ -22,7 +22,13 @@
         <br />
         <label>Suma</label>
         <br />
-        <input type="number" class="inputWrite" v-model="createSum" />
+        <input
+          type="number"
+          class="inputWrite"
+          v-model="createSum"
+          @keydown="rangefunction($event)"
+          min="0"
+        />
         <br />
         <label>Naziv računa</label>
         <br />
@@ -86,9 +92,19 @@
 
       <br />
 
-      <input type="button"  class="inputWrite"  value="OPOZOVI TRANSAKCIJU"  @click="cancelTransaction(transactionForDelete)"  />
+      <input
+        type="button"
+        class="inputWrite"
+        value="OPOZOVI TRANSAKCIJU"
+        @click="cancelTransaction(transactionForDelete)"
+      />
       <br />
-      <input type="button" class="inputWrite"  value="OTKAŽI OPOZIVANJE"  @click="showDeleteTransactionDiv(false)"  />
+      <input
+        type="button"
+        class="inputWrite"
+        value="OTKAŽI OPOZIVANJE"
+        @click="showDeleteTransactionDiv(false)"
+      />
       <br />
 
       <!-- -->
@@ -184,8 +200,15 @@
               <td class="scrollTD">{{acc.tra_amount}}</td>
               <td class="scrollTD">{{acc.tra_description}}</td>
               <td class="scrollTD">{{formateDate(acc.tra_date)}}</td>
-              <td v-if="acc.tra_type_name === 'Štednja' || acc.tra_description === 'početno stanje računa' " class="scrollTD"></td>
-              <td v-else class="scrollTD cancelTransaction" @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)" >Opozovi</td>
+              <td
+                v-if="acc.tra_type_name === 'Štednja' || acc.tra_description === 'početno stanje računa' "
+                class="scrollTD"
+              ></td>
+              <td
+                v-else
+                class="scrollTD cancelTransaction"
+                @click="checkCancelTransaction(acc.tra_id ,acc.tra_description)"
+              >Opozovi</td>
             </tr>
           </table>
           <table v-else-if="arrTryTransaction.length>0 && showTryAcc">
@@ -257,7 +280,13 @@
           <br />
           <label>Iznos</label>
           <br />
-          <input v-model="buySum" type="number" class="inputWrite" />
+          <input
+            v-model="buySum"
+            type="number"
+            class="inputWrite"
+            @keydown="rangefunction($event)"
+            min="0"
+          />
           <br />
           <label>Opis</label>
           <br />
@@ -282,7 +311,13 @@
           </h2>
           <label>Iznos</label>
           <br />
-          <input v-model="addSum" type="number" class="inputWrite" />
+          <input
+            v-model="addSum"
+            type="number"
+            class="inputWrite"
+            @keydown="rangefunction($event)"
+            min="0"
+          />
           <br />
           <label>Opis</label>
           <br />
@@ -389,7 +424,17 @@ export default {
   methods: {
     displayDelete(e) {
       e.preventDefault();
-      alert("cao");
+    },
+    rangefunction(e) {
+      if (
+        !(
+          (e.keyCode > 95 && e.keyCode < 106) ||
+          (e.keyCode > 47 && e.keyCode < 58) ||
+          e.keyCode == 8
+        )
+      ) {
+        e.preventDefault();
+      }
     },
     //call in  get accounts and setBill - set value for chart- for default bill
     getParamsForChart(acc_name) {
@@ -518,7 +563,7 @@ export default {
           return;
         }
         if (this.createSum.length > 30) {
-          this.createErrors.push("Iznos ne sme biti duži od 30 cifre");
+          this.createErrors.push("Iznos ne sme biti duži od 30 cifri");
           return;
         }
 
@@ -634,11 +679,12 @@ export default {
           return;
         }
         this.buyErrors.push("Unos mora postojati");
+        return;
       }
       if (!this.buySum) {
         this.buyErrors.push("Iznos mora biti upisan");
       }
-      if (this.buySum <= 0) {
+      if (this.buySum && this.buySum <= 0) {
         this.buyErrors.push("Iznos za transakciju mora biti veći od 0");
       }
       if (!this.buyDesc) {
@@ -976,7 +1022,6 @@ export default {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(116, 113, 113, 0.774);
 }
-
 
 .dashboard {
   text-align: center;
@@ -1388,7 +1433,7 @@ h1 .orange {
   min-height: 100%;
 
   background: #00000000;
- 
+
   position: fixed;
   left: 0;
   top: 0;
@@ -1410,6 +1455,7 @@ h1 .orange {
   text-align: right;
   cursor: pointer;
   padding-left: 14%;
+  font-size: 25px;
 }
 .exit :hover {
   font-size: 1.1em;
@@ -1438,5 +1484,48 @@ h1 .orange {
 i :hover {
   font-size: 1.1em;
   cursor: pointer;
+}
+@media screen and (max-width: 500px) {
+  .dashboard {
+    font-size: 1em;
+  }
+  h2 {
+    font-size: 1.2em;
+    padding: 1%;
+    margin:2%;
+  }
+  .exit {
+    display: none;
+  }
+  .transaction {
+    padding-bottom:5%;
+    min-height:fit-content;
+  }
+  .inputWrite {
+    padding: 1% 1%;
+    margin-bottom: 1%;
+  }
+
+  .createAccDiv2 {
+    box-sizing: border-box;
+    width: 80%;
+    top: 0%;
+    left: 10%;
+    padding: 0 1% 2% 1%;
+  }
+ 
+
+  form {
+    padding: 0;
+    width: 95%;
+  }
+
+  input[type="button"] {
+    font-family: "Oswald", sans-serif !important;
+    font-size: 1em;
+
+    width: 63% !important;
+    /* border: inset 2px rgb(77, 74, 74) !important; */
+  }
 }
 </style>

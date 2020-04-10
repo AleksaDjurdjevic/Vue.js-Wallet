@@ -28,11 +28,12 @@
       Šifra:
       <input type="password" v-model="computedPassword" placeholder="Nova šifra" />
     </div>
-    <p :class = "{'err': err, 'err-invi': !err }">{{err? err: 'Fill'}}</p>
-    <p :class = "{'message': message, 'message-invi': !message }">{{message? message: 'fill'}}</p>
-    <div class="btn">
+     <div class="btn">
       <button @click="update()">Potvrdite promene</button>
     </div>
+    <p :class = "{'err': err, 'err-invi': !err }">{{err? err: 'Fill'}}</p>
+    <p :class = "{'message': message, 'message-invi': !message }">{{message? message: 'fill'}}</p>
+   
   </div>
 </template>
 
@@ -429,4 +430,26 @@ h1 {
   flex-direction: column;
   align-items: center;
 }
+@media screen and (min-width:410px) and (max-width:720px) {
+  .userProfile div {
+   width: 70%;
+   margin: 3px;
+}
+ .btn {
+   font-size:1em;
+  margin-bottom: 5%;
+} 
+}
+
+@media screen and (max-width:409px) {
+  .userProfile div {
+  width: 100%;
+  margin: 5px;
+}
+  .btn {
+   font-size:0.8em;
+  margin-bottom: 5%;
+} 
+}
+
 </style>

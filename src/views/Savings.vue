@@ -55,7 +55,10 @@
                             <p class='p-details'>Cilj: <span>{{saving.sav_amount + " " + saving.acc_type_name}}</span></p>
                         </div>
                         <div class="data-row">
-                            <p v-if = "saving.sav_month_rate_payed>0" class='p-details'>Mesečna rata: <span>{{saving.sav_month_rate_payed+ " " + saving.acc_type_name}}</span></p>
+                            <p v-if = "saving.sav_month_rate - saving.payments_for_this_month>0" class='month-rate'>
+                                <span class = "month-rate-first">Mesečna rata: {{saving.sav_month_rate + " " + saving.acc_type_name}}</span>
+                                <span class = "month-rate-second">Preostalo za uplatu rate: {{saving.sav_month_rate-saving.payments_for_this_month + " " + saving.acc_type_name}}</span>
+                            </p>
                             <p v-else class='p-done'>Uplaćeno! <span><i class="far fa-check-circle fa-2x" style = "color:#03a100;"></i></span></p>
                         </div>
                     </div>
@@ -200,17 +203,15 @@ export default {
             }    
         },
         getSavings(){
+            console.log(moment('31.02.2019'));
+            
             axios.post('http://053n122.mars-e1.mars-hosting.com/api/get/getSavings', {sid: localStorage.getItem('sid')})
             .then(r=>{
                 if(r.data.all_savings !== undefined){
                     this.savings = r.data.all_savings;
+
                     for(let i=0; i<this.savings.length; i++){
-                        this.savings[i].sav_month_rate = this.calculateRate(this.savings[i].leftover_amount, this.savings[i].sav_start, this.savings[i].sav_period);
-                        this.savings[i].hover = false;
-                        this.savings[i].fixed_month_rate = Math.ceil(this.savings[i].sav_amount / this.savings[i].sav_period);
-                        this.savings[i].sav_months_in = this.getMonthsIn(this.savings[i].sav_start, this.savings[i].sav_period) + 1;
-                        this.savings[i].sav_month_rate_payed = this.savings[i].fixed_month_rate*this.savings[i].sav_months_in-this.savings[i].sav_amount_accumulated;
-                        
+                        //Get saving status
                         let currentDate = moment();
                         let endDate = moment(this.savings[i].sav_start).add(this.savings[i].sav_period, 'months');
                         
@@ -221,14 +222,51 @@ export default {
                         }else{
                             this.savings[i].sav_status = 'U toku';  
                         }
+                        
+                        //Get payments for this month
+                        let startParts =  this.savings[i].sav_start.split('-');
+                        let firstDay = startParts[2];
+
+                        if(currentDate.date() < parseInt(firstDay)){
+                            let fromDate = currentDate.month().toString().length < 2? moment(`${startParts[0]}-0${currentDate.month().toString()}-${firstDay}`) : moment(`${startParts[0]}-${currentDate.month().toString()}-${firstDay}`)
+                            let toDate = (currentDate.month()+1).toString().length < 2? moment(`${startParts[0]}-0${(currentDate.month()+1).toString()}-${firstDay}`) : moment(`${startParts[0]}-${(currentDate.month()+1).toString()}-${firstDay}`)
+
+                            this.savings[i].payments_for_this_month = 0;
+
+                            for(let j=0; j<this.savings[i].payments.length; j++){
+                                if(moment(this.savings[i].payments[j].sav_pay_date) >= fromDate && moment(this.savings[i].payments[j].sav_pay_date) < toDate){
+                                    this.savings[i].payments_for_this_month += this.savings[i].payments[j].sav_pay_amount;
+                                }
+                            }
+                            
+                        }else if (currentDate.date() >= parseInt(firstDay)){
+                            let fromDate = (currentDate.month()+1).toString().length < 2? moment(`${startParts[0]}-0${(currentDate.month()+1).toString()}-${firstDay}`) : moment(`${startParts[0]}-${(currentDate.month()+1).toString()}-${firstDay}`)
+                            let toDate = (currentDate.month()+2).toString().length < 2? moment(`${startParts[0]}-0${(currentDate.month()+2).toString()}-${firstDay}`) : moment(`${startParts[0]}-${(currentDate.month()+2).toString()}-${firstDay}`)
+
+                            this.savings[i].payments_for_this_month = 0;
+
+                            for(let j=0; j<this.savings[i].payments.length; j++){
+                                if(moment(this.savings[i].payments[j].sav_pay_date) >= fromDate && moment(this.savings[i].payments[j].sav_pay_date) < toDate){
+                                    this.savings[i].payments_for_this_month += this.savings[i].payments[j].sav_pay_amount;
+                                }
+                            }
+                            
+                        }
+
+                        this.savings[i].sav_month_rate = this.calculateRate(this.savings[i].leftover_amount, this.savings[i].sav_start, this.savings[i].sav_period, this.savings[i].payments_for_this_month);
+                        this.savings[i].sav_next_month_rate = this.calculateRate(this.savings[i].leftover_amount, this.savings[i].sav_start, this.savings[i].sav_period-1);
+                        this.savings[i].hover = false;
+                        this.savings[i].sav_months_in = this.getMonthsIn(this.savings[i].sav_start, this.savings[i].sav_period) + 1;
                     }
                 }
             });
         },
-        calculateRate(leftover_amount, start, period){
+        calculateRate(leftover_amount, start, period, month_payments){
+            if(month_payments === undefined) month_payments = 0;
+
             let monthsIn = this.getMonthsIn(start, period);
             let leftoverMonths = period - monthsIn;
-            return Math.ceil(leftover_amount / leftoverMonths);
+            return Math.ceil((leftover_amount+month_payments) / leftoverMonths);
         },
         getMonthsIn(start, period){
             let currentDate = new Date();
@@ -275,15 +313,15 @@ export default {
             if(bool){
                 return s
             }else {
-                if(s.length>17){
-                    return s.substring(17, 0) + " ...";
+                if(s.length>30){
+                    return s.substring(30, 0) + " ...";
                 }else{
                     return s;
                 }
             } 
         },
         displaySavingFullName(index, applying){
-            if(this.savings[index].sav_description.length>17){
+            if(this.savings[index].sav_description.length>30){
                 if(applying) {
                     if(this.savings[index].hover !== true){
                         this.savings[index].hover = true;
@@ -636,6 +674,30 @@ button{
     font-weight: 100;
     height: 100%;
     line-height: 1.1em;
+    align-items: center;
+}
+.month-rate{
+    display: flex;
+    font-weight: 100;
+    height: 100%;
+    line-height: 1.1em;
+    align-items: center;
+    flex-direction: column;
+}
+.month-date span {
+    display:flex;
+}
+.month-rate .month-rate-first{
+    height:70%;
+    display:flex;
+    align-items: flex-end;
+    box-sizing: border-box;
+    padding-bottom: 1%;
+}
+.month-rate .month-rate-second{
+    height:30%;
+    display:flex;
+    font-size: 0.5em;
     align-items: center;
 }
 .p-done{

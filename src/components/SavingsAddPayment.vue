@@ -23,7 +23,7 @@
                 <p>{{account.acc_amount + " " + account.acc_type_name}}</p>
             </div>
         </div>
-        <p class ="no-acc" v-if= "accounts.length === 0">Nemate računa ovog tipa</p>
+        <p class ="no-acc" v-if= "accounts.length === 0">Nemate računa ove valute</p>
         <div class="accounts" v-if = "accounts.length===1">
             <div class="each-account-selected">
                 <p>{{accounts[0].acc_name}}</p>
@@ -125,7 +125,8 @@ export default {
                     accId: this.acc_id,
                     savId: this.sav_id,
                     savPayAmount: this.paymentValue,
-                    savEnd: currentDateString
+                    savEnd: currentDateString,
+                    sav_leftover: this.singleSaving.leftover_amount
                 }).then(r=>{
                     this.error = r.data.msg;
                     this.$emit('get-savings');

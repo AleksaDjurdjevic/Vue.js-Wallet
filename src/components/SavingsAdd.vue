@@ -9,7 +9,7 @@
             <input id = "new-sav-period" type="number" v-model = "newSavPeriod">
 
         <select class="add-accounts" v-model = "type">
-            <option disabled value="">Izaberite tip štednje:</option>
+            <option disabled value="">Izaberite valutu štednje:</option>
             <option v-for = "eachType in accounts" 
             :value = "eachType.acc_type_id" 
             :key="eachType.acc_type_id">
@@ -68,7 +68,7 @@ export default {
                 this.error = "Željena količina mora biti pozitivan broj i veći od 0.";
 
             }else if(this.type ===''){
-                this.error = "Unesite tip štednje.";
+                this.error = "Unesite valutu štednje.";
 
             }else{
                 axios.post('http://053n122.mars-e1.mars-hosting.com/api/wallet/addSavings', {

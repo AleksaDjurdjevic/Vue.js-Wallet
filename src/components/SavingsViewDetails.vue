@@ -9,11 +9,10 @@
               <div v-if = "singleSaving.leftover_amount >= 0" class="cell">Preostalo za uplatu</div>
               <div class="cell">Broj uplata</div>
               <div class="cell">Period štednje</div>
+              <div class="cell">Period do kraja štednje</div>
               <!-- Dynamic data -->
-              <div v-if = "!singleSaving.sav_end">
-                <div class="cell" v-if = "singleSaving.sav_month_rate_payed>0" >Mesečna rata</div>
-                <div class="cell" v-else-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>0" >Sledeća mesečna rata</div>
-                <div class="cell" v-else >Sledeće rate ispod</div>
+              <div v-if = "!singleSaving.sav_end && singleSaving.sav_period - singleSaving.sav_months_in !== 0">
+                <div class="cell">Sledeća mesečna rata</div>
               </div>
               <!-- End of dynamic data -->
               <div class="cell">Rata se obnavlja</div>
@@ -25,11 +24,10 @@
               <div v-if = "singleSaving.leftover_amount >= 0" class="cell">{{singleSaving.leftover_amount + " " + singleSaving.acc_type_name}}</div>
               <div class="cell">{{singleSaving.number_of_payments}}</div>
               <div class="cell">{{singleSaving.sav_period + setProperWord(singleSaving.sav_period)}}</div>
+              <div class="cell">{{singleSaving.sav_period-singleSaving.sav_months_in+1 + setProperWord(singleSaving.sav_period)}}</div>
               <!-- Dynamic data -->
-              <div v-if = "!singleSaving.sav_end">
-                <div v-if = "singleSaving.sav_month_rate_payed>0" class="cell">{{singleSaving.sav_month_rate_payed + " " + singleSaving.acc_type_name}}</div>
-                <div class="cell" v-else-if = "singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed>=0" >{{singleSaving.fixed_month_rate + singleSaving.sav_month_rate_payed}}{{" " + singleSaving.acc_type_name}}</div>
-                <div class="cell" v-else>{{singleSaving.fixed_month_rate + " " + singleSaving.acc_type_name}}</div>
+              <div v-if = "!singleSaving.sav_end && singleSaving.sav_period - singleSaving.sav_months_in !== 0">
+                <div class="cell">{{singleSaving.sav_next_month_rate+ " " + singleSaving.acc_type_name}}</div>
               </div>
               <!-- End of dynamic data -->
               <div class="cell">{{parseInt(singleSaving.sav_start.slice(-2))}}. dana u mesecu</div>

@@ -1,12 +1,14 @@
 <template>
   <div class="userProfile" v-on:keyup.enter="update" >
     <div class="profile-img">
-      <img v-if="url === 'placeholder'" src="../assets/placeholder-img.jpg" alt="">
-      <img v-else :src="url" alt="" />
+      <div class="img-wrap" @mouseover="showChangePic(1)" @mouseleave="showChangePic(0)">
+        <img v-if="url === 'placeholder'" src="../assets/placeholder-img.jpg" alt="">
+        <img v-else :src="url" alt="" />
+        <label for="myfile" ref="label"><i class="fas fa-camera" style = "color:white;"></i></label>
+      </div>
+      <input id="myfile" type="file" @change="photoData($event)" ref="fileInput"/>
     </div>
     <div class="picEdit">
-      <label for="myfile">Izaberite novu profilnu sliku</label>
-      <input id="myfile" type="file" @change="photoData($event)" ref="fileInput"/>
       <p v-if="img">Nova slika: {{img.name}}</p>
       <button class = "remove-pic" v-if="img" @click = "resetFile">Uklonite dodatu sliku</button>
     </div>
@@ -249,6 +251,13 @@ export default {
             }
         });
       })
+    },
+    showChangePic(val){
+      if(val){
+        this.$refs.label.style.opacity = '1';
+      }else if (!val){
+        this.$refs.label.style.opacity = '0';
+      }
     }
   }
 };
@@ -258,22 +267,36 @@ export default {
 .userProfile {
   display: flex;
   flex-direction: column;
-  align-items: center;
   min-height: 92vh;
-  margin-top: 2%;
-}
-.userProfile div {
-  width: 30%;
-  margin: 5px;
-}
-.profile-img img {
-  border-radius: 50%;
-  height: 100px;
-  width: 100px;
-}
-.profile-img{
-  display: flex;
+  margin-top: 2% auto;
   justify-content: center;
+  width: 30%;
+}
+.img-wrap{
+  width: 130px;
+  height: 130px;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 50%;
+}
+.img-wrap img {
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+}
+label{
+  opacity: 0;
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  width: 25%;
+  height: 25%;
+  background-color: black;
+  border-radius: 50%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.4s;
 }
 input[type="text"],
 input[type="password"] {
@@ -325,6 +348,26 @@ button{
   background-image: linear-gradient(-45deg, rgb(131, 131, 131), rgb(34, 34, 34));
   color: #e6eaef;
 }
+button:hover{
+  text-shadow: 2.9px 2.95px 2.95px rgb(131, 131, 131);
+
+  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
+    0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
+    0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
+}
+button:active{
+  box-shadow: 0px 1px 3px 1px #888888;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+
+  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
+    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
+    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
+  transition: 0s;
+  color: rgba(18, 104, 117, 0.616);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  outline: none;
+}
 button:focus{
   outline: none;
   cursor: pointer;
@@ -338,13 +381,11 @@ h1 {
 .welcome{
   text-align: center;
 }
-label {
-  font-weight: bold;
-} 
 .err {
   font-weight: normal;
   color:#e80000;
   text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
+  margin: 1% auto;
 }
 .err-invi {
   font-weight: normal;
@@ -356,6 +397,7 @@ label {
   font-weight: normal;
   color:#1db802;
   text-shadow: -0.5px 0 black, 0 0.5px black, 0.5px 0 black, 0 -0.5px black;
+  margin: 1% auto;
 }
 .message-invi{
   font-weight: normal;
@@ -366,57 +408,6 @@ label {
 .btn{
   display: flex;
   justify-content: center;
-}
-label{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
-  transition-property: box-shadow, transform, color;
-  transition-duration: 0.2s, 0.2s, 0.2s;
-  transition-timing-function: ease, ease, ease;
-  transition-delay: 0s, 0s, 0s;
-
-  cursor: pointer;
-  font-size: 1.2em;
-  min-width: 99px;
-  font-weight: 500;
-  margin: 0.6%;
-  width: 70%;
-  background-color: rgb(0, 0, 0);
-  overflow: hidden;
-  border-radius: 10px;
-  padding-right: 5%;
-  padding-left: 5%;
-
-  box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
-    0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
-    0 1px 2px 1px rgba(0, 0, 0, 0) inset,
-    0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
-  background-image: linear-gradient(-45deg, rgb(131, 131, 131), rgb(34, 34, 34));
-  color: #e6eaef;
-}
-label:hover, button:hover{
-  font-size: 1.2em;
-  text-shadow: 2.9px 2.95px 2.95px #000000;
-
-  box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
-    0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
-    0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
-}
-label:active, button:active{
-  box-shadow: 0px 1px 3px 1px #888888;
-  font-size: 1.2em;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-
-  box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
-    0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
-    0 -18px 32px -2px rgba(255, 255, 255, 0.1) inset;
-  transition: 0s;
-  color: rgba(18, 104, 117, 0.616);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
-  outline: none;
 }
 .remove-pic{
   width: 80%;

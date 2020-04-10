@@ -13,6 +13,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .profil{
+    display: flex;
+    justify-content: center;
+  }
 </style>

@@ -66,7 +66,7 @@
                 <div>Tip transakcije</div>
                 <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
               </div>
-              <div class="cell-first" @click="transactionSortBy('tra_amount')">
+              <div class="cell-first">
                 <div>Iznos</div>
                 <div :class="orderBy == 'ASC' ? 'arrow-up': 'arrow-down'"></div>
               </div>
@@ -85,7 +85,7 @@
                 <div class="cell">{{formateDate(tr.tra_date)}}</div>
                 <div class="cell">{{tr.acc_name}}</div>
                 <div class="cell">{{tr.tra_type_name}}</div>
-                <div class="cell">{{tr.tra_amount + " " + tr.acc_type_name}}</div>
+                <div class="cell">{{tr.tra_type_name === 'Prihod' ? '+' + tr.tra_amount + " " + tr.acc_type_name: '-' + tr.tra_amount + " " + tr.acc_type_name}}</div>
                 <div class="cell">{{tr.cat_name}}</div>
                 <div class="cell">{{tr.tra_description}}</div>
               </div>

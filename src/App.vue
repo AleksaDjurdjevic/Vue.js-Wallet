@@ -795,8 +795,9 @@ h6 {
 .navRightM ul li ul{
     background: #17a2b8;
     position:absolute;
+    right:0;
     top:100%;
-    width:140px;
+    width:150px;
     display:none;
 }
 .navRightM ul li:hover ul{
@@ -829,10 +830,18 @@ h6 {
   .headerM {
     display: none;
   }
-  .app {
-    transition: 800ms ease-in-out all;
+  @keyframes opacity {
+  0% {
+    background-color: rgb(255, 255, 255);
   }
+  100% {
+    background-color: #17a2b8;
+  }
+}
+  
   .navH{
+   animation-name: opacity;
+   animation-duration: 0.5s;
     max-width:100%;
     position: sticky;
     top:0;
@@ -852,7 +861,8 @@ h6 {
     
   }
   .navigacija {
-    transition: 800ms ease-in-out background-color;
+    animation-name: opacity;
+   animation-duration: 0.5s;
     display: block;
     padding-bottom: 5%;
     background-color: #17a2b8;
@@ -871,8 +881,7 @@ h6 {
   }
 
   .container {
-    animation-name: opacity;
-    animation-duration: 0.3s;
+    
     display: block;
     cursor: pointer;
   }
@@ -888,7 +897,7 @@ h6 {
   }
   .change {
     animation-name: opacity;
-    animation-duration: 0.3s;
+    animation-duration: 0.5s;
     margin: 0;
     background-color: #17a2b8;
   }

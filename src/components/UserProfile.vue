@@ -431,8 +431,10 @@ h1 {
   align-items: center;
 }
 @media screen and (min-width:410px) and (max-width:720px) {
-  
-  .userProfile div {
+  .userProfile{
+    width:50%;
+    }
+  .userProfile div input {
    width:100%;
    margin: 3px;
 }
@@ -443,7 +445,10 @@ h1 {
 }
 
 @media screen and (max-width:409px) {
-  .userProfile div {
+    .userProfile{
+       width:70%;
+    }
+  .userProfile div input{
   width: 100%;
   margin: 5px;
 }

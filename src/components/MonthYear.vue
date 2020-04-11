@@ -145,13 +145,14 @@ export default {
   display: flex;
   box-sizing: border-box;
   width: 16.66%;
-  min-width: 109px;
+  min-width: 119px;
   text-align: center;
   padding: 5px;
    text-shadow: 0.8px 0.8px 0.8px #000000;
   justify-content: center;
   align-items: center;
    flex-wrap: wrap;
+   overflow: hidden;
 }
 .ch {
   

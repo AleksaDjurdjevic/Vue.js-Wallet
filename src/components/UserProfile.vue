@@ -431,8 +431,9 @@ h1 {
   align-items: center;
 }
 @media screen and (min-width:410px) and (max-width:720px) {
+  
   .userProfile div {
-   width: 70%;
+   width:100%;
    margin: 3px;
 }
  .btn {

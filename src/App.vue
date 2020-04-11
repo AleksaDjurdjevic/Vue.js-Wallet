@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <div class="navH" :class="{tirkiz:change}">
     <div class="navHamb" :class="{container:!change , change:change}" @click="myFunction()">
       <div class="bar1"></div>
       <div class="bar2"></div>
@@ -52,8 +53,65 @@
       </div>
     </div>
     <!-- showNawHamb -->
+</div>
+  <div class="headerM cf">
+    <div class="navLeftM " id="logo" @click="setSelected(0)">
+        <router-link to="/">
+              <img src="./assets/logo1.png" alt />
+        </router-link>
+    </div>
+    <div class="navLeftM">
+          <ul>
+              <li @click="setSelected(0)"><router-link :to="links[0].url" :class="{selected: links[0].selected}">Početna</router-link></li>
+              <li v-if="isLoggedIn" @click="setSelected(1)"><router-link  :to="links[1].url"  :class="{selected: links[1].selected}" >Transakcije</router-link></li>
+              <li v-if="isLoggedIn" @click="setSelected(2)" ><router-link :to="links[2].url" :class="{selected: links[2].selected}" >Štednja</router-link></li>
+              <li v-if="isLoggedIn" @click="setSelected(3)" ><router-link  :to="links[3].url"  :class="{selected: links[3].selected}"  >Statistika</router-link></li>
+          </ul>
+    </div><!-- end navLeftM -->
 
-    <header id="page-header">
+   
+    <div class="navRightM">
+          <ul> 
+              <li v-if="!isLoggedIn"  @click="setSelected(5)"> <router-link :to="links[5].url" :class="{selected: links[5].selected}">Prijavite&nbsp;se</router-link></li>
+              <li v-if="!isLoggedIn" @click="setSelected(6)"><router-link :to="links[6].url"  :class="{selected: links[6].selected}" >Registracija</router-link></li>
+
+             
+              <li v-if="isLoggedIn" > <router-link :to="links[4].url" >  {{ name+" "+surname }}  </router-link>
+                  <ul>
+                    <router-link :to="links[4].url"><li @click="setSelected('all')" >Profil</li></router-link>
+                    <a @click="logout"><li>Odjavite se </li></a>
+                 </ul>
+              </li>
+              
+    
+          </ul>
+
+    </div><!-- end navRightM -->
+     <div class="navRightM"> <!-- slika -->
+          <div class="" @click="setSelected(0)">
+              <router-link :to="links[4].url" id="profile" v-if="!isLoggedIn">
+                <img src="./assets/placeholder-img.jpg" alt />
+              </router-link>
+            </div>
+
+       <div class="navRightM" @click="setSelected('all')">
+              <router-link :to="links[4].url" id="profile" v-if="isLoggedIn">
+                <img
+                  v-if="url === './assets/placeholder-img.jpg'"
+                  src="./assets/placeholder-img.jpg"
+                  alt
+                />
+                <img v-else :src="url" alt />
+              </router-link>
+            </div>
+    </div>
+  </div><!-- end headerM -->
+
+
+
+
+
+    <header v-if="false" id="page-header">
       <div class="container">
         <div class="nav cart">
           <div id="logo" @click="setSelected(0)">
@@ -293,6 +351,7 @@ export default {
 .app {
   /* font-size:1.2em; */
   font-family: "Oswald", sans-serif;
+  
 }
 body {
   padding: 0;
@@ -475,7 +534,7 @@ article p {
 }
 .l-4of12 {
   display: inline-block;
-  width: calc(33.3333333333% - 33px);
+ /* width: calc(33.3333333333% - 33px);*/
   margin: 0 15px;
 }
 
@@ -522,6 +581,7 @@ article p {
 .cart a {
   text-decoration: none;
 }
+
 
 .cart img {
   border-radius: 50%;
@@ -669,30 +729,130 @@ h6 {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+
+
+
+
+
+/* ------ MIRJANA style -------- */
+.cf:after{
+  content:" ";
+  display:table;
+  clear:both;   
+  }
+
+.headerM{
+  font-size: 24px;
+  padding:10px 15px 8px 50px;
+  max-width:100%;
+  background: #17a2b8;
+  color:#ffffff;
+  position: sticky;
+  top:0;
+  z-index: 6000;
+}
+.headerM ul{
+  margin:0;
+  padding:0;
+  list-style: none;
+}
+.navLeftM{
+  float:left;
+}
+.navRightM{
+   width:fit-content;
+  float: right;
+}
+
+
+.navLeftM ul li,
+.navRightM ul li{
+  float:left;
+  position:relative;
+   padding:10px 5px 13px 5px;
+}
+
+.navLeftM ul li a,
+.navRightM ul li a{
+    color:#ffffff;
+    text-decoration:none;
+    display:block;
+}
+
+.navLeftM ul li a:hover,
+.navRightM ul li a:hover{
+    color:rgba(255, 255, 255, 0.685);
+   
+}
+
+.navLeftM ul li a.selected,
+.navRightM ul li a.selected{
+    border-bottom: 0.1em solid rgba(255, 255, 255, 0.8);
+}
+
+
+.navRightM ul li ul{
+    background: #17a2b8;
+    position:absolute;
+    top:100%;
+    width:140px;
+    display:none;
+}
+.navRightM ul li:hover ul{
+  display: block;
+}
+.navRightM ul li ul li{
+  float:none;
+}
+
+.navRightM a img,
+.navLeftM a img {
+  border-radius: 50%;
+  width: 50px !important;
+  height: 50px !important;
+}
+
+
 .navHamb {
   display: none;
 }
 .navigacija {
   display: none;
 }
+ #page-header {
+    display: none;
+  }
 
-@media screen and (max-width: 500px) {
-  #page-header {
+@media screen and (max-width: 720px) {
+  #page-header,
+  .headerM {
     display: none;
   }
   .app {
     transition: 800ms ease-in-out all;
   }
+  .navH{
+    max-width:100%;
+    position: sticky;
+    top:0;
+    z-index: 6000;
+    background: #ffffff;
+  }
+  .tirkiz{
+    background: #17a2b8 !important;
+  }
 
   .navHamb {
-    transition: 800ms ease-in-out all;
+    
     display: block;
     padding: 1% 3%;
     font-size: 1.2em;
     margin: 0;
+    
   }
   .navigacija {
-    transition: 800ms ease-in-out all;
+    transition: 800ms ease-in-out background-color;
     display: block;
     padding-bottom: 5%;
     background-color: #17a2b8;

@@ -145,7 +145,7 @@ export default {
   display: flex;
   box-sizing: border-box;
   width: 16.66%;
-  min-width: 119px;
+  min-width: 124px;
   text-align: center;
   padding: 5px;
    text-shadow: 0.8px 0.8px 0.8px #000000;
@@ -165,6 +165,7 @@ export default {
   outline: none;
   cursor: pointer;
   padding: initial;
+   overflow: auto;
 
   box-shadow: 0px 2px 0 0 rgba(24, 68, 75, 0.616),
     0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
@@ -271,4 +272,11 @@ select option{
     background:rgb(60, 61, 61);
 }
 
+
+@media screen and (max-width: 720px) {
+
+.round {
+  font-size:1em;
+   padding:3px;}
+}
 </style>

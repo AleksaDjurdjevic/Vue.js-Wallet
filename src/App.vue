@@ -7,53 +7,53 @@
       <div class="bar3"></div>
     </div>
     <div v-if="showNavHamb" class="navigacija">
-      <div class="ponovo" @click="setSelected(0)">
+      <div class="ponovo" @click="setSelected(0) , myFunction()" >
         <router-link :to="links[0].url" :class="{selected: links[0].selected}">Početna</router-link>
       </div>
-      <div class="ponovo" @click="setSelected(1)">
+      <div class="ponovo" @click="setSelected(1) , myFunction()">
         <router-link
           :to="links[1].url"
           :class="{selected: links[1].selected}"
           v-if="isLoggedIn"
         >Transakcije</router-link>
       </div>
-      <div class="ponovo" @click="setSelected(2)">
+      <div class="ponovo" @click="setSelected(2) , myFunction()">
         <router-link
           :to="links[2].url"
           :class="{selected: links[2].selected}"
           v-if="isLoggedIn"
         >Štednja</router-link>
       </div>
-      <div class="ponovo" @click="setSelected(3)">
+      <div class="ponovo" @click="setSelected(3), myFunction()">
         <router-link
           :to="links[3].url"
           :class="{selected: links[3].selected}"
           v-if="isLoggedIn"
         >Statistika</router-link>
       </div>
-      <div class="ponovo" @click="setSelected(5)">
+      <div class="ponovo" @click="setSelected(5), myFunction()">
         <router-link
           :to="links[5].url"
           :class="{selected: links[5].selected}"
           v-if="!isLoggedIn"
         >Prijavite se</router-link>
       </div>
-      <div class="ponovo" @click="setSelected(6)">
+      <div class="ponovo" @click="setSelected(6), myFunction()">
         <router-link
           :to="links[6].url"
           :class="{selected: links[6].selected}"
           v-if="!isLoggedIn"
         >Registracija</router-link>
       </div>
-      <div v-if="isLoggedIn" class="ponovo" @click="setSelected('all')">
+      <div v-if="isLoggedIn" class="ponovo" @click="setSelected('all'), myFunction()">
         <router-link :to="links[4].url">Profil</router-link>
       </div>
       <div v-if="isLoggedIn" class="ponovo">
-        <a @click="logout">Odjavite se</a>
+        <a @click="logout(), myFunction()">Odjavite se</a>
       </div>
     </div>
     <!-- showNawHamb -->
-</div>
+</div> <!-- end navH -->
   <div class="headerM cf">
     <div class="navLeftM " id="logo" @click="setSelected(0)">
         <router-link to="/">
@@ -874,11 +874,12 @@ h6 {
   .navigacija a {
     color: #ffffff;
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 1.3em;
   }
   a.selected {
     border-bottom: 0.1em solid rgba(255, 255, 255, 0.8);
   }
+  
 
   .container {
     

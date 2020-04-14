@@ -1029,7 +1029,8 @@ export default {
   width: 100%;
 }
 .bills {
-  padding: 6px 0;
+  box-sizing:border-box;
+  padding:0 1%;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -1044,9 +1045,9 @@ export default {
 
   cursor: pointer;
   font-size: 1.2em;
-  min-width: 99px;
+  min-width: 103px;
   font-weight: 500;
-  margin: 0.6%;
+  margin: 0.9% 0.6%;
   width: 18%;
   height: 60px;
   background-color: rgb(0, 0, 0);
@@ -1485,7 +1486,7 @@ i :hover {
   font-size: 1.1em;
   cursor: pointer;
 }
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 720px) {
   .dashboard {
     font-size: 1em;
   }
@@ -1512,6 +1513,13 @@ i :hover {
     top: 0%;
     left: 10%;
     padding: 0 1% 2% 1%;
+  }
+  .bils{
+    display:flex;
+   justify-content: center !important; 
+  }
+  .bill{
+     margin: 1% 0.8%;
   }
  
 

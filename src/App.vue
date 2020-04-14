@@ -1,6 +1,7 @@
 <template>
   <div class="app">
-    <div class="navH" :class="{tirkiz:change}">
+    <a id="head-anch"></a> 
+    <div class="navH" :class="{tirkiz:change}" >
     <div class="navHamb" :class="{container:!change , change:change}" @click="myFunction()">
       <div class="bar1"></div>
       <div class="bar2"></div>
@@ -348,10 +349,12 @@ export default {
 </script>
  
 <style >
+html{
+  scroll-behavior: smooth;
+}
 .app {
   /* font-size:1.2em; */
   font-family: "Oswald", sans-serif;
-  
 }
 body {
   padding: 0;

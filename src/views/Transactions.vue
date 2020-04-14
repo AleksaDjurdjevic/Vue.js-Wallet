@@ -1,5 +1,6 @@
 <template>
-  <div class="transactions" :key="key">
+  <div class="transactions" :key="key" id = "tran-anch">
+    
      <div v-if="showingCalendar" class="createAccDivCallendar" @click="showingCalendar=false"></div>
     <!-- Left side -->
     <div class="aside">
@@ -26,8 +27,9 @@
     </div>
 
     <!-- Right side -->
-    <div class="main">
-      <div class="table-wrap">
+    <div class="main" id = "table">
+      <div class="table-wrap" >
+          <a href="#table" id ="table-anch"></a>
           <p class="message">{{error}}</p>
           <div class="search-date">
             <div class="each-search-date">
@@ -47,6 +49,7 @@
           </div>
           <!-- Table -->
           <div class="main-table">
+            <button class="table-shade-p-resp" @click = "anchorTop">Povratak na vrh</button>
             <!-- Calendar -->
             <div class="calendar-wrapper" v-if="showingCalendar">
               <calendar @selectDate="setDate" @showCallEmit="showingCalendar = false" />
@@ -92,6 +95,7 @@
             </div>
             <div class="table-shade" v-if="showingTableShade"></div>
             <p class="table-shade-p" v-if="showingTableShade">Nemate transakcije za prikaz</p>
+            <p class="table-shade-p-anchor" v-if="showingTableShade" ><button @click = "anchorTop">Povratak na vrh</button></p>
             <!-- Pagination -->
             <div class="pagination-wrap" v-if="allPagesArray.length > 1">
               <div class="pages-dynamic">
@@ -268,6 +272,7 @@ export default {
         }
         this.showingAccPlaceholder = false;
         this.key++;
+        window.location.hash='table-anch'; //For anchor
       }
     },
     getAccounts() {
@@ -329,6 +334,8 @@ export default {
       this.targetInput = x;
     },
     setDate(date) {
+      console.log('cao');
+      
       let dateParts = date.split("-");
       if (dateParts[2].length === 1) {
         dateParts[2] = "0" + dateParts[2];
@@ -378,6 +385,7 @@ export default {
         this.acc_name = null;
         this.currentPage = 1;
         this.getTransactions();
+        window.location.hash='table-anch';
       }
     },
     validateDisplayingPages(direction, obj) {
@@ -483,6 +491,9 @@ export default {
       });
 
       this.currentPage = page.page;
+    },
+    anchorTop(){
+      window.location.hash = 'head-anch';
     }
   },
   mounted() {
@@ -546,7 +557,7 @@ export default {
 button::-moz-focus-inner {
   border: 0;
 }
-.pages-dynamic button {
+.pages-dynamic button, .table-shade-p-resp, .table-shade-p-anchor button{
   margin: 0 1%;
   border-radius: 13px;
   background-color: white;
@@ -576,13 +587,13 @@ button::-moz-focus-inner {
 
   color: #e6eaef;
 }
-.pages-dynamic button:hover {
+.pages-dynamic button:hover, .table-shade-p-resp:hover, .table-shade-p-anchor button:hover {
   box-shadow: 1px 4px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
 }
 
-.pages-dynamic button:active {
+.pages-dynamic button:active, .table-shade-p-resp:active, .table-shade-p-anchor button:active {
   cursor: pointer;
   box-shadow: 0 0px 0 0 rgba(18, 104, 117, 0.616), 0 3px 0 0 rgba(0, 0, 0, 0),
     0 4px 16px rgba(0, 0, 0, 0), 0 1px 2px 1px rgba(0, 0, 0, 0.5) inset,
@@ -592,7 +603,7 @@ button::-moz-focus-inner {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .pages-dynamic button.selected,
-.pages-dynamic button.selected:hover {
+.pages-dynamic button.selected:hover{
   background-color: #17a2b8;
   color: white;
   box-shadow: 0px 1px 3px 1px #888888;
@@ -675,7 +686,7 @@ button::-moz-focus-inner {
 }
 .main-table {
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
   border-radius: 25px;
   display: flex;
   flex-direction: column;
@@ -695,6 +706,7 @@ button::-moz-focus-inner {
   width: 100%;
   background-color: #17a2b8 !important;
   min-height: 6vh;
+  border-radius: 25px 25px 0 0;
 }
 .table-data{
   min-height: 66vh;
@@ -729,6 +741,9 @@ button::-moz-focus-inner {
 .row-first .cell:hover {
   cursor: pointer;
 }
+#table-anch{
+    display: none;
+  }
 .table-shade {
   width: 100%;
   height: 100%;
@@ -754,6 +769,12 @@ button::-moz-focus-inner {
   display: flex;
   justify-content: center;
   top: 200px;
+}
+.table-shade-p-anchor{
+  display: none;
+}
+.table-shade-p-resp {
+  display: none;
 }
 /* Pagination */
 .pagination-wrap {
@@ -790,76 +811,10 @@ button::-moz-focus-inner {
   flex-direction: column;
 }
 
-/*
-.each-account.selected{
--ms-transform-origin:   background-color: #17A2B8;
-  color: white;
-  border: 1px solid gray;
-  width: 90%;
-  margin-right: 10%;
-  margin-top: 1%;
-  
- 
-}  */
-
-/*
-.each-account.selected:hover{
-  animation-name: color-change-blue-shade;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
- 
-   
-} */
-
-/*
-
-.each-account{
-  height: 80px;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid gray;
-  width: 90%;
-  margin-right: 10%;
-  margin-top: 3%;
-  background-color: rgb(0, 0, 0);
-
-  transition: box-shadow 0.2s, transform 0.2s, color 0.2s;
-  transition: box-shadow, transform, color;
-  transition-duration: 0.2s, 0.2s, 0.2s;
-  transition-timing-function: ease, ease, ease;
-  transition-delay: 0s, 0s, 0s;
-
-  border-radius: 12px;
-
-box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
-    0 5px 5px -1px rgba(0, 0, 0, 0.6), 0 4px 6px 1px rgba(0, 0, 0, 0.3),
-    0 1px 2px 1px rgba(0, 0, 0, 0) inset,
-    0 18px 32px -2px rgba(255, 255, 255, 0.1) inset;
-  background-image: linear-gradient(
-    -45deg,
-    rgb(131, 131, 131),
-    rgb(34, 34, 34)
-  );
-  color: #e6eaef;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-
-}
-*/
-
 .each-account p,
 .each-account-placeholder p {
   margin: 0;
 }
-/*:checked
-.each-account:hover{
-  cursor: pointer;
-  animation-name: color-change-white-gray;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-  
-  
-} */
 
 .each-account,
 .each-account-placeholder {
@@ -901,21 +856,11 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
 .each-account:hover,
 .each-account-placeholder:hover {
   cursor: pointer;
-  /*  animation-name: color-change-white-gray;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;
-*/
 
   box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
     0 12px 20px rgba(0, 0, 0, 0.5), 0 1px 2px 1px rgba(0, 0, 0, 0) inset,
     0 18px 32px -2px rgba(255, 255, 255, 0.14) inset;
 }
-/*
-.each-account-placeholder.selected:hover{
-  animation-name: color-change-blue-shade;
-  animation-duration: 0.6s;
-  animation-fill-mode: forwards;  
-}  */
 
 .each-account:active,
 .each-account-placeholder:active {
@@ -930,13 +875,6 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
 .each-account.selected:hover,
 .each-account-placeholder.selected:hover,
 .each-account-placeholder.selected {
-  /* background-color: #17A2B8;
-  color: white;
-  border: 1px solid gray;
-  width: 90%;
-  margin-right: 10%;
-  margin-top: 1%;
-  */
 
   background-color: rgba(0, 0, 0, 0.5);
   background-image: linear-gradient(
@@ -1006,7 +944,6 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
 
 .scrollTD {
   overflow: auto;
-  
 }
 
 /* width */
@@ -1046,5 +983,156 @@ box-shadow: 3px 6px 0 0 rgba(24, 68, 75, 0.979),
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(116, 113, 113, 0.774);
 }
-
+@media (max-width: 720px){
+  .transactions{
+    flex-direction: column;
+    font-size: 0.7em;
+  }
+  .aside{
+    width: 90%;
+    margin: 0 auto;
+  }
+  .accounts{
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .scrollTD{
+    overflow: unset;
+  }
+  .each-account{
+    margin: 1%;
+    width: auto;
+    min-width: 20%;
+    height: auto;
+    min-height: 50px;
+  }
+  .each-account-placeholder{
+    margin: 1%;
+    width: auto;
+    min-width: 20%;
+    height: auto;
+    min-height: 50px;
+  }
+  .main{
+    width: 90%;
+    margin: 0 auto 0 auto;
+  }
+  .main-table{
+    min-height: 0;
+  }
+  .table-data{
+    min-height: 0;
+    padding-bottom: 25px;
+  }
+  .search-date{
+    flex-direction: column;
+    align-items: center;
+  }
+  .input-calendar{
+    width: 100%;
+  }
+  .input-calendar input{
+    width: 75%;
+    justify-content: center;
+  }
+  .each-search-date{
+    margin: 3% 0;
+    width: 100%;
+    align-items: center;
+  }
+  .row-first{
+    display: none;
+  }
+  .pagination-wrap{
+    display: none;
+  }
+  .row-other{
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2%;
+    pointer-events: none;
+  }
+  .row-other:last-child{
+    margin: 0;
+  }
+  .row-other .cell:nth-child(1):before{
+    content: "Datum";
+  }
+  .row-other .cell:nth-child(2):before{
+    content: "Naziv računa";
+  }
+  .row-other .cell:nth-child(3):before{
+    content: "Tip transakcije";
+  }
+  .row-other .cell:nth-child(4):before{
+    content: "Iznos";
+  }
+  .row-other .cell:nth-child(5):before{
+    content: "Kategorija";
+  }
+  .row-other .cell:nth-child(6):before{
+    content: "Opis";
+  }
+  .row-other .cell:nth-child(1),
+  .row-other .cell:nth-child(2),
+  .row-other .cell:nth-child(3),
+  .row-other .cell:nth-child(4),
+  .row-other .cell:nth-child(5),
+  .row-other .cell:nth-child(6){
+    justify-content: space-between;
+    width: 90%;
+  }
+  .row-other .cell{
+    width: 95%;
+    text-align: end;
+  }
+  .row-other:nth-of-type(odd){
+    background-color: #17a2b8;
+    color: white;
+    border-bottom: 1px solid white;
+  }
+  .table-shade-p{
+    top: 1%;
+    height: auto;
+    text-align: center;
+  }
+  .calendar-wrapper{
+    left: 8%;
+  }
+  .table-shade-p-resp {
+    font-size: 1.2em;
+    font-weight: 600;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 90%;
+    width: 70%;
+    margin: 0 auto;
+    opacity: 0.6;
+    box-shadow: none;
+  }
+  .table-shade-p-resp:hover{
+    box-shadow: none;
+  }
+  .table-shade-p-anchor{
+    font-size: 1.5em;
+    font-weight: 600;
+    width: 100%;
+    z-index: 101;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top: 100px;
+    cursor: pointer;
+    box-shadow: none;
+  }
+  .table-shade-p-anchor:hover{
+    box-shadow: none;
+  }
+  #table-anch{
+    display: inline;
+  }
+}
 </style>

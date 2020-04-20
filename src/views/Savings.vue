@@ -9,26 +9,35 @@
                 <button @click = "addingSaving = true">Dodaj štednju</button>
 
                 <p>Sortiraj po:</p>
-                <input type="radio" id="sort0" value = 'sav_start' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort0">Datumu kreiranja</label>
-                <br>
-                <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort1">Cilju</label>
-                <br>
-                <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort2">Uplaćenom iznosu</label>
-                <br>
-                <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort3">Periodu</label>
-                <br>
-                <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort4">Preostalom iznosu</label>
-                <br>
-                <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort5">Uplatama</label>
-                <br>
-                <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
-                <label for="sort6">Mesečnoj rati</label>
+
+                <div class="option-wrap">
+                    <input type="radio" id="sort0" value = 'sav_start' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                    <label for="sort0">Datumu kreiranja</label>
+                </div>
+                <div class="option-wrap">
+                    <input type="radio" id="sort1" value = 'sav_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                    <label for="sort1">Cilju</label>
+                </div>
+                <div class="option-wrap">
+                    <input type="radio" id="sort2" value = 'sav_amount_accumulated' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                    <label for="sort2">Uplaćenom iznosu</label>
+                </div>
+                <div class="option-wrap">
+                    <input type="radio" id="sort3" value = 'sav_period' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                    <label for="sort3">Periodu</label>
+                </div>
+                <div class="option-wrap">
+                    <input type="radio" id="sort4" value = 'leftover_amount' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                    <label for="sort4">Preostalom iznosu</label>
+                </div>
+                <div class="option-wrap">
+                    <input type="radio" id="sort5" value = 'number_of_payments' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                    <label for="sort5">Uplatama</label>
+                </div>
+                <div class="option-wrap">
+                    <input type="radio" id="sort6" value = 'sav_month_rate' v-model="property" @change = "savingSort(sortOrder)" @click = "savingSort(sortOrder)">
+                    <label for="sort6">Mesečnoj rati</label>
+                </div>
 
                 <div class="sort-order">
                     <input type="radio" id="asc" value = "asc" v-model="sortOrder" @change = "savingSort('asc')">
@@ -46,7 +55,7 @@
                 <div class="each-saving-white">
                     <p :class = "{hover: saving.hover}" @mouseover="displaySavingFullName(index, true)" @mouseleave="displaySavingFullName(index, false)">{{setProperSavingsNameLength(saving.sav_description, saving.hover)}}</p>
                 </div>
-                <div :class="'each-saving' + setClassForSavings(index+1)">
+                <div :class="'each-saving' + setClassForSavings(index)">
                     <div class="saving-status"><p>Status: <span :class="saving.sav_status">{{saving.sav_status}}</span></p></div>
                     <!-- Dashboard -->
                     <!-- V-if -->
@@ -76,7 +85,7 @@
                     <div class="buttons" v-if = "saving.sav_status === 'U toku'">
                         <button @click = "viewDetails(saving.sav_id)">Detalji</button>
                         <button @click = "viewPayments(saving.sav_id)">Pregled uplata</button>
-                        <button @click = "preparePayment(saving.sav_id)">Uplati na štednju</button>
+                        <button @click = "preparePayment(saving.sav_id)">Uplati</button>
                         <button @click = "deleteSavings(saving.sav_id)">Obriši štednju</button>
                     </div>
                     <!-- V-if -->
@@ -667,7 +676,7 @@ button{
 }
 .main{
     width:80%;
-    margin-right: 3%;
+    margin-right: 4%;
 }
 .p-details{
     display: flex;
@@ -746,7 +755,7 @@ button{
     display: block;
     position: relative;
     margin-bottom: 18%;
-    height: 45px;
+    min-height: 45px;
     width: 80%;
 }
 .reg-notice{
@@ -791,5 +800,113 @@ button{
     font-size: 2em;
     display:flex;
     align-items: center;
+}
+/* Responsive */
+@media (max-width: 720px){
+    .aside{
+        width: 96%;
+        margin: 2%;
+    }
+    .aside button{
+        margin: 1% auto 5% auto;
+    }
+    .sorting .option-wrap{
+        display:inline-block;
+    }
+    .sort-order{
+        display: flex;
+        justify-content: center;
+    }
+    .main{
+        width: 96%;
+        margin: 2%;
+        display:flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .savings-wrapper{
+        flex-direction: column;
+    }
+    .all-savings{
+        margin-bottom: 12%;
+        height: 150px;
+    }
+    .saving-status{
+        top: 9%;
+        font-size: 0.7em;
+    }
+    .data{
+        font-size: 0.6em;
+        flex-direction: column;
+    }
+    .saving-done{
+        font-size: 0.6em;
+    }
+    .data-row:nth-child(1), .data-row:nth-child(2){
+        width: auto;
+        margin-top: 2%;
+    }
+    .saving-done p {
+        display:flex;
+        align-items: center;
+        width: 80%;
+        position: absolute;
+        top: 13%;
+    }
+    .each-saving-white{
+        width: 100%;
+        height: 80%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: white;
+        border-radius: 15px;
+        box-sizing: border-box;
+        -webkit-box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 42px -18px rgba(0,0,0,0.75);
+    }
+    .each-saving-white p{
+        font-size: 1.8em;
+        width: 96%;
+        position: relative;
+        top: 1%;
+        left: 2%;
+        height: 20%;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        word-break: break-all;
+    }
+    .each-saving1, .each-saving2, .each-saving3, .each-saving4{
+        width: 100%;
+        height: 80%;
+        top: unset;
+        bottom: 0;
+    }
+    .buttons{
+        top: unset;
+        bottom: 5%;
+        height: 30%;
+    }
+    .buttons button{
+        font-size: 0.8em;
+        width: 20%;
+    }
+    .month-rate{
+        font-size: 0.8em;
+    }
+    .month-date span {
+        display:flex;
+    }
+    .month-rate .month-rate-second{
+        font-size: 0.8em;
+    }
+    .payment-form, .add-savings-form, .delete-saving, .view-payments, .savings-view-details {
+        top: 7%;
+    }
+    .sort-order{
+        margin-top: 5%;
+    }
 }
 </style>

@@ -264,6 +264,7 @@ export default {
         padding: 1%;
         color: #e6eaef;
         margin: 1%;
+        min-width: 40%;
     }
     .each-account:hover{
         box-shadow: 3px 6px 0 0 #126875, 0 12px 7px -1px rgba(0, 0, 0, 0.3),
@@ -342,5 +343,24 @@ export default {
     .no-acc{
         color: #e80000;
         font-size: 1.3em;
+    }
+
+/* Responsive */
+    @media (max-width: 720px){
+        .payment-form{
+            width:90%;
+            font-size: 0.9em;
+            height: 90vh;
+            overflow: auto;
+        }
+        button{
+            width: 85%;
+        }
+        .amount{
+            text-align:center;
+        }
+        /* .accounts{
+            font-size: 0.8em;
+        } */
     }
 </style>

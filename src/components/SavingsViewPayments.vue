@@ -216,4 +216,28 @@ export default {
     .no-payments{
         font-size: 1.5em;
     }
+
+/* Responsive */
+    @media (max-width: 720px){
+        .view-payments{
+            width:90%;
+            font-size: 0.9em;
+            height: 90vh;
+        }
+        button{
+            width: 85%;
+        }
+        .each-info{
+            box-sizing: border-box;
+            padding: 1%;
+        }
+        .each-info:nth-of-type(4){
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .no-payments{
+            text-align: center;
+        }
+    }
 </style>

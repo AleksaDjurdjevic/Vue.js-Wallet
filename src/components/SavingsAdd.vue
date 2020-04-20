@@ -108,6 +108,7 @@ export default {
         flex-direction: column;
         width: 30%;
         align-items: center;
+        max-height: 92vh;
     }
     input, select{
         width: 80%;
@@ -171,5 +172,19 @@ export default {
     }
     .add-accounts{
         font-family: 'Oswald', sans-serif;
+    }
+
+/* Responsive */
+    @media (max-width: 720px){
+        .add-savings-form{
+            width:85%;
+            font-size: 1em;
+        }
+        h2{
+            text-align: center;
+        }
+        label{
+            text-align: center;
+        }
     }
 </style>

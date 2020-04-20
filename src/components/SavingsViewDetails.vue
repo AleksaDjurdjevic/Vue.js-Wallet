@@ -3,37 +3,45 @@
       <h2>{{singleSaving.sav_description}}</h2>
 
       <div class="table">
-          <div class="column">
+          <div class="row">
               <div class="cell">Cilj</div>
-              <div class="cell">Do sada uplaćeno</div>
-              <div v-if = "singleSaving.leftover_amount >= 0" class="cell">Preostalo za uplatu</div>
-              <div class="cell">Broj uplata</div>
-              <div class="cell">Period štednje</div>
-              <div class="cell">Period do kraja štednje</div>
-              <!-- Dynamic data -->
-              <div v-if = "!singleSaving.sav_end && singleSaving.sav_period - singleSaving.sav_months_in !== 0">
-                <div class="cell">Sledeća mesečna rata</div>
-              </div>
-              <!-- End of dynamic data -->
-              <div class="cell">Rata se obnavlja</div>
-              <div class="cell">Datum početka</div>
-          </div>
-          <div class="column">
               <div class="cell">{{singleSaving.sav_amount + " " + singleSaving.acc_type_name}}</div>
-              <div class="cell">{{singleSaving.sav_amount_accumulated + " " + singleSaving.acc_type_name}}</div>
-              <div v-if = "singleSaving.leftover_amount >= 0" class="cell">{{singleSaving.leftover_amount + " " + singleSaving.acc_type_name}}</div>
-              <div class="cell">{{singleSaving.number_of_payments}}</div>
-              <div class="cell">{{singleSaving.sav_period + setProperWord(singleSaving.sav_period)}}</div>
-              <div class="cell">{{singleSaving.sav_period-singleSaving.sav_months_in+1 + setProperWord(singleSaving.sav_period)}}</div>
-              <!-- Dynamic data -->
-              <div v-if = "!singleSaving.sav_end && singleSaving.sav_period - singleSaving.sav_months_in !== 0">
-                <div class="cell">{{singleSaving.sav_next_month_rate+ " " + singleSaving.acc_type_name}}</div>
-              </div>
-              <!-- End of dynamic data -->
-              <div class="cell">{{parseInt(singleSaving.sav_start.slice(-2))}}. dana u mesecu</div>
-              <div class="cell">{{formateDate(singleSaving.sav_start)}}</div>
           </div>
-      </div>
+          <div class="row">
+                <div class="cell">Do sada uplaćeno</div>
+                <div class="cell">{{singleSaving.sav_amount_accumulated + " " + singleSaving.acc_type_name}}</div>
+          </div>
+          <div class="row" v-if = "singleSaving.leftover_amount >= 0">
+              <div class="cell">Preostalo za uplatu</div>
+              <div class="cell">{{singleSaving.leftover_amount + " " + singleSaving.acc_type_name}}</div>
+          </div>
+          <div class="row">
+              <div class="cell">Broj uplata</div>
+                <div class="cell">{{singleSaving.number_of_payments}}</div>
+          </div>
+          <div class="row">
+              <div class="cell">Period štednje</div>
+              <div class="cell">{{singleSaving.sav_period + setProperWord(singleSaving.sav_period)}}</div>
+          </div>
+          <div class="row">
+              <div class="cell">Period do kraja štednje</div>
+                <div class="cell">{{singleSaving.sav_period-singleSaving.sav_months_in+1 + setProperWord(singleSaving.sav_period)}}</div>
+          </div>
+          <!-- Dynamic data -->
+          <div class="row" v-if = "!singleSaving.sav_end && singleSaving.sav_period - singleSaving.sav_months_in !== 0">
+                <div class="cell">Sledeća mesečna rata</div>
+                <div class="cell">{{singleSaving.sav_next_month_rate+ " " + singleSaving.acc_type_name}}</div>
+          </div>
+          <!-- End of dynamic data -->
+          <div class="row">
+              <div class="cell">Rata se obnavlja</div>
+              <div class="cell">{{parseInt(singleSaving.sav_start.slice(-2))}}. dana u mesecu</div>
+          </div>
+          <div class="row">
+              <div class="cell">Datum početka</div>
+                <div class="cell">{{formateDate(singleSaving.sav_start)}}</div>
+          </div> 
+        </div>
 
       <button @click = "$emit('viewing-details')">Povratak na štednje</button>
   </div>
@@ -95,31 +103,39 @@ export default {
         flex-direction: column;
         align-items: center;
         font-size: 1.2em;
-        min-height: 50vh;
+        max-height: 90vh;
         font-size: 1.4em;
+        overflow: auto;
     }
     .table{
         width:75%;
+        margin-right: 2%;
         display: flex;
+        flex-direction: column;
+    }
+    .row{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin: 0;
+        justify-content: space-between;
     }
     .cell{
-        padding: 1%;
+        width: 50%;
+        padding: 0.5%;
     }
-    .column{
-        width:50%;
-        height: 100%;
-    }
-    .column:nth-child(1){
+    .row .cell:nth-child(1){
         background-color: #17a2b8;
         color: white;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        border-bottom: 1px solid #d3d3d3;
     }
-    .column:nth-child(1) .cell{
-        border-bottom: 1px solid lightgray;
-    }
-    .column:nth-child(2){
-        text-align: end;
-    }
-    .column:nth-child(2) .cell{
+    .row .cell:nth-child(2){
+        display: flex;
+        justify-content: end;
+        align-items: center;
         border-bottom: 1px solid #17a2b8;
     }
     button{
@@ -173,5 +189,21 @@ export default {
         transition: 0s;
         color: rgba(18, 104, 117, 0.616);
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+/* Responsive */
+    @media (max-width: 720px){
+        .savings-view-details{
+            width:90%;
+            font-size: 0.9em;
+            height: 90vh;
+        }
+        h2{
+            text-align: center;
+            margin: 1%;
+        }
+        .table{
+            width: 95%;
+        }
     }
 </style>

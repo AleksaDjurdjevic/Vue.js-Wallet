@@ -1,7 +1,5 @@
 <template>
   <div class="transactions" :key="key" id = "tran-anch">
-    
-     <div v-if="showingCalendar" class="createAccDivCallendar" @click="showingCalendar=false"></div>
     <!-- Left side -->
     <div class="aside">
       <!-- Accounts -->
@@ -53,7 +51,6 @@
             <!-- Calendar -->
             <div class="calendar-wrapper" v-if="showingCalendar">
               <calendar @selectDate="setDate" @showCallEmit="showingCalendar = false" />
-              <button @click="clearDate">Obrišite unet datum</button>
             </div>
             <!-- First row -->
             <div class="row-first">
@@ -159,7 +156,7 @@ export default {
     };
   },
   components: {
-    calendar: Callendar
+    'calendar': Callendar
   },
   computed: {
     ...mapState(["isLoggedIn"])
@@ -334,8 +331,6 @@ export default {
       this.targetInput = x;
     },
     setDate(date) {
-      console.log('cao');
-      
       let dateParts = date.split("-");
       if (dateParts[2].length === 1) {
         dateParts[2] = "0" + dateParts[2];
@@ -923,25 +918,6 @@ button::-moz-focus-inner {
   font-size: 1.5em;
 }
 
-/*-----------------------------*/
-
-.createAccDivCallendar {
-  animation-name: opacity;
-  animation-duration: 0.3s;
-  padding-top: 6%;
-  color: #fff;
-  width: 100%;
-  min-height: 100%;
-
-  background: #00000000;
- 
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 1000100;
-}
-
-
 .scrollTD {
   overflow: auto;
 }
@@ -1001,9 +977,9 @@ button::-moz-focus-inner {
     overflow: unset;
   }
   .each-account{
-    margin: 1%;
+    margin: 2.5% 1.5%;
     width: auto;
-    min-width: 20%;
+    min-width: 30%;
     height: auto;
     min-height: 50px;
   }
@@ -1110,7 +1086,7 @@ button::-moz-focus-inner {
     top: 90%;
     width: 70%;
     margin: 0 auto;
-    opacity: 0.6;
+    opacity: 0.8;
     box-shadow: none;
   }
   .table-shade-p-resp:hover{

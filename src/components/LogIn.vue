@@ -64,6 +64,15 @@ export default {
   },
   mounted(){
     this.$root.$emit('set-selected', 5);
+    window.grecaptcha.ready(function() {
+      window.grecaptcha.execute('6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P', {action: 'login'})
+      .then(function(token){
+        console.log(token);
+        
+      });
+    
+    });
+
   },
   components: {
     VueRecaptcha

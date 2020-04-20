@@ -117,4 +117,12 @@ export default {
         color: rgba(18, 104, 117, 0.616);
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
     }
+
+/* Responsive */
+    @media (max-width: 720px){
+        .delete-saving{
+            width:90%;
+            font-size: 0.9em;
+        }
+    }
 </style>

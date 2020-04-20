@@ -359,8 +359,5 @@ export default {
         .amount{
             text-align:center;
         }
-        /* .accounts{
-            font-size: 0.8em;
-        } */
     }
 </style>

@@ -908,5 +908,8 @@ button{
     .sort-order{
         margin-top: 5%;
     }
+    .saving-status{
+        width: 30%;
+    }
 }
 </style>

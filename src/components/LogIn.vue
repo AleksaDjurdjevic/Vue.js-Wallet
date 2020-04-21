@@ -29,7 +29,8 @@ export default {
     return {
       email: '',
       password: '',
-      msg: null
+      msg: null,
+      token: null
     };
   },
   methods: {
@@ -37,29 +38,37 @@ export default {
       if(this.password === '' || this.email === ''){
         this.msg = 'Unesite sva polja.';
       }else{
-      axios
-        .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
-          email: this.email,
-          password: this.password
-        })
-        .then(res => {
-          localStorage.setItem("sid", res.data.sid);
-          localStorage.setItem("user", res.data.user);
-          
-          this.$store.state.isLoggedIn = true;
-
-          this.$root.$emit('change-id');
-          this.$root.$emit('change-usr-data');
-          this.$root.$emit('change-pic');
-          this.$root.$emit('set-selected', 0);
-
-          this.$router.push({
-            name: 'Home'
-          })
-        }).catch(e=>{
-          this.msg = e.response.data.err;
+        window.grecaptcha.ready(function() {
+          window.grecaptcha.execute('6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P', {action: 'login'})
+            .then(function(token){
+              this.token = token;
+            });
         });
-      }
+
+        axios
+          .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
+            email: this.email,
+            password: this.password,
+            token: this.token
+          })
+          .then(res => {
+            localStorage.setItem("sid", res.data.sid);
+            localStorage.setItem("user", res.data.user);
+            
+            this.$store.state.isLoggedIn = true;
+
+            this.$root.$emit('change-id');
+            this.$root.$emit('change-usr-data');
+            this.$root.$emit('change-pic');
+            this.$root.$emit('set-selected', 0);
+
+            this.$router.push({
+              name: 'Home'
+            })
+          }).catch(e=>{
+            this.msg = e.response.data.err;
+          });
+        }
     }
   },
   mounted(){
@@ -72,7 +81,6 @@ export default {
       });
     
     });
-
   },
   components: {
     VueRecaptcha

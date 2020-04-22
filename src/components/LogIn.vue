@@ -44,7 +44,8 @@ export default {
               this.token = token;
             });
         });
-
+        console.log(this.token);
+        
         axios
           .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
             email: this.email,

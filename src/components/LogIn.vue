@@ -29,8 +29,7 @@ export default {
     return {
       email: '',
       password: '',
-      msg: null,
-      token: null
+      msg: null
     };
   },
   methods: {
@@ -38,50 +37,37 @@ export default {
       if(this.password === '' || this.email === ''){
         this.msg = 'Unesite sva polja.';
       }else{
-        window.grecaptcha.ready(function() {
           window.grecaptcha.execute('6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P', {action: 'login'})
-            .then(function(token){
-              this.token = token;
-            });
-        });
-        console.log(this.token);
-        
-        axios
-          .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
-            email: this.email,
-            password: this.password,
-            token: this.token
-          })
-          .then(res => {
-            localStorage.setItem("sid", res.data.sid);
-            localStorage.setItem("user", res.data.user);
-            
-            this.$store.state.isLoggedIn = true;
+            .then((token)=>{
+              axios
+                .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
+                  email: this.email,
+                  password: this.password,
+                  token
+                })
+                .then(res => {
+                  localStorage.setItem("sid", res.data.sid);
+                  localStorage.setItem("user", res.data.user);
+                  
+                  this.$store.state.isLoggedIn = true;
 
-            this.$root.$emit('change-id');
-            this.$root.$emit('change-usr-data');
-            this.$root.$emit('change-pic');
-            this.$root.$emit('set-selected', 0);
+                  this.$root.$emit('change-id');
+                  this.$root.$emit('change-usr-data');
+                  this.$root.$emit('change-pic');
+                  this.$root.$emit('set-selected', 0);
 
-            this.$router.push({
-              name: 'Home'
-            })
-          }).catch(e=>{
-            this.msg = e.response.data.err;
+                  this.$router.push({
+                    name: 'Home'
+                  })
+                }).catch(e=>{
+                  this.msg = e.response.data.err;
+                });
           });
-        }
+      }
     }
   },
   mounted(){
     this.$root.$emit('set-selected', 5);
-    window.grecaptcha.ready(function() {
-      window.grecaptcha.execute('6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P', {action: 'login'})
-      .then(function(token){
-        console.log(token);
-        
-      });
-    
-    });
   },
   components: {
     VueRecaptcha

@@ -78,22 +78,26 @@ export default {
         this.$refs.email.focus();
 
       }else{
-        axios
-        .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/registration", {
-          name: this.name,
-          surname: this.surname,
-          email: this.email,
-          password: this.password,
-        })
-        .then((r) => {
-          this.$store.state.isRegistrated = true;
-          this.id = r.data.id_usera;
-        })
-        .catch((err) => {
-          localStorage.clear();
-          this.msg = err.response.data.err;
-          this.$refs.email.focus();
-        }); 
+         window.grecaptcha.execute('6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P', {action: 'register'})
+            .then((token)=>{
+              axios
+              .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/registration", {
+                name: this.name,
+                surname: this.surname,
+                email: this.email,
+                password: this.password,
+                token
+              })
+              .then((r) => {
+                this.$store.state.isRegistrated = true;
+                this.id = r.data.id_usera;
+              })
+              .catch((err) => {
+                localStorage.clear();
+                this.msg = err.response.data.err;
+                this.$refs.email.focus();
+              }); 
+            });
       }
     }
   },

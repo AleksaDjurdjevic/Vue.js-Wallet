@@ -89,7 +89,31 @@ export default {
                 token
               })
               .then((r) => {
-                this.$store.state.isRegistrated = true;
+                window.grecaptcha.execute('6Lcak-cUAAAAAKswQ4YMo7BHsla5Qgi-orzyb74P', {action: 'login'})
+                .then((tok)=>{
+                  axios
+                  .post("http://053n122.mars-e1.mars-hosting.com/api/wallet/login", {
+                    email: this.email,
+                    password: this.password,
+                    token: tok
+                  })
+                  .then(res => {
+                    localStorage.setItem("sid", res.data.sid);
+                    localStorage.setItem("user", res.data.user);
+                    
+                    this.$store.state.isLoggedIn = true;
+
+                    this.$root.$emit('change-id');
+                    this.$root.$emit('change-usr-data');
+                    this.$root.$emit('change-pic');
+                    this.$root.$emit('set-selected', 0);
+
+                    this.$router.push({
+                      name: 'Home'
+                    })
+                  })
+                });
+                // this.$store.state.isRegistrated = true;
                 this.id = r.data.id_usera;
               })
               .catch((err) => {

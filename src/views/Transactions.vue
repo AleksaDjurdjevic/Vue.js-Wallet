@@ -49,6 +49,7 @@
           <div class="main-table">
             <button class="table-shade-p-resp" @click = "anchorTop">Povratak na vrh</button>
             <!-- Calendar -->
+            <div class="calendar-background" v-if="showingCalendar" @click="showingCalendar = false"></div>
             <div class="calendar-wrapper" v-if="showingCalendar">
               <calendar @selectDate="setDate" @showCallEmit="showingCalendar = false" />
             </div>
@@ -722,6 +723,12 @@ button::-moz-focus-inner {
 .row-first .cell-first:nth-child(3), .row-other .cell:nth-child(3){
   width:50%;
 }
+.row-first .cell-first:nth-child(1){
+   border-top-left-radius: 25px;
+}
+.row-first .cell-first:nth-child(6){
+   border-top-right-radius: 25px;
+}
 .row-first .cell-first:nth-child(5), .row-other .cell:nth-child(5){
   width: 70%;
 }
@@ -787,6 +794,14 @@ button::-moz-focus-inner {
 }
 
 /* Calendar */
+.calendar-background{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index:1000100;
+}
 .calendar-wrapper {
   position: absolute;
   top: 0%;

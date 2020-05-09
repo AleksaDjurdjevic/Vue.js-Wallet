@@ -1,6 +1,5 @@
 <template>
   <div class="registration" v-on:keyup.enter="registration" >
-    <!-- v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )" TREBA U BLA DA SE UBACI -->
     <div class="bla" v-if="!($store.state.isRegistrated || $store.state.isLoggedIn )">
       <h1>Registracija</h1> 
       <div>
@@ -113,7 +112,6 @@ export default {
                     })
                   })
                 });
-                // this.$store.state.isRegistrated = true;
                 this.id = r.data.id_usera;
               })
               .catch((err) => {
@@ -221,7 +219,6 @@ button:active{
 
 .bla {
   border-radius: 5px;
-  /* background-color: #f2f2f2; */
   width: 25%;
   margin: 4% auto;
   padding: 20px;
@@ -273,9 +270,7 @@ h1 {
   .bla h1{
     font-size: 1.15em;
      margin-bottom:5%; 
-} 
+  } 
 }
-
-
 </style>
 

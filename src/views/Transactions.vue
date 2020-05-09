@@ -430,8 +430,7 @@ export default {
       }
 
       //This part is for rendering the pages navigation bar
-      let localallPagesArray = this.allPagesArray; //keyword "this" in filter method doesnt refer to vue properties.
-
+      let localallPagesArray = this.allPagesArray;
       this.displayingPages = this.allPagesArray.filter(function(oldPage) {
         //if the page clicked is the last page
         if (
@@ -681,7 +680,6 @@ button::-moz-focus-inner {
 }
 .main-table {
   position: relative;
-  /* overflow: hidden; */
   border-radius: 25px;
   display: flex;
   flex-direction: column;
@@ -935,21 +933,17 @@ button::-moz-focus-inner {
 /* Track */
 ::-moz-scrollbar-track {
   box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671);
-  /* border-radius: 10px; */
 }
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 2px rgba(3, 3, 3, 0.671);
-  /* border-radius: 10px; */
 }
 
 /* Handle */
 ::-moz-scrollbar-thumb {
   background: rgb(172, 168, 168);
-  /*  border-radius: 10px; */
 }
 ::-webkit-scrollbar-thumb {
   background: rgb(172, 168, 168);
-  /*  border-radius: 10px; */
 }
 
 /* Handle on hover */

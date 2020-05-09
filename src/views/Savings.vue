@@ -310,10 +310,6 @@ export default {
             this.sav_id = sav_id;
             this.viewingDetails = true;
         },
-        // endSaving(sav_id){
-        //     this.sav_id = sav_id;
-        //     this.endingSaving = true;
-        // },
         setClassForSavings(i){
             let devider = Math.floor(i/4);
             return i-4*devider+1;

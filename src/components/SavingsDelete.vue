@@ -21,19 +21,17 @@ export default {
     },
     methods: {
         deleteSavings(){
-            let paymentsToDelete = []; // koje sve uplate da obrisem (sav_pay_id)
-            let accAndAmountToRefund = {} // objekat koji sadrzi id racuna i kolicinu koju treba da refundiram
-            let repeatedAccs = []; // niz racuna koji se ponavljaju u iteraciji kroz uplate
-            for (let i in this.savings){ // pristupam objektu svih stednji usera
-                if(this.savings[i].sav_id == this.sav_id){ /* ako je sav_id u tom pojedinacnom objektu 
-                jednak sav_id objektu na koji je kliknut, te uplate mi trebaju*/
-                    for(let j in this.savings[i].payments){ //za svaku uplatu..
-                        paymentsToDelete.push(this.savings[i].payments[j].sav_pay_id); //izvuci id uplata koji su za brisanje
-                        if (repeatedAccs.includes(this.savings[i].payments[j].acc_id)){ //ako je neki racun vec obavio uplatu pre ove
-                                                                                        //Samo azuriraj kolicinu novca za refundaciju
+            let paymentsToDelete = [];
+            let accAndAmountToRefund = {}
+            let AccountsWithMultiplePayments = [];
+            for (let i in this.savings){
+                if(this.savings[i].sav_id == this.sav_id){
+                    for(let j in this.savings[i].payments){
+                        paymentsToDelete.push(this.savings[i].payments[j].sav_pay_id);
+                        if (AccountsWithMultiplePayments.includes(this.savings[i].payments[j].acc_id)){
                             accAndAmountToRefund[this.savings[i].payments[j].acc_id] += this.savings[i].payments[j].sav_pay_amount; 
                         }else{
-                            repeatedAccs.push(this.savings[i].payments[j].acc_id);//ako nije, dodaj novi "acc_id: amount" u "accAndAmountToRefund"
+                            AccountsWithMultiplePayments.push(this.savings[i].payments[j].acc_id);
                             accAndAmountToRefund[this.savings[i].payments[j].acc_id] = this.savings[i].payments[j].sav_pay_amount;
                         }
                     }
